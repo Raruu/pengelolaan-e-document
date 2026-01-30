@@ -23,27 +23,20 @@ cp .env.example .env
 php artisan key:generate
 ```
 
-3. Create the local database (if using sqlite)
+3. Run migrations
 
 ```bash
-mkdir -p database
-touch database/database.sqlite
+php artisan migrate --seed
 ```
 
-4. Run migrations
-
-```bash
-php artisan migrate
-```
-
-5. Install frontend deps and start dev servers
+4. Install frontend deps and build 
 
 ```bash
 npm install
-npm run dev
+npm run build
 ```
 
-Alternatively, start everything (server, queue, vite) via Composer script:
+5. start everything (server, queue, vite) via Composer script:
 
 ```bash
 composer run dev
