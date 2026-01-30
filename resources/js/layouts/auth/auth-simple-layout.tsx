@@ -1,4 +1,4 @@
-import AppLogoIcon from '@/components/app-logo-icon';
+import AppLogoIcon from '@/components/AppLogoIcon';
 import type { AuthLayoutProps } from '@/types';
 
 export default function AuthSimpleLayout({
@@ -13,7 +13,7 @@ export default function AuthSimpleLayout({
                     <div className="relative flex flex-col items-center gap-2">
                         <div className="flex flex-row items-center justify-center gap-4">
                             <AppLogoIcon />
-                            <h1 className="text-xl font-bold">{title}</h1>
+                            <h1 className="text-xl font-bold text-black">{title}</h1>
                         </div>
 
                         <div className="space-y-2 text-center">

@@ -7,18 +7,10 @@ import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import AppLayout from '@/layouts/app-layout';
-import SettingsLayout from '@/layouts/settings/layout';
-import { edit } from '@/routes/profile';
+import AppLayout from '@/layouts/app';
+import SettingsLayout from '@/layouts/settings';
 import { send } from '@/routes/verification';
-import type { BreadcrumbItem, SharedData } from '@/types';
-
-const breadcrumbs: BreadcrumbItem[] = [
-    {
-        title: 'Profile settings',
-        href: edit().url,
-    },
-];
+import type { SharedData } from '@/types';
 
 export default function Profile({
     mustVerifyEmail,
@@ -30,7 +22,7 @@ export default function Profile({
     const { auth } = usePage<SharedData>().props;
 
     return (
-        <AppLayout breadcrumbs={breadcrumbs}>
+        <AppLayout>
             <Head title="Profile settings" />
 
             <h1 className="sr-only">Profile Settings</h1>

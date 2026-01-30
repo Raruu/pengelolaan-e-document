@@ -2,7 +2,7 @@ import type { SVGAttributes } from 'react';
 
 export default function AppLogoIcon(props: SVGAttributes<SVGElement>) {
     return (
-        <div className="rounded-xl bg-primary text-background p-2.5">
+        <div className="rounded-xl bg-primary text-white p-2.5">
             <svg
                 xmlns="http://www.w3.org/2000/svg"
                 width="24"

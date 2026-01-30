@@ -1,14 +1,7 @@
-import type { InertiaLinkProps } from '@inertiajs/react';
-import type { LucideIcon } from 'lucide-react';
-
-export type BreadcrumbItem = {
-    title: string;
-    href: string;
-};
-
 export type NavItem = {
-    title: string;
-    href: NonNullable<InertiaLinkProps['href']>;
-    icon?: LucideIcon | null;
+    name: string;
+    href: string;
+    icon?: React.ReactNode;
     isActive?: boolean;
+    subItems?: { name: string; href: string; pro?: boolean; new?: boolean }[];
 };

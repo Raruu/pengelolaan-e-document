@@ -7,28 +7,22 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
-import { show } from '@/routes/two-factor';
 import { edit as editPassword } from '@/routes/user-password';
 import type { NavItem } from '@/types';
 
 const sidebarNavItems: NavItem[] = [
     {
-        title: 'Profile',
+        name: 'Profile',
         href: edit(),
         icon: null,
     },
     {
-        title: 'Password',
+        name: 'Password',
         href: editPassword(),
         icon: null,
     },
     {
-        title: 'Two-Factor Auth',
-        href: show(),
-        icon: null,
-    },
-    {
-        title: 'Appearance',
+        name: 'Appearance',
         href: editAppearance(),
         icon: null,
     },
@@ -69,7 +63,7 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
                                     {item.icon && (
                                         <item.icon className="h-4 w-4" />
                                     )}
-                                    {item.title}
+                                    {item.name}
                                 </Link>
                             </Button>
                         ))}
