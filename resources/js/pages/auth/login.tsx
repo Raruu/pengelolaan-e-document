@@ -3,7 +3,7 @@ import { Form, Head } from '@inertiajs/react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import { useState } from 'react';
 import TextLink from '@/components/text-link';
-import AuthLayout from '@/layouts/auth-layout';
+import AuthLayout from '@/layouts/auth';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';
 
@@ -93,7 +93,7 @@ export default function Login({ status, canResetPassword }: Props) {
                                     {canResetPassword && (
                                         <TextLink
                                             href={request()}
-                                            className="ml-auto text-sm font-semibold text-primary-700 "
+                                            className="ml-auto text-sm font-semibold text-primary-700"
                                             tabIndex={5}
                                         >
                                             Lupa Password?
