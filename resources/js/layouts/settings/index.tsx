@@ -1,5 +1,5 @@
 import { useEffect, type PropsWithChildren } from 'react';
-import Heading from '@/components/heading';
+import Heading from '@/components/Heading';
 import { settingsItems } from '@/constants/nav-items';
 import { useSidebar } from '@/hooks/SidebarContext';
 

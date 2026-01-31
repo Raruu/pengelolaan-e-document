@@ -2,7 +2,7 @@ import { Button, Card, CardBody, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import { useState } from 'react';
-import TextLink from '@/components/text-link';
+import TextLink from '@/components/TextLink';
 import AuthLayout from '@/layouts/auth';
 import { store } from '@/routes/login';
 import { request } from '@/routes/password';

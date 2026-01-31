@@ -1,8 +1,8 @@
 import { Button, Card, CardBody, CardFooter, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
-import InputError from '@/components/input-error';
-import TextLink from '@/components/text-link';
+import InputError from '@/components/InputError';
+import TextLink from '@/components/TextLink';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth';
 import { login } from '@/routes';
