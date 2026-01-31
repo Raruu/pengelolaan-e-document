@@ -3,5 +3,5 @@ export type NavItem = {
     href: string;
     icon?: React.ReactNode;
     isActive?: boolean;
-    subItems?: { name: string; href: string; pro?: boolean; new?: boolean }[];
+    subItems?: { name: string; href: string; new?: boolean }[];
 };

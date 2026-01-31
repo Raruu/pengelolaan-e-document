@@ -2,20 +2,25 @@ import { Link, usePage } from '@inertiajs/react';
 import { ChevronDown, MoreHorizontal } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
-import { navItems } from '@/constants/nav-items';
+import { defaultItems } from '@/constants/nav-items';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types/navigation';
 import { useSidebar } from '../../hooks/SidebarContext';
 
 const AppSidebar: React.FC = () => {
-    const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
+    const {
+        isExpanded,
+        isMobileOpen,
+        isHovered,
+        setIsHovered,
+        openSubmenu,
+        setOpenSubmenu,
+        navItems,
+        setNavItems,
+    } = useSidebar();
     const page = usePage();
     const currentPath = page.url;
 
-    const [openSubmenu, setOpenSubmenu] = useState<{
-        type: 'main' | 'others';
-        index: number;
-    } | null>(null);
     const [subMenuHeight, setSubMenuHeight] = useState<Record<string, number>>(
         {},
     );
@@ -27,29 +32,30 @@ const AppSidebar: React.FC = () => {
     );
 
     useEffect(() => {
+        setNavItems(defaultItems);
+    }, [setNavItems]);
+
+    useEffect(() => {
         let submenuMatched = false;
-        ['main', 'others'].forEach((menuType) => {
-            const items = navItems;
-            items.forEach((nav, index) => {
-                if (nav.subItems) {
-                    nav.subItems.forEach((subItem) => {
-                        if (isActive(subItem.href)) {
-                            setOpenSubmenu({
-                                type: menuType as 'main' | 'others',
-                                index,
-                            });
-                            submenuMatched = true;
-                        }
-                    });
+        for (const nav of navItems) {
+            if (nav.subItems) {
+                for (const subItem of nav.subItems) {
+                    if (isActive(subItem.href)) {
+                        setOpenSubmenu({
+                            type: 'main',
+                            index: navItems.indexOf(nav),
+                        });
+                        submenuMatched = true;
+                        return; // break
+                    }
                 }
-            });
-        });
+            }
+        }
 
         if (!submenuMatched) {
-            // eslint-disable-next-line react-hooks/set-state-in-effect
             setOpenSubmenu(null);
         }
-    }, [currentPath, isActive]);
+    }, [currentPath, isActive, navItems, setOpenSubmenu]);
 
     useEffect(() => {
         if (openSubmenu !== null) {
@@ -132,6 +138,7 @@ const AppSidebar: React.FC = () => {
                                         ? 'menu-item-active'
                                         : 'menu-item-inactive'
                                 }`}
+                                preserveState
                             >
                                 <span
                                     className={`menu-item-icon-size ${
@@ -177,6 +184,7 @@ const AppSidebar: React.FC = () => {
                                                         ? 'menu-dropdown-item-active'
                                                         : 'menu-dropdown-item-inactive'
                                                 }`}
+                                                preserveState
                                             >
                                                 {subItem.name}
                                                 <span className="ml-auto flex items-center gap-1">
@@ -191,19 +199,6 @@ const AppSidebar: React.FC = () => {
                                                             } menu-dropdown-badge`}
                                                         >
                                                             new
-                                                        </span>
-                                                    )}
-                                                    {subItem.pro && (
-                                                        <span
-                                                            className={`ml-auto ${
-                                                                isActive(
-                                                                    subItem.href,
-                                                                )
-                                                                    ? 'menu-dropdown-badge-active'
-                                                                    : 'menu-dropdown-badge-inactive'
-                                                            } menu-dropdown-badge`}
-                                                        >
-                                                            pro
                                                         </span>
                                                     )}
                                                 </span>
@@ -241,6 +236,7 @@ const AppSidebar: React.FC = () => {
                     <Link
                         href={dashboard.url()}
                         className="flex flex-row items-center justify-center gap-4 whitespace-nowrap"
+                        preserveState
                     >
                         <AppLogoIcon />
                         <h1 className="text-xl font-bold text-foreground">

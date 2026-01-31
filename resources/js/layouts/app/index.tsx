@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { SidebarProvider, useSidebar } from '../../hooks/SidebarContext';
+import { useSidebar } from '../../hooks/SidebarContext';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import Backdrop from './Backdrop';
@@ -36,11 +36,7 @@ type AppLayoutProps = {
 };
 
 const AppLayout: React.FC<AppLayoutProps> = ({ children }) => {
-    return (
-        <SidebarProvider>
-            <LayoutContent>{children}</LayoutContent>
-        </SidebarProvider>
-    );
+    return <LayoutContent>{children}</LayoutContent>;
 };
 
 export default AppLayout;
