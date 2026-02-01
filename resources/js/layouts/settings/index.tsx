@@ -16,10 +16,10 @@ export default function SettingsLayout({ children }: PropsWithChildren) {
     }
 
     return (
-        <div className="px-4 py-6">
+        <div className="px-4 py-2">
             <Heading
-                title="Settings"
-                description="Manage your profile and account settings"
+                title="Pengaturan"
+                description="Kelola profil dan pengaturan akun Anda"
             />
 
             <div className="flex flex-col lg:flex-row lg:space-x-12">

@@ -71,7 +71,7 @@ export default function UserDropdown() {
                             className="flex items-center gap-3 px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-800"
                         >
                             <User className="h-4 w-4" />
-                            Profile
+                            Profil
                         </Link>
                     </div>
                     <div className="border-t border-gray-200 py-2 dark:border-gray-800">
@@ -80,7 +80,7 @@ export default function UserDropdown() {
                             className="flex w-full items-center gap-3 px-4 py-2 text-sm text-red-600 hover:bg-gray-100 dark:text-red-400 dark:hover:bg-gray-800"
                         >
                             <LogOut className="h-4 w-4" />
-                            Log out
+                            Keluar
                         </button>
                     </div>
                 </div>

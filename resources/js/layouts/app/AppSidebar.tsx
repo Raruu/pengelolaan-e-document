@@ -227,7 +227,7 @@ const AppSidebar: React.FC = () => {
         >
             {isExpanded || isHovered || isMobileOpen ? (
                 <div
-                    className={`flex py-8 ${
+                    className={`flex py-5.5 ${
                         !isExpanded && !isHovered
                             ? 'lg:justify-center'
                             : 'justify-start'
@@ -245,7 +245,7 @@ const AppSidebar: React.FC = () => {
                     </Link>
                 </div>
             ) : (
-                <div className="my-8 flex flex-row items-center justify-center gap-4 whitespace-nowrap">
+                <div className="flex flex-row items-center justify-center gap-4 py-5.5 whitespace-nowrap">
                     <AppLogoIcon />
                 </div>
             )}

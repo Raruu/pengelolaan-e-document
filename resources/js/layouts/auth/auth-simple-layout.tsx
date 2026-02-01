@@ -1,5 +1,12 @@
+import type { ReactNode } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
-import type { AuthLayoutProps } from '@/types';
+
+type AuthLayoutProps = {
+    children?: ReactNode;
+    name?: string;
+    title?: string;
+    description?: string;
+};
 
 export default function AuthSimpleLayout({
     children,
@@ -13,7 +20,9 @@ export default function AuthSimpleLayout({
                     <div className="relative flex flex-col items-center gap-2">
                         <div className="flex flex-row items-center justify-center gap-4">
                             <AppLogoIcon />
-                            <h1 className="text-xl font-bold text-black">{title}</h1>
+                            <h1 className="text-xl font-bold text-black">
+                                {title}
+                            </h1>
                         </div>
 
                         <div className="space-y-2 text-center">
