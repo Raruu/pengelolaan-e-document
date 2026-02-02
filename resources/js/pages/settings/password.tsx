@@ -1,18 +1,20 @@
-import { Transition } from '@headlessui/react';
+import { Button, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
-import { useRef } from 'react';
+import { Eye, EyeOff, Save } from 'lucide-react';
+import { useRef, useState } from 'react';
 import PasswordController from '@/actions/App/Http/Controllers/Settings/PasswordController';
 import Heading from '@/components/Heading';
-import InputError from '@/components/InputError';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
 import AppLayout from '@/layouts/app';
 import SettingsLayout from '@/layouts/settings';
 
 export default function Password() {
     const passwordInput = useRef<HTMLInputElement>(null);
     const currentPasswordInput = useRef<HTMLInputElement>(null);
+    const [isCurrentPasswordVisible, setIsCurrentPasswordVisible] =
+        useState(false);
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isPasswordConfirmationVisible, setIsPasswordConfirmationVisible] =
+        useState(false);
 
     return (
         <AppLayout>
@@ -50,84 +52,160 @@ export default function Password() {
                         }}
                         className="space-y-6"
                     >
-                        {({ errors, processing, recentlySuccessful }) => (
+                        {({
+                            errors,
+                            processing,
+                            recentlySuccessful,
+                            clearErrors,
+                        }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="current_password">
-                                        Kata sandi saat ini
-                                    </Label>
-
                                     <Input
                                         id="current_password"
                                         ref={currentPasswordInput}
                                         name="current_password"
-                                        type="password"
-                                        className="mt-1 block w-full"
-                                        autoComplete="current-password"
+                                        type={
+                                            isCurrentPasswordVisible
+                                                ? 'text'
+                                                : 'password'
+                                        }
+                                        label="Kata sandi saat ini"
+                                        labelPlacement="outside"
                                         placeholder="Kata sandi saat ini"
-                                    />
-
-                                    <InputError
-                                        message={errors.current_password}
+                                        radius="md"
+                                        autoComplete="current-password"
+                                        isInvalid={!!errors.current_password}
+                                        errorMessage={errors.current_password}
+                                        onChange={() =>
+                                            clearErrors('current_password')
+                                        }
+                                        endContent={
+                                            <button
+                                                className="focus:outline-none"
+                                                type="button"
+                                                onClick={() =>
+                                                    setIsCurrentPasswordVisible(
+                                                        !isCurrentPasswordVisible,
+                                                    )
+                                                }
+                                                aria-label="toggle password visibility"
+                                            >
+                                                {isCurrentPasswordVisible ? (
+                                                    <EyeOff className="size-4 text-default-400" />
+                                                ) : (
+                                                    <Eye className="size-4 text-default-400" />
+                                                )}
+                                            </button>
+                                        }
                                     />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password">
-                                        Kata sandi baru
-                                    </Label>
-
                                     <Input
                                         id="password"
                                         ref={passwordInput}
                                         name="password"
-                                        type="password"
-                                        className="mt-1 block w-full"
-                                        autoComplete="new-password"
+                                        type={
+                                            isPasswordVisible
+                                                ? 'text'
+                                                : 'password'
+                                        }
+                                        label="Kata sandi baru"
+                                        labelPlacement="outside"
                                         placeholder="Kata sandi baru"
+                                        radius="md"
+                                        autoComplete="new-password"
+                                        isInvalid={!!errors.password}
+                                        errorMessage={errors.password}
+                                        onChange={() => clearErrors('password')}
+                                        endContent={
+                                            <button
+                                                className="focus:outline-none"
+                                                type="button"
+                                                onClick={() =>
+                                                    setIsPasswordVisible(
+                                                        !isPasswordVisible,
+                                                    )
+                                                }
+                                                aria-label="toggle password visibility"
+                                            >
+                                                {isPasswordVisible ? (
+                                                    <EyeOff className="size-4 text-default-400" />
+                                                ) : (
+                                                    <Eye className="size-4 text-default-400" />
+                                                )}
+                                            </button>
+                                        }
                                     />
-
-                                    <InputError message={errors.password} />
                                 </div>
 
                                 <div className="grid gap-2">
-                                    <Label htmlFor="password_confirmation">
-                                        Konfirmasi kata sandi
-                                    </Label>
-
                                     <Input
                                         id="password_confirmation"
                                         name="password_confirmation"
-                                        type="password"
-                                        className="mt-1 block w-full"
-                                        autoComplete="new-password"
+                                        type={
+                                            isPasswordConfirmationVisible
+                                                ? 'text'
+                                                : 'password'
+                                        }
+                                        label="Konfirmasi kata sandi"
+                                        labelPlacement="outside"
                                         placeholder="Konfirmasi kata sandi"
-                                    />
-
-                                    <InputError
-                                        message={errors.password_confirmation}
+                                        radius="md"
+                                        autoComplete="new-password"
+                                        isInvalid={
+                                            !!errors.password_confirmation
+                                        }
+                                        errorMessage={
+                                            errors.password_confirmation
+                                        }
+                                        onChange={() =>
+                                            clearErrors('password_confirmation')
+                                        }
+                                        endContent={
+                                            <button
+                                                className="focus:outline-none"
+                                                type="button"
+                                                onClick={() =>
+                                                    setIsPasswordConfirmationVisible(
+                                                        !isPasswordConfirmationVisible,
+                                                    )
+                                                }
+                                                aria-label="toggle password visibility"
+                                            >
+                                                {isPasswordConfirmationVisible ? (
+                                                    <EyeOff className="size-4 text-default-400" />
+                                                ) : (
+                                                    <Eye className="size-4 text-default-400" />
+                                                )}
+                                            </button>
+                                        }
                                     />
                                 </div>
 
                                 <div className="flex items-center gap-4">
                                     <Button
-                                        disabled={processing}
+                                        type="submit"
+                                        color="primary"
+                                        radius="md"
+                                        isDisabled={processing}
+                                        isLoading={processing}
                                         data-test="update-password-button"
+                                        onPress={()=> {
+                                            clearErrors('current_password')
+                                            clearErrors('password')
+                                            clearErrors('password_confirmation')
+                                        }}
+                                        startContent={<Save className="size-4" />}
                                     >
                                         Simpan kata sandi
                                     </Button>
 
-                                    <Transition
-                                        show={recentlySuccessful}
-                                        enter="transition ease-in-out"
-                                        enterFrom="opacity-0"
-                                        leave="transition ease-in-out"
-                                        leaveTo="opacity-0"
-                                    >
+                                    {recentlySuccessful && (
                                         <p className="text-sm text-neutral-600">
                                             Tersimpan
                                         </p>
-                                    </Transition>
+                                    )}
                                 </div>
                             </>
                         )}

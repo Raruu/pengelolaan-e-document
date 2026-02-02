@@ -9,8 +9,11 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
+use Intervention\Image\ImageManager;
+use Intervention\Image\Drivers\Gd\Driver;
 
 class ProfileController extends Controller
 {
@@ -30,15 +33,44 @@ class ProfileController extends Controller
      */
     public function update(ProfileUpdateRequest $request): RedirectResponse
     {
-        $request->user()->fill($request->validated());
+        $user = $request->user();
 
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
+        $user->fill($request->validated());
+
+        if ($request->hasFile('profile_photo_path')) {
+            $user->profile_photo_path =  $this->updateProfilePhoto($request, $user);
         }
 
-        $request->user()->save();
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
+        }
+
+        $user->save();
 
         return to_route('profile.edit');
+    }
+
+    /**
+     * Update the user's profile photo.
+     */
+    protected function updateProfilePhoto(ProfileUpdateRequest $request, $user): string
+    {
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
+        }
+
+        $file = $request->file('profile_photo_path');
+        $filename = $user->id . '.webp';
+        $path = 'profile-photos/' . $filename;
+
+        $manager = new ImageManager(new Driver());
+
+        $image = $manager->read($file->getPathname());
+        $image->scale(width: 500, height: 500);
+        $encodedImage = $image->toWebp(85);
+
+        Storage::disk('public')->put($path, (string) $encodedImage);
+        return $path;
     }
 
     /**
@@ -49,6 +81,10 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
+
+        if ($user->profile_photo_path) {
+            Storage::disk('public')->delete($user->profile_photo_path);
+        }
 
         $user->delete();
 

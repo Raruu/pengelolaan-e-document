@@ -1,6 +1,8 @@
+import { Avatar } from '@heroui/react';
 import { Link, router, usePage } from '@inertiajs/react';
 import { ChevronDown, LogOut, User } from 'lucide-react';
 import { useState, useRef, useEffect } from 'react';
+import { initialsName } from '@/lib/utils';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
 import type { SharedData } from '@/types';
@@ -32,12 +34,7 @@ export default function UserDropdown() {
 
     if (!user) return null;
 
-    const initials = user.name
-        .split(' ')
-        .map((n) => n[0])
-        .join('')
-        .toUpperCase()
-        .slice(0, 2);
+    const initials = initialsName(user.name);
 
     return (
         <div className="relative" ref={dropdownRef}>
@@ -45,9 +42,12 @@ export default function UserDropdown() {
                 onClick={() => setIsOpen(!isOpen)}
                 className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
             >
-                <div className="flex h-10 w-10 items-center justify-center rounded-full bg-brand-500 text-sm font-semibold text-white">
-                    {initials}
-                </div>
+                <Avatar
+                    src={auth.user.profile_photo_url}
+                    icon={initials}
+                    className="size-10 bg-primary text-sm font-semibold text-white"
+                    radius="full"
+                />             
                 <div className="hidden text-left lg:block">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
                         {user.name}
