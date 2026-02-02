@@ -12,8 +12,8 @@ class DocumentSeeder extends Seeder
     {
         // Ambil ID referensi
         $adminId = DB::table('users')->first()>value('id');
-        $catUndanganId = DB::table('categories')->where('categorie', 'Undangan')->value('id');
-        $catRahasiaId = DB::table('categories')->where('categorie', 'Telegram Rahasia')->value('id');
+        $catUndanganId = DB::table('categories')->where('category', 'Undangan')->value('id');
+        $catRahasiaId = DB::table('categories')->where('category', 'Telegram Rahasia')->value('id');
 
         DB::table('documents')->insert([
             [
@@ -22,7 +22,7 @@ class DocumentSeeder extends Seeder
                 'title' => 'Undangan Rapat Koordinasi Tahunan',
                 'description' => 'Undangan wajib hadir bagi seluruh kepala divisi',
                 'file_path' => '/uploads/2026/undangan_rapat.pdf',
-                'file_type' => 'DOCUMENT',
+                // 'file_type' => 'DOCUMENT',
                 'file_size_kb' => 1024,
                 'document_date' => Carbon::parse('2026-02-15'),
                 'created_at' => now(),
@@ -33,7 +33,7 @@ class DocumentSeeder extends Seeder
                 'title' => 'Laporan Intelijen Q1',
                 'description' => 'Dokumen klasifikasi rahasia',
                 'file_path' => '/uploads/2026/laporan_rahasia.jpg', 
-                'file_type' => 'PICTURE',
+                // 'file_type' => 'PICTURE',
                 'file_size_kb' => 5120,
                 'document_date' => Carbon::parse('2024-01-10'), 
                 'created_at' => now(),

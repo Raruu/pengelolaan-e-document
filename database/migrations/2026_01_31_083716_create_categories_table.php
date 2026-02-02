@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
-            $table->string('categorie'); // Undangan, Telegram Biasa, dll
+            $table->string('category'); // Undangan, Telegram Biasa, dll
             $table->string('direction'); // Masuk, Keluar
             
             // Composite unique key
-            $table->unique(['categorie', 'direction']);    
+            $table->unique(['category', 'direction']);    
             $table->timestamps(); 
         });
     }

@@ -255,7 +255,7 @@ const AppSidebar: React.FC = () => {
                     <div className="flex flex-col gap-4">
                         <div>
                             <h2
-                                className={`mb-4 flex text-xs leading-[20px] text-gray-400 uppercase ${
+                                className={`mb-4 flex text-xs leading-5 text-gray-400 uppercase ${
                                     !isExpanded && !isHovered
                                         ? 'lg:justify-center'
                                         : 'justify-start'

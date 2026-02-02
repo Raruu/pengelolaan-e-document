@@ -10,12 +10,12 @@ class CategorySeeder extends Seeder
     public function run()
     {
         $categories = [
-            ['categorie' => 'Undangan', 'direction' => 'Masuk'],
-            ['categorie' => 'Undangan', 'direction' => 'Keluar'],
-            ['categorie' => 'Telegram Biasa', 'direction' => 'Masuk'],
-            ['categorie' => 'Telegram Biasa', 'direction' => 'Keluar'],
-            ['categorie' => 'Telegram Rahasia', 'direction' => 'Masuk'],
-            ['categorie' => 'Telegram Rahasia', 'direction' => 'Keluar'],
+            ['category' => 'Undangan', 'direction' => 'Masuk'],
+            ['category' => 'Undangan', 'direction' => 'Keluar'],
+            ['category' => 'Telegram Biasa', 'direction' => 'Masuk'],
+            ['category' => 'Telegram Biasa', 'direction' => 'Keluar'],
+            ['category' => 'Telegram Rahasia', 'direction' => 'Masuk'],
+            ['category' => 'Telegram Rahasia', 'direction' => 'Keluar'],
         ];
 
         DB::table('categories')->insert($categories);

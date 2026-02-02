@@ -21,7 +21,7 @@ return new class extends Migration
 
             // Manajemen File
             $table->string('file_path');
-            $table->enum('file_type', ['DOCUMENT', 'PICTURE']);
+            // $table->enum('file_type', ['DOCUMENT', 'PICTURE']);
             $table->integer('file_size_kb')->nullable();
 
             // Waktu & Filter
