@@ -56,7 +56,7 @@ class DocumentController extends Controller
             ->limit(4)
             ->get();
 
-        return Inertia::render('dokumen-ku/index', [
+        return Inertia::render('my-documents/index', [
             'documents' => $documents,
             'categories' => $categories,
             'directions' => $directions,
