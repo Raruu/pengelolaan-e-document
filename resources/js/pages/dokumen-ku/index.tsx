@@ -22,19 +22,10 @@ import {
 import { Head } from '@inertiajs/react';
 
 import axios from 'axios';
-import {
-    Plus,
-    MoreVertical,
-    FileText,
-    FileSpreadsheet,
-    FileImage,
-    File as FileIcon,
-    Archive,
-} from 'lucide-react';
+import { Plus, MoreVertical, Star } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import Heading from '@/components/Heading';
 import AppLayout from '@/layouts/app';
-import { formatFileSize } from '@/lib/utils';
 import type { Category, Document } from '@/types/models';
 
 interface Props {
@@ -49,7 +40,6 @@ interface Props {
     };
     categories: Category[];
     directions: { direction: string }[];
-    recentFiles: Document[];
     filters: {
         category?: string;
         date_from?: string;
@@ -58,27 +48,15 @@ interface Props {
         sort_by: string;
         sort_order: string;
     };
+    starred: boolean;
 }
-
-const fileIcons: Record<string, React.ReactNode> = {
-    pdf: <FileText className="h-6 w-6 text-red-500" />,
-    doc: <FileText className="h-6 w-6 text-blue-500" />,
-    docx: <FileText className="h-6 w-6 text-blue-500" />,
-    xlsx: <FileSpreadsheet className="h-6 w-6 text-green-500" />,
-    xls: <FileSpreadsheet className="h-6 w-6 text-green-500" />,
-    jpg: <FileImage className="h-6 w-6 text-orange-500" />,
-    jpeg: <FileImage className="h-6 w-6 text-orange-500" />,
-    png: <FileImage className="h-6 w-6 text-orange-500" />,
-    zip: <Archive className="h-6 w-6 text-yellow-500" />,
-    default: <FileIcon className="h-6 w-6 text-gray-500" />,
-};
 
 export default function DokumenKu({
     documents,
     directions,
     categories,
-    recentFiles,
     filters,
+    starred
 }: Props) {
     const [selectedCategory, setSelectedCategory] = useState<string>(
         filters.category || '',
@@ -87,23 +65,27 @@ export default function DokumenKu({
     const [loading, setLoading] = useState<boolean>(false);
     const [documentsData, setDocumentsData] = useState(documents);
 
-    const fetchDocuments = useCallback(async (params = {}) => {
-        setLoading(true);
-        try {
-            const response = await axios.get('/api/documents', {
-                params: {
-                    ...filters,
-                    ...params,
-                    per_page: perPage,
-                },
-            });
-            setDocumentsData(response.data);
-        } catch (error) {
-            console.error('Error fetching documents:', error);
-        } finally {
-            setLoading(false);
-        }
-    }, [perPage, filters]);
+    const fetchDocuments = useCallback(
+        async (params = {}) => {
+            setLoading(true);
+            try {
+                const response = await axios.get('/api/documents', {
+                    params: {
+                        ...filters,
+                        ...params,
+                        per_page: perPage,
+                        starred: starred ? 1 : 0,
+                    },
+                });
+                setDocumentsData(response.data);
+            } catch (error) {
+                console.error('Error fetching documents:', error);
+            } finally {
+                setLoading(false);
+            }
+        },
+        [filters, perPage, starred],
+    );
 
     useEffect(() => {
         fetchDocuments();
@@ -140,15 +122,6 @@ export default function DokumenKu({
         });
     };
 
-    const getFileIcon = (doc: {
-        file_extension?: string;
-        file_path: string;
-    }) => {
-        const extension =
-            doc.file_extension || doc.file_path.split('.').pop() || '';
-        return fileIcons[extension.toLowerCase()] || fileIcons.default;
-    };
-
     return (
         <AppLayout>
             <Head title="Dokumenku" />
@@ -162,7 +135,7 @@ export default function DokumenKu({
                             color="primary"
                             startContent={<Plus className="h-4 w-4" />}
                         >
-                            Upload New
+                            Upload Dokumen
                         </Button>
                     }
                 />
@@ -208,52 +181,26 @@ export default function DokumenKu({
                         variant="bordered"
                         selectedKey={selectedCategory}
                         onSelectionChange={(key) => {
-                            const categoryValue = key?.toString() || '';
+                            const categoryValue =
+                                key == 'all' ? '' : key?.toString() || '';
                             setSelectedCategory(categoryValue);
-                            fetchDocuments({ category: categoryValue || undefined, page: 1 });
+                            fetchDocuments({
+                                category: categoryValue || undefined,
+                                page: 1,
+                            });
                         }}
                         isClearable
                         onClear={clearCategoryFilter}
                     >
-                        {categories.map((category) => (
-                            <AutocompleteItem key={category.category}>
-                                {category.category}
-                            </AutocompleteItem>
-                        ))}
+                        <AutocompleteItem key="all">Semua</AutocompleteItem>
+                        <>
+                            {categories.map((category) => (
+                                <AutocompleteItem key={category.category}>
+                                    {category.category}
+                                </AutocompleteItem>
+                            ))}
+                        </>
                     </Autocomplete>
-                </div>
-
-                {/* Recent Files */}
-                <div>
-                    <div className="mb-3 flex items-center justify-between">
-                        <h2 className="text-lg font-semibold">File Terbaru</h2>
-                    </div>
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
-                        {recentFiles.map((file) => (
-                            <Card key={file.id} className="border">
-                                <CardBody className="gap-2 p-4">
-                                    <div className="flex items-center justify-center rounded-lg bg-default-100 p-4">
-                                        {getFileIcon(file)}
-                                    </div>
-                                    <div className="mt-2">
-                                        <p className="truncate text-sm font-medium">
-                                            {file.title}
-                                        </p>
-                                        <div className="mt-1 flex items-center justify-between text-xs text-default-500">
-                                            <span>
-                                                {formatFileSize(
-                                                    file.file_size_kb,
-                                                )}
-                                            </span>
-                                            <span>
-                                                {formatDate(file.created_at)}
-                                            </span>
-                                        </div>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        ))}
-                    </div>
                 </div>
 
                 {/* Documents Table */}
@@ -265,75 +212,101 @@ export default function DokumenKu({
                             className="min-h-100"
                         >
                             <TableHeader>
-                                <TableColumn>NAME</TableColumn>
-                                <TableColumn>DATE MODIFIED</TableColumn>
-                                <TableColumn>TYPE</TableColumn>
-                                <TableColumn>SIZE</TableColumn>
-                                <TableColumn>ACTIONS</TableColumn>
+                                <TableColumn>NAMA DOKUMEN</TableColumn>
+                                <TableColumn>JUMLAH FILE</TableColumn>
+                                <TableColumn>TERAKHIR DIUBAH</TableColumn>
+                                <TableColumn>AKSI</TableColumn>
                             </TableHeader>
                             <TableBody isLoading={loading}>
-                                {documentsData.data.map((doc) => (
-                                    <TableRow key={doc.id}>
-                                        <TableCell>
-                                            <div className="flex items-center gap-3">
-                                                {getFileIcon(doc)}
-                                                <span className="font-medium">
-                                                    {doc.title}
-                                                </span>
-                                            </div>
-                                        </TableCell>
-                                        <TableCell>
-                                            {doc.updated_at
-                                                ? formatDate(doc.updated_at)
-                                                : formatDate(doc.created_at)}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Chip size="sm" variant="flat">
-                                                {(
-                                                    doc.file_extension ||
-                                                    doc.file_path
-                                                        .split('.')
-                                                        .pop() ||
-                                                    ''
-                                                ).toUpperCase()}
-                                            </Chip>
-                                        </TableCell>
-                                        <TableCell>
-                                            {formatFileSize(doc.file_size_kb)}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Dropdown>
-                                                <DropdownTrigger>
-                                                    <Button
-                                                        isIconOnly
+                                <>
+                                    {documentsData.data.map((doc) => {
+                                        return (
+                                            <TableRow key={doc.id}>
+                                                <TableCell>
+                                                    <div className="flex flex-col">
+                                                        <span className="flex flex-row items-center gap-2 font-medium">
+                                                            {doc.title}
+                                                            {doc.starred && (
+                                                                <Star className="size-3" />
+                                                            )}
+                                                        </span>
+                                                        {doc.description && (
+                                                            <span className="text-xs text-default-400">
+                                                                {
+                                                                    doc.description
+                                                                }
+                                                            </span>
+                                                        )}
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Chip
                                                         size="sm"
-                                                        variant="light"
+                                                        variant="flat"
+                                                        color="default"
                                                     >
-                                                        <MoreVertical className="h-4 w-4" />
-                                                    </Button>
-                                                </DropdownTrigger>
-                                                <DropdownMenu aria-label="Document actions">
-                                                    <DropdownItem key="download">
-                                                        Download
-                                                    </DropdownItem>
-                                                    <DropdownItem key="share">
-                                                        Share
-                                                    </DropdownItem>
-                                                    <DropdownItem key="rename">
-                                                        Rename
-                                                    </DropdownItem>
-                                                    <DropdownItem
-                                                        key="delete"
-                                                        className="text-danger"
-                                                        color="danger"
-                                                    >
-                                                        Delete
-                                                    </DropdownItem>
-                                                </DropdownMenu>
-                                            </Dropdown>
-                                        </TableCell>
-                                    </TableRow>
-                                ))}
+                                                        {doc.files.length} file
+                                                        {doc.files.length > 1
+                                                            ? 's'
+                                                            : ''}
+                                                    </Chip>
+                                                </TableCell>
+                                                <TableCell>
+                                                    {doc.updated_at
+                                                        ? formatDate(
+                                                              doc.updated_at,
+                                                          )
+                                                        : formatDate(
+                                                              doc.created_at,
+                                                          )}
+                                                </TableCell>
+                                                <TableCell>
+                                                    <Dropdown>
+                                                        <DropdownTrigger>
+                                                            <Button
+                                                                isIconOnly
+                                                                size="sm"
+                                                                variant="light"
+                                                            >
+                                                                <MoreVertical className="h-4 w-4" />
+                                                            </Button>
+                                                        </DropdownTrigger>
+                                                        <DropdownMenu aria-label="Document actions">
+                                                            <DropdownItem key="view">
+                                                                Lihat Detail
+                                                            </DropdownItem>
+                                                            <DropdownItem key="download">
+                                                                Download
+                                                            </DropdownItem>
+                                                            <DropdownItem key="edit">
+                                                                Edit
+                                                            </DropdownItem>
+                                                            <DropdownItem
+                                                                key="delete"
+                                                                className="text-danger"
+                                                                color="danger"
+                                                            >
+                                                                Hapus
+                                                            </DropdownItem>
+                                                        </DropdownMenu>
+                                                    </Dropdown>
+                                                </TableCell>
+                                            </TableRow>
+                                        );
+                                    })}
+                                </>
+                                <>
+                                    {documentsData.data.length === 0 && (
+                                        <TableRow>
+                                            <TableCell
+                                                colSpan={4}
+                                                className="h-24 text-center"
+                                            >
+                                                Tidak ada dokumen
+                                            </TableCell>
+                                        </TableRow>
+                                    )}
+                                </>
                             </TableBody>
                         </Table>
                     </CardBody>
@@ -348,7 +321,9 @@ export default function DokumenKu({
                             variant="bordered"
                             className="w-32"
                             selectedKeys={[perPage.toString()]}
-                            onChange={(e) => handlePerPageChange(e.target.value)}
+                            onChange={(e) =>
+                                handlePerPageChange(e.target.value)
+                            }
                         >
                             <SelectItem key="10">10</SelectItem>
                             <SelectItem key="25">25</SelectItem>
@@ -356,8 +331,8 @@ export default function DokumenKu({
                             <SelectItem key="100">100</SelectItem>
                         </Select>
                         <p className="text-sm text-default-500">
-                            Menampilkan {documentsData.from}-{documentsData.to} dari
-                            total {documentsData.total}
+                            Menampilkan {documentsData.from}-{documentsData.to}{' '}
+                            dari total {documentsData.total}
                         </p>
                     </div>
                     <Pagination

@@ -2,6 +2,7 @@ import { LayoutGrid, LucideFiles, LucideStar, LucideTrash2, UserCircle } from 'l
 import MaterialCategoryRounded from '@/components/custom-icons/MaterialCategoryRounded';
 import { dashboard } from '@/routes';
 import { index as documentsIndex } from '@/routes/documents';
+import { index as documentsIndexStarred } from '@/routes/documents_starred';
 import { edit } from '@/routes/profile';
 import { edit as editPassword } from '@/routes/user-password';
 import type { NavItem } from '@/types/navigation';
@@ -20,7 +21,7 @@ export const defaultItems: NavItem[] = [
     {
         icon: <LucideStar />,
         name: 'Berbintang',
-        href: dashboard.url(),
+        href: documentsIndexStarred.url(),
     },
     {
         icon: <LucideTrash2 />,

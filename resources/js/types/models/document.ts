@@ -1,10 +1,10 @@
+import type { DocumentFile } from './document-file';
+
 export interface Document {
     id: number;
     title: string;
     description: string | null;
-    file_path: string;
-    file_size_kb: number;
-    file_extension?: string;
+    starred: boolean;
     document_date: string;
     created_at: string;
     updated_at: string | null;
@@ -15,4 +15,5 @@ export interface Document {
         categorie: string;
         direction: string;
     };
+    files: DocumentFile[];
 }

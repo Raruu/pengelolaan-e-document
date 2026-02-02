@@ -11,9 +11,9 @@ use Inertia\Response;
 
 class DocumentController extends Controller
 {
-    public function index(Request $request): Response
+    public function index(Request $request, bool $starred = false): Response
     {
-        $query = Document::with(['category', 'uploader'])
+        $query = Document::with(['category', 'uploader', 'files'])
             ->where('uploaded_by', $request->user()->id);
 
         // Filter by category
@@ -50,7 +50,7 @@ class DocumentController extends Controller
         $directions = Category::select('direction')->distinct()->get();
 
         // Get recent files (last 4 uploaded)
-        $recentFiles = Document::with(['category'])
+        $recentFiles = Document::with(['category', 'files'])
             ->where('uploaded_by', $request->user()->id)
             ->orderBy('created_at', 'desc')
             ->limit(4)
@@ -69,7 +69,13 @@ class DocumentController extends Controller
                 'sort_by' => $sortBy,
                 'sort_order' => $sortOrder,
             ],
+            'starred' => $starred
         ]);
+    }
+
+    public function indexStarred(Request $request): Response
+    {
+        return $this->index($request, true);
     }
 
     public function store(Request $request)
@@ -78,22 +84,27 @@ class DocumentController extends Controller
             'category_id' => 'required|exists:categories,id',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'file' => 'required|file|max:10240', // 10MB max            
+            'files' => 'required|array',
+            'files.*' => 'file|max:10240', // 10MB max per file
             'document_date' => 'required|date',
         ]);
-
-        $file = $request->file('file');
-        $path = $file->store('documents', 'public');
 
         $document = Document::create([
             'category_id' => $validated['category_id'],
             'uploaded_by' => $request->user()->id,
             'title' => $validated['title'],
             'description' => $validated['description'],
-            'file_path' => $path,
-            'file_size_kb' => round($file->getSize() / 1024),
             'document_date' => $validated['document_date'],
         ]);
+
+        // Store each file
+        foreach ($request->file('files') as $file) {
+            $path = $file->store('documents', 'public');
+            $document->files()->create([
+                'file_path' => $path,
+                'file_size_kb' => round($file->getSize() / 1024),
+            ]);
+        }
 
         return redirect()->back()->with('success', 'Document uploaded successfully.');
     }
@@ -105,11 +116,15 @@ class DocumentController extends Controller
             abort(403);
         }
 
-        // Delete file from storage
-        Storage::disk('public')->delete($document->file_path);
+        if ($document->trashed()) {
+            foreach ($document->files as $file) {
+                Storage::disk('public')->delete($file->file_path);
+            }
+            $document->forceDelete();
+            return redirect()->back()->with('success', 'Document permanently deleted.');
+        }
 
         $document->delete();
-
-        return redirect()->back()->with('success', 'Document deleted successfully.');
+        return redirect()->back()->with('success', 'Document moved to trash.');
     }
 }

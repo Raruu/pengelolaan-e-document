@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\Document;
-use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 
@@ -22,9 +21,10 @@ class DocumentApiController extends Controller
             'search' => 'nullable|string|max:255',
             'sort_by' => 'nullable|string|in:created_at,updated_at,title,document_date',
             'sort_order' => 'nullable|string|in:asc,desc',
+            'starred' => 'nullable|boolean',
         ]);
 
-        $query = Document::with(['category', 'uploader'])
+        $query = Document::with(['category', 'uploader', 'files'])
             ->where('uploaded_by', $request->user()->id);
 
         // Filter by category
@@ -48,6 +48,11 @@ class DocumentApiController extends Controller
 
         if (!empty($validated['date_to'])) {
             $query->whereDate('document_date', '<=', $validated['date_to']);
+        }
+
+        // Starred
+        if (!empty($validated['starred'])) {
+            $query->where('starred', true);
         }
 
         // Search

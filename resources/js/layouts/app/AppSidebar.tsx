@@ -17,6 +17,7 @@ const AppSidebar: React.FC = () => {
         setOpenSubmenu,
         navItems,
         setNavItems,
+        toggleMobileSidebar,
     } = useSidebar();
     const page = usePage();
     const currentPath = page.url;
@@ -25,6 +26,12 @@ const AppSidebar: React.FC = () => {
         {},
     );
     const subMenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
+    const closeMobileSidebar = () => {
+        if (isMobileOpen) {
+            toggleMobileSidebar();
+        }
+    };
 
     const isActive = useCallback(
         (path: string) => currentPath === path,
@@ -85,7 +92,7 @@ const AppSidebar: React.FC = () => {
         });
     };
 
-    const renderMenuItems = (items: NavItem[], menuType: 'main' | 'others') => (
+    const renderMenuItems = (items: NavItem[], menuType: 'main') => (
         <ul className="flex flex-col gap-4">
             {items.map((nav, index) => (
                 <li key={nav.name}>
@@ -139,6 +146,7 @@ const AppSidebar: React.FC = () => {
                                         : 'menu-item-inactive'
                                 }`}
                                 preserveState
+                                onClick={closeMobileSidebar}
                             >
                                 <span
                                     className={`menu-item-icon-size ${
@@ -185,6 +193,7 @@ const AppSidebar: React.FC = () => {
                                                         : 'menu-dropdown-item-inactive'
                                                 }`}
                                                 preserveState
+                                                onClick={closeMobileSidebar}
                                             >
                                                 {subItem.name}
                                                 <span className="ml-auto flex items-center gap-1">

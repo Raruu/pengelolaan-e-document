@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('categories', function (Blueprint $table) {
             $table->id();
             $table->string('category'); // Undangan, Telegram Biasa, dll
-            $table->string('direction'); // Masuk, Keluar
+            $table->enum('direction', ['Masuk', 'Keluar']); // Masuk, Keluar
             
             // Composite unique key
             $table->unique(['category', 'direction']);    
