@@ -56,7 +56,7 @@ export default function DokumenKu({
     directions,
     categories,
     filters,
-    starred
+    starred,
 }: Props) {
     const [selectedCategory, setSelectedCategory] = useState<string>(
         filters.category || '',
@@ -101,7 +101,9 @@ export default function DokumenKu({
     };
 
     const handlePerPageChange = (value: string) => {
-        setPerPage(Number(value));
+        const perPage = Number(value);
+        if (perPage < 10) return;
+        setPerPage(perPage);
     };
 
     const formatDate = (dateString: string): string => {
@@ -246,9 +248,6 @@ export default function DokumenKu({
                                                         color="default"
                                                     >
                                                         {doc.files.length} file
-                                                        {doc.files.length > 1
-                                                            ? 's'
-                                                            : ''}
                                                     </Chip>
                                                 </TableCell>
                                                 <TableCell>

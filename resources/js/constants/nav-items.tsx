@@ -1,6 +1,13 @@
-import { LayoutGrid, LucideFiles, LucideStar, LucideTrash2, UserCircle } from 'lucide-react';
+import {
+    LayoutGrid,
+    LucideFiles,
+    LucideStar,
+    LucideTrash2,
+    UserCircle,
+} from 'lucide-react';
 import MaterialCategoryRounded from '@/components/custom-icons/MaterialCategoryRounded';
 import { dashboard } from '@/routes';
+import { index as categoriesIndex } from '@/routes/categories';
 import { index as documentsIndex } from '@/routes/documents';
 import { index as documentsIndexStarred } from '@/routes/documents_starred';
 import { edit } from '@/routes/profile';
@@ -31,7 +38,7 @@ export const defaultItems: NavItem[] = [
     {
         icon: <MaterialCategoryRounded />,
         name: 'Manajemen Kategori',
-        href: dashboard.url(),
+        href: categoriesIndex.url(),
     },
 ];
 

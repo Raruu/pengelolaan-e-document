@@ -12,11 +12,12 @@ return new class extends Migration
             $table->id();
             $table->string('category'); // Undangan, Telegram Biasa, dll
             $table->enum('direction', ['Masuk', 'Keluar']); // Masuk, Keluar
-            $table->text('description')->nullable();
+            $table->string('icon_path')->nullable();
             
             // Composite unique key
             $table->unique(['category', 'direction']);    
-            $table->timestamps(); 
+            $table->timestamp('created_at')->useCurrent();
+            $table->timestamp('updated_at')->nullable()->useCurrentOnUpdate();
         });
     }
 

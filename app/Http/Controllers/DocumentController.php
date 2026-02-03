@@ -30,6 +30,11 @@ class DocumentController extends Controller
             $query->whereDate('document_date', '<=', $request->date_to);
         }
 
+        // Starred
+        if (!empty($validated['starred'])) {
+            $query->where('starred', true);
+        }
+
         // Search
         if ($request->has('search')) {
             $query->where(function ($q) use ($request) {
@@ -43,7 +48,7 @@ class DocumentController extends Controller
         $sortOrder = $request->get('sort_order', 'desc');
         $query->orderBy($sortBy, $sortOrder);
 
-        $documents = $query->paginate(24);
+        $documents = $query->paginate(10);
 
         // Get categories for filter
         $categories = Category::select('category')->distinct()->get();

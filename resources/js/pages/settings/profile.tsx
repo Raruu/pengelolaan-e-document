@@ -115,7 +115,7 @@ export default function Profile({
                                             <div className="flex flex-col gap-2">
                                                 <label
                                                     htmlFor="photo"
-                                                    className="group relative z-0 box-border inline-flex h-10 w-fit min-w-20 transform-gpu cursor-pointer appearance-none items-center justify-center gap-2 overflow-hidden rounded-medium border bg-background px-4 text-small font-normal whitespace-nowrap text-foreground subpixel-antialiased outline-transparent transition-transform-colors-opacity outline-solid select-none tap-highlight-transparent hover:bg-primary hover:text-white data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-offset-2 data-[focus-visible=true]:outline-focus data-[hover=true]:opacity-hover data-[pressed=true]:scale-[0.97] motion-reduce:transition-none [&>svg]:max-w-[theme(spacing.8)]"
+                                                    className="group relative z-0 box-border inline-flex h-10 w-fit min-w-20 transform-gpu cursor-pointer appearance-none items-center justify-center gap-2 overflow-hidden rounded-medium border bg-background px-4 text-small font-normal whitespace-nowrap text-foreground subpixel-antialiased outline-transparent transition-transform-colors-opacity outline-solid select-none tap-highlight-transparent hover:bg-primary hover:text-white data-[focus-visible=true]:z-10 data-[focus-visible=true]:outline-2 data-[focus-visible=true]:outline-offset-2 data-[focus-visible=true]:outline-focus data-[hover=true]:opacity-hover data-[pressed=true]:scale-[0.97] motion-reduce:transition-none [&>svg]:max-w-8"
                                                 >
                                                     <Camera className="size-4" />
                                                     Pilih Foto
@@ -129,8 +129,7 @@ export default function Profile({
                                                     className="hidden"
                                                 />
                                                 <p className="text-muted-foreground text-xs">
-                                                    JPG, PNG, atau GIF (Maks.
-                                                    2MB)
+                                                    JPG, PNG, atau GIF (Maks. 2MB setelah dicrop)
                                                 </p>
                                                 {errors.profile_photo_path && (
                                                     <p className="text-xs text-danger">
