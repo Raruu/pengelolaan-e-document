@@ -1,6 +1,11 @@
 import { useEffect, useRef } from 'react';
+import { cn } from '@/lib/utils';
 
-export default function WaveBackground() {
+export default function WaveBackground({
+    variant = 'full-screen',
+}: {
+    variant?: 'full-screen' | 'component';
+}) {
     const canvasRef = useRef<HTMLCanvasElement>(null);
 
     useEffect(() => {
@@ -52,8 +57,10 @@ export default function WaveBackground() {
                 // Start path
                 ctx.moveTo(0, canvas.height);
 
+                const incrementBy = variant === 'full-screen' ? 1 : 2;
+
                 // Draw wave from center outward
-                for (let x = 0; x <= canvas.width; x++) {
+                for (let x = 0; x <= canvas.width; x += incrementBy) {
                     // Calculate distance from center
                     const centerX = canvas.width / 2;
                     const distanceFromCenter = Math.abs(x - centerX);
@@ -94,11 +101,21 @@ export default function WaveBackground() {
             window.removeEventListener('resize', resizeCanvas);
             cancelAnimationFrame(animationFrameId);
         };
-    }, []);
+    }, [variant]);
 
     return (
-        <div className="absolute h-full w-full">
-            <div className="relative h-screen w-full overflow-hidden bg-[#EDF4FC]">
+        <div
+            className={cn(
+                'h-full w-full',
+                variant == 'full-screen' ? 'absolute' : '',
+            )}
+        >
+            <div
+                className={cn(
+                    'relative w-full overflow-hidden bg-[#EDF4FC]',
+                    variant == 'full-screen' ? 'h-screen' : 'h-full',
+                )}
+            >
                 <canvas
                     ref={canvasRef}
                     className="absolute inset-0 h-full w-full"
