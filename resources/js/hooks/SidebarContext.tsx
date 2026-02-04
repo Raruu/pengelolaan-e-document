@@ -11,13 +11,13 @@ type SidebarContextType = {
     isExpanded: boolean;
     isMobileOpen: boolean;
     isHovered: boolean;
-    activeItem: string | null;
+    // activeItem: string | null;
     openSubmenu: OpenSubmenu;
     navItems: NavItem[];
     toggleSidebar: () => void;
     toggleMobileSidebar: () => void;
     setIsHovered: (isHovered: boolean) => void;
-    setActiveItem: (item: string | null) => void;
+    // setActiveItem: (item: string | null) => void;
     setOpenSubmenu: (
         submenu: OpenSubmenu | ((prev: OpenSubmenu) => OpenSubmenu),
     ) => void;
@@ -41,7 +41,7 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
     const [isMobileOpen, setIsMobileOpen] = useState(false);
     const [isMobile, setIsMobile] = useState(false);
     const [isHovered, setIsHovered] = useState(false);
-    const [activeItem, setActiveItem] = useState<string | null>(null);
+    // const [activeItem, setActiveItem] = useState<string | null>(null);
     const [openSubmenu, setOpenSubmenu] = useState<OpenSubmenu>(null);
     const [navItems, setNavItems] = useState<NavItem[]>(defaultItems);
 
@@ -76,12 +76,12 @@ export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
                 isExpanded: isMobile ? false : isExpanded,
                 isMobileOpen,
                 isHovered,
-                activeItem,
+                // activeItem,
                 openSubmenu,
                 toggleSidebar,
                 toggleMobileSidebar,
                 setIsHovered,
-                setActiveItem,
+                // setActiveItem,
                 setOpenSubmenu,
                 navItems,
                 setNavItems,

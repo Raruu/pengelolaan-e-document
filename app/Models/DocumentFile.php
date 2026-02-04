@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,7 +14,7 @@ class DocumentFile extends Model
     protected $fillable = [
         'document_id',
         'file_path',
-        'file_size_kb',
+        'file_size',
     ];
 
     protected $casts = [
@@ -23,6 +24,9 @@ class DocumentFile extends Model
 
     protected $appends = [
         'file_extension',
+        'file_name',
+        'file_url',
+        'file_size_kb',
     ];
 
     public function document(): BelongsTo
@@ -30,13 +34,23 @@ class DocumentFile extends Model
         return $this->belongsTo(Document::class);
     }
 
-    public function getFileSizeMbAttribute(): float
+    protected function fileSizeKb(): Attribute
     {
-        return round($this->file_size_kb / 1024, 2);
+        return Attribute::make(fn() => round($this->attributes['file_size'] * 1024, 2));
     }
 
-    public function getFileExtensionAttribute(): string
+    protected function fileExtension(): Attribute
     {
-        return pathinfo($this->file_path, PATHINFO_EXTENSION);
+        return Attribute::make(fn() => pathinfo($this->file_path, PATHINFO_EXTENSION));
+    }
+
+    protected function fileName(): Attribute
+    {
+        return Attribute::make(fn() => pathinfo($this->file_path, PATHINFO_FILENAME));
+    }
+
+    protected function fileUrl(): Attribute
+    {
+        return Attribute::make(fn() => asset('storage/' . $this->file_path));
     }
 }

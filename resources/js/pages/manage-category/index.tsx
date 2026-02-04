@@ -304,7 +304,7 @@ export default function ManageCategory({ categories, filters }: Props) {
                                             <TableRow key={category.id}>
                                                 <TableCell>
                                                     <div className="flex items-center gap-3">
-                                                        <div className="flex size-8 items-center justify-center rounded-md bg-primary-100">
+                                                        <div className="flex size-8 items-center justify-center overflow-hidden rounded-md bg-primary-100">
                                                             {category.icon_url ? (
                                                                 <Avatar
                                                                     className="size-8 rounded-md"

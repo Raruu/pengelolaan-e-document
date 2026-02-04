@@ -1,12 +1,12 @@
 import { HeroUIProvider } from '@heroui/react';
 import { createInertiaApp, router } from '@inertiajs/react';
+import axios from 'axios';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../css/app.css';
 import { SidebarProvider } from './hooks/SidebarContext';
 import { initializeTheme } from './hooks/use-appearance';
-import axios from 'axios';
 
 // Setup axios defaults
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

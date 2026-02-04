@@ -34,7 +34,7 @@ return new class extends Migration
             $table->foreignId('document_id')->constrained('documents')->onDelete('cascade');
             
             $table->string('file_path');
-            $table->integer('file_size_kb')->nullable();
+            $table->integer('file_size')->nullable();
             
             $table->timestamps();
         });

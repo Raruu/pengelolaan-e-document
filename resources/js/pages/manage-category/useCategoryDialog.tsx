@@ -189,7 +189,7 @@ export function useCategoryDialog(): UseCategoryDialogReturn {
                                         className="hidden"
                                     />
                                     <p className="text-muted-foreground text-xs">
-                                        JPG, PNG, atau GIF (Maks. 2MB setelah dicrop)
+                                        (Maks. 2MB setelah dicrop)
                                     </p>
                                     {errors.icon && (
                                         <p className="text-xs text-danger">

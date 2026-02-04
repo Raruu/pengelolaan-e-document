@@ -10,11 +10,16 @@ export function toUrl(url: NonNullable<InertiaLinkProps['href']>): string {
     return typeof url === 'string' ? url : url.url;
 }
 
-export const formatFileSize = (kb: number): string => {
-    if (kb >= 1024) {
-        return `${(kb / 1024).toFixed(1)} MB`;
+export const formatFileSize = (b: number): string => {
+    if (b <= 0) return '0 KB';
+
+    if (b >= 1024 * 1024) {
+        return `${(b / (1024 * 1024)).toFixed(1)} MB`;
     }
-    return `${kb} KB`;
+    if (b >= 1024) {
+        return `${(b / 1024).toFixed(1)} KB`;
+    }
+    return `${Math.round(b)} B`;
 };
 
 export const initialsName = (name: string): string =>
@@ -24,3 +29,21 @@ export const initialsName = (name: string): string =>
         .join('')
         .toUpperCase()
         .slice(0, 2);
+
+export const formatDate = (dateString: string): string => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    if (diffDays === 0) return 'Hari ini';
+    if (diffDays === 1) return 'Kemarin';
+    if (diffDays < 7) return `${diffDays} hari lalu`;
+    if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
+
+    return date.toLocaleDateString('id-ID', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+    });
+};

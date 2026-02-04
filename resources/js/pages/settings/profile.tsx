@@ -129,7 +129,7 @@ export default function Profile({
                                                     className="hidden"
                                                 />
                                                 <p className="text-muted-foreground text-xs">
-                                                    JPG, PNG, atau GIF (Maks. 2MB setelah dicrop)
+                                                    (Maks. 2MB setelah dicrop)
                                                 </p>
                                                 {errors.profile_photo_path && (
                                                     <p className="text-xs text-danger">
@@ -209,7 +209,9 @@ export default function Profile({
                                             type="submit"
                                             color="primary"
                                             radius="md"
-                                            isDisabled={processing || recentlySuccessful}
+                                            isDisabled={
+                                                processing || recentlySuccessful
+                                            }
                                             isLoading={processing}
                                             data-test="update-profile-button"
                                             startContent={

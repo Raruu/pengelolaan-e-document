@@ -31,7 +31,7 @@ class DocumentController extends Controller
         }
 
         // Starred
-        if (!empty($validated['starred'])) {
+        if ($starred) {
             $query->where('starred', true);
         }
 
@@ -50,22 +50,20 @@ class DocumentController extends Controller
 
         $documents = $query->paginate(10);
 
-        // Get categories for filter
-        $categories = Category::select('category')->distinct()->get();
+        $categories = Category::select('category', 'icon_path')
+            ->distinct('category')
+            ->get()
+            ->map(function ($cat) {
+                $cat->icon_url;
+                return $cat;
+            });
+
         $directions = Category::select('direction')->distinct()->get();
 
-        // Get recent files (last 4 uploaded)
-        $recentFiles = Document::with(['category', 'files'])
-            ->where('uploaded_by', $request->user()->id)
-            ->orderBy('created_at', 'desc')
-            ->limit(4)
-            ->get();
-
-        return Inertia::render('my-documents/index', [
+        return Inertia::render('documents/index', [
             'documents' => $documents,
             'categories' => $categories,
             'directions' => $directions,
-            'recentFiles' => $recentFiles,
             'filters' => [
                 'category' => $request->category,
                 'date_from' => $request->date_from,
@@ -83,53 +81,59 @@ class DocumentController extends Controller
         return $this->index($request, true);
     }
 
-    public function store(Request $request)
+    public function indexCreate(Request $request): Response
     {
-        $validated = $request->validate([
-            'category_id' => 'required|exists:categories,id',
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'files' => 'required|array',
-            'files.*' => 'file|max:10240', // 10MB max per file
-            'document_date' => 'required|date',
+        $categories = Category::select('category', 'icon_path')
+            ->distinct('category')
+            ->get()
+            ->map(function ($cat) {
+                $cat->icon_url;
+                return $cat;
+            });
+
+        $directions = Category::select('direction')->distinct()->get();
+
+        return Inertia::render('documents/alter-documents', [
+            'categories' => $categories,
+            'directions' => $directions,
+            'mode' => 'create',
         ]);
-
-        $document = Document::create([
-            'category_id' => $validated['category_id'],
-            'uploaded_by' => $request->user()->id,
-            'title' => $validated['title'],
-            'description' => $validated['description'],
-            'document_date' => $validated['document_date'],
-        ]);
-
-        // Store each file
-        foreach ($request->file('files') as $file) {
-            $path = $file->store('documents', 'public');
-            $document->files()->create([
-                'file_path' => $path,
-                'file_size_kb' => round($file->getSize() / 1024),
-            ]);
-        }
-
-        return redirect()->back()->with('success', 'Document uploaded successfully.');
     }
 
-    public function destroy(Request $request, Document $document)
+    public function indexEdit(Request $request, Document $document): Response
     {
-        // Check authorization
+        // Ensure user can only edit their own documents
         if ($document->uploaded_by !== $request->user()->id) {
-            abort(403);
+            abort(403, 'Unauthorized');
         }
 
-        if ($document->trashed()) {
-            foreach ($document->files as $file) {
-                Storage::disk('public')->delete($file->file_path);
-            }
-            $document->forceDelete();
-            return redirect()->back()->with('success', 'Document permanently deleted.');
-        }
+        $categories = Category::select('category', 'icon_path')
+            ->distinct('category')
+            ->get()
+            ->map(function ($cat) {
+                $cat->icon_url;
+                return $cat;
+            });
 
-        $document->delete();
-        return redirect()->back()->with('success', 'Document moved to trash.');
+        $directions = Category::select('direction')->distinct()->get();
+
+        $document->load('files', 'category');
+
+        $files = $document->files->map(function ($file) {
+            return [
+                'id' => $file->id,
+                'filename' => $file->file_name . '.' . $file->file_extension,
+                'size' => $file->file_size_kb,
+                'fileurl' => $file->file_url,
+            ];
+        });
+
+        return Inertia::render('documents/alter-documents', [
+            'categories' => $categories,
+            'directions' => $directions,
+            'document' => $document,
+            'files' => $files,
+            'mode' => 'edit',
+        ]);
     }
 }

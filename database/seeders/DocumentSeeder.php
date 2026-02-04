@@ -41,14 +41,14 @@ class DocumentSeeder extends Seeder
             [
                 'document_id' => $docId1,
                 'file_path' => '/uploads/2026/undangan_rapat.pdf',
-                'file_size_kb' => 1024,
+                'file_size' => 1024,
                 'created_at' => now(),
                 'updated_at' => now(),
             ],
             [
                 'document_id' => $docId2,
                 'file_path' => '/uploads/2026/laporan_rahasia.jpg',
-                'file_size_kb' => 5120,
+                'file_size' => 5120,
                 'created_at' => now(),
                 'updated_at' => now(),
             ]

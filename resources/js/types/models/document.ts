@@ -1,3 +1,4 @@
+import type { Category } from './category';
 import type { DocumentFile } from './document-file';
 
 export interface Document {
@@ -10,10 +11,6 @@ export interface Document {
     updated_at: string | null;
     uploaded_by: number;
     category_id: number;
-    category: {
-        id: number;
-        categorie: string;
-        direction: string;
-    };
+    category: Category;
     files: DocumentFile[];
 }

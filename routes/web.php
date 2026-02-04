@@ -17,11 +17,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('dashboard');
     })->name('dashboard');
 
-    Route::get('my-documents', [DocumentController::class, 'index'])->name('documents.index');
-    Route::post('my-documents', [DocumentController::class, 'store'])->name('documents.store');
-    Route::delete('my-documents/{document}', [DocumentController::class, 'destroy'])->name('documents.destroy');
-
-    Route::get('my-starred-documents', [DocumentController::class, 'indexStarred'])->name('documents_starred.index');
+    Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
+    Route::get('documents-starred', [DocumentController::class, 'indexStarred'])->name('documents_starred.index');
+    Route::get('document/create', [DocumentController::class, 'indexCreate'])->name('document.create.index');
+    Route::get('document/{document}/edit', [DocumentController::class, 'indexEdit'])->name('document.edit.index');
 
     Route::get('manage-category', [CategoryController::class, 'index'])->name('categories.index');
 });
