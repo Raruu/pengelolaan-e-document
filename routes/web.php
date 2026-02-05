@@ -19,6 +19,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::get('documents', [DocumentController::class, 'index'])->name('documents.index');
     Route::get('documents-starred', [DocumentController::class, 'indexStarred'])->name('documents_starred.index');
+    Route::get('document/preview/{document}', [DocumentController::class, 'indexPreview'])->name('document.preview.index');
     Route::get('document/create', [DocumentController::class, 'indexCreate'])->name('document.create.index');
     Route::get('document/{document}/edit', [DocumentController::class, 'indexEdit'])->name('document.edit.index');
 

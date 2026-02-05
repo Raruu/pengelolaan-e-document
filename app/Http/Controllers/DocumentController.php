@@ -81,6 +81,30 @@ class DocumentController extends Controller
         return $this->index($request, true);
     }
 
+    public function indexPreview(Request $request, Document $document): Response
+    {
+        if ($document->uploaded_by !== $request->user()->id) {
+            abort(403, 'Unauthorized');
+        }
+
+        $document->load('files', 'category');
+
+        $files = $document->files->map(function ($file) {
+            return [
+                'id' => $file->id,
+                'filename' => $file->file_name . '.' . $file->file_extension,
+                'size' => $file->file_size_kb,
+                'mime_type' => $file->file_type ?? 'application/octet-stream',
+                'fileurl' => $file->file_url,
+            ];
+        });
+
+        return Inertia::render('documents/preview-documents/index', [
+            'document' => $document,
+            'files' => $files,
+        ]);
+    }
+
     public function indexCreate(Request $request): Response
     {
         $categories = Category::select('category', 'icon_path')

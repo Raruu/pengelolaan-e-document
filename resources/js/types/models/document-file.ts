@@ -1,9 +1,16 @@
 export interface DocumentFile {
     id: number;
-    document_id: number;
-    file_path: string;
-    file_size_kb: number;
-    file_extension?: string;
-    created_at: string;
-    updated_at: string;
+    filename: string;
+    size: number;
+    mime_type: string;
+    path?: string;
+    fileurl?: string;
+}
+
+export interface UploadingFile {
+    id: string;
+    file: File;
+    progress: number;
+    status: 'uploading' | 'uploaded' | 'error' | 'on server';
+    uploadedData?: DocumentFile;
 }

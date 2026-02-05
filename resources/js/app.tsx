@@ -1,4 +1,4 @@
-import { HeroUIProvider } from '@heroui/react';
+import { HeroUIProvider, ToastProvider } from '@heroui/react';
 import { createInertiaApp, router } from '@inertiajs/react';
 import axios from 'axios';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
@@ -28,6 +28,7 @@ createInertiaApp({
         root.render(
             <StrictMode>
                 <HeroUIProvider navigate={router.visit}>
+                    <ToastProvider />
                     <SidebarProvider>
                         <App {...props} />
                     </SidebarProvider>

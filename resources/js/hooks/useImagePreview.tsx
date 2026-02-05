@@ -1,9 +1,21 @@
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from '@heroui/react';
+import {
+    Button,
+    Modal,
+    ModalBody,
+    ModalContent,
+    ModalFooter,
+    ModalHeader,
+} from '@heroui/react';
 import { Download, X } from 'lucide-react';
 import { useState } from 'react';
 
 interface UseImagePreviewReturn {
-    preview: (url: string, filename: string, title?: string) => void;
+    preview: (
+        url: string,
+        filename: string,
+        title?: string,
+        subtitle?: string | null,
+    ) => void;
     DialogComponent: React.ReactNode;
 }
 
@@ -12,11 +24,18 @@ export function useImagePreview(): UseImagePreviewReturn {
     const [imageUrl, setImageUrl] = useState<string>('');
     const [filename, setFilename] = useState<string>('image.jpg');
     const [title, setTitle] = useState<string>('Preview');
+    const [subTitle, setSubtitle] = useState<string | null>('');
 
-    const preview = (url: string, filename: string = 'image.jpg', title: string = 'Preview') => {
+    const preview = (
+        url: string,
+        filename: string = 'image.jpg',
+        title: string = 'Preview',
+        subtitle: string | null = '',
+    ) => {
         setImageUrl(url);
         setFilename(filename);
         setTitle(title);
+        setSubtitle(subtitle);
         setIsOpen(true);
     };
 
@@ -32,14 +51,15 @@ export function useImagePreview(): UseImagePreviewReturn {
     };
 
     const DialogComponent = (
-        <Modal
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-            size="2xl"
-        >
+        <Modal isOpen={isOpen} onClose={() => setIsOpen(false)} size="2xl">
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
-                    {title}
+                    <h2 className="text-lg font-semibold">{title}</h2>
+                    {subTitle && (
+                        <p className="text-muted-foreground text-sm">
+                            {subTitle}
+                        </p>
+                    )}
                 </ModalHeader>
                 <ModalBody>
                     <div className="flex items-center justify-center">
@@ -52,7 +72,7 @@ export function useImagePreview(): UseImagePreviewReturn {
                 </ModalBody>
                 <ModalFooter>
                     <Button
-                        color="primary"                       
+                        color="primary"
                         onPress={handleDownload}
                         startContent={<Download className="size-4" />}
                     >
@@ -62,7 +82,8 @@ export function useImagePreview(): UseImagePreviewReturn {
                         color="danger"
                         variant="light"
                         onPress={() => setIsOpen(false)}
-                        startContent={<X className="size-4" />}                    >
+                        startContent={<X className="size-4" />}
+                    >
                         Tutup
                     </Button>
                 </ModalFooter>

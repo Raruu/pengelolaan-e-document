@@ -11,6 +11,7 @@ import { index as editRoute } from '@/routes/document/edit';
 import type { Category, Document } from '@/types/models';
 import DocumentsFilters from './components/DocumentsFilters';
 import DocumentsTable from './components/DocumentsTable';
+import { index as previewRoute } from '@/routes/document/preview';
 
 interface Props {
     documents: {
@@ -155,6 +156,9 @@ export default function DokumenKu({
                     documents={documentsData.data}
                     loading={loading}
                     onEdit={(id) => router.visit(editRoute.url(id))}
+                    onView={(id) => router.visit(previewRoute.url(id))}
+                    onDownload={() => {}}
+                    onDelete={() => {}}
                 />
 
                 {/* Pagination */}

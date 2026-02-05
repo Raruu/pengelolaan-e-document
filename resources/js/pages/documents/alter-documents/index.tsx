@@ -9,7 +9,12 @@ import { useSidebar } from '@/hooks/SidebarContext';
 import AppLayout from '@/layouts/app';
 import { index as createRoute } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
-import type { Category, Document } from '@/types/models';
+import type {
+    Category,
+    Document,
+    DocumentFile,
+    UploadingFile,
+} from '@/types/models';
 import DocumentDetailsForm from './components/DocumentDetailsForm';
 import FileUploadZone from './components/FileUploadZone';
 import UploadedFilesList from './components/UploadedFilesList';
@@ -18,25 +23,8 @@ interface Props {
     categories: Category[];
     directions: { direction: string }[];
     document?: Document;
-    files?: UploadedFileData[];
+    files?: DocumentFile[];
     mode?: 'create' | 'edit';
-}
-
-interface UploadedFileData {
-    id: number;
-    filename: string;
-    size: number;
-    mime_type: string;
-    path?: string;
-    fileurl?: string;
-}
-
-interface UploadingFile {
-    id: string;
-    file: File;
-    progress: number;
-    status: 'uploading' | 'uploaded' | 'error' | 'on server';
-    uploadedData?: UploadedFileData;
 }
 
 export default function AlterDocuments({
@@ -367,38 +355,38 @@ export default function AlterDocuments({
                                 }
                             }}
                         />
-                    </div>
-                </div>
 
-                {/* Action Buttons */}
-                <div className="flex justify-end gap-3">
-                    <Button
-                        variant="bordered"
-                        onPress={() => window.history.back()}
-                        isDisabled={isSubmitting}
-                        startContent={<X className="size-4" />}
-                    >
-                        Batal
-                    </Button>
-                    <Button
-                        color="primary"
-                        onPress={handleSubmit}
-                        isDisabled={isSubmitting}
-                        isLoading={isSubmitting}
-                        startContent={
-                            !isSubmitting && mode === 'edit' ? (
-                                <Save className="size-4" />
-                            ) : (
-                                <Upload className="size-4" />
-                            )
-                        }
-                    >
-                        {isSubmitting
-                            ? 'Uploading...'
-                            : mode === 'edit'
-                              ? 'Perbarui'
-                              : 'Upload'}
-                    </Button>
+                        {/* Action Buttons */}
+                        <div className="flex justify-end gap-3 mt-4">
+                            <Button
+                                variant="bordered"
+                                onPress={() => window.history.back()}
+                                isDisabled={isSubmitting}
+                                startContent={<X className="size-4" />}
+                            >
+                                Batal
+                            </Button>
+                            <Button
+                                color="primary"
+                                onPress={handleSubmit}
+                                isDisabled={isSubmitting}
+                                isLoading={isSubmitting}
+                                startContent={
+                                    !isSubmitting && mode === 'edit' ? (
+                                        <Save className="size-4" />
+                                    ) : (
+                                        <Upload className="size-4" />
+                                    )
+                                }
+                            >
+                                {isSubmitting
+                                    ? 'Uploading...'
+                                    : mode === 'edit'
+                                      ? 'Perbarui'
+                                      : 'Upload'}
+                            </Button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </AppLayout>

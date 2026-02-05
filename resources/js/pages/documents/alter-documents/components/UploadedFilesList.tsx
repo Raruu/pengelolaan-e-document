@@ -1,23 +1,7 @@
 import { Card, CardBody } from '@heroui/react';
 import { AlertCircle } from 'lucide-react';
+import type { UploadingFile } from '@/types/models';
 import UploadedFileItem from './UploadedFileItem';
-
-interface UploadedFileData {
-    id: number;
-    filename: string;
-    size: number;
-    mime_type: string;
-    path?: string;
-    fileurl?: string;
-}
-
-interface UploadingFile {
-    id: string;
-    file: File;
-    progress: number;
-    status: 'uploading' | 'uploaded' | 'error' | 'on server';
-    uploadedData?: UploadedFileData;
-}
 
 interface UploadedFilesListProps {
     uploadingFiles: UploadingFile[];

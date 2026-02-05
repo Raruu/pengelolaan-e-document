@@ -23,9 +23,9 @@ interface DocumentsTableProps {
     documents: Document[];
     loading: boolean;
     onEdit: (id: number) => void;
-    onView?: (id: number) => void;
-    onDownload?: (id: number) => void;
-    onDelete?: (id: number) => void;
+    onView: (id: number) => void;
+    onDownload: (id: number) => void;
+    onDelete: (id: number) => void;
 }
 
 export default function DocumentsTable({
@@ -149,23 +149,19 @@ export default function DocumentsTable({
                                             <DropdownMenu
                                                 aria-label="Document actions"
                                                 onAction={(key) => {
-                                                    if (key === 'edit') {
-                                                        onEdit(doc.id);
-                                                    } else if (
-                                                        key === 'view' &&
-                                                        onView
-                                                    ) {
-                                                        onView(doc.id);
-                                                    } else if (
-                                                        key === 'download' &&
-                                                        onDownload
-                                                    ) {
-                                                        onDownload(doc.id);
-                                                    } else if (
-                                                        key === 'delete' &&
-                                                        onDelete
-                                                    ) {
-                                                        onDelete(doc.id);
+                                                    switch (key) {
+                                                        case 'edit':
+                                                            onEdit(doc.id);
+                                                            break;
+                                                        case 'view':
+                                                            onView(doc.id);
+                                                            break;
+                                                        case 'download':
+                                                            onDownload(doc.id);
+                                                            break;
+                                                        case 'delete':
+                                                            onDelete(doc.id);
+                                                            break;
                                                     }
                                                 }}
                                             >

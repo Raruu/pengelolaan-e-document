@@ -46,7 +46,7 @@ export default function DocumentDetailsForm({
     onDocumentDateChange,
 }: DocumentDetailsFormProps) {
     return (
-        <Card className="h-full">
+        <Card>
             <CardBody className="flex flex-col gap-4 p-6">
                 <div>
                     <h3 className="mb-1 text-lg font-semibold text-default-700">

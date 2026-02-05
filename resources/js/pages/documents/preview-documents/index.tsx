@@ -1,0 +1,82 @@
+import { Button } from '@heroui/react';
+import { Head } from '@inertiajs/react';
+import { ArrowLeft, Download } from 'lucide-react';
+import { useEffect } from 'react';
+import Heading from '@/components/Heading';
+import { defaultItems } from '@/constants/nav-items';
+import { useSidebar } from '@/hooks/SidebarContext';
+import AppLayout from '@/layouts/app';
+import type { Document, DocumentFile } from '@/types/models';
+import DocumentDetailsView from './components/DocumentDetailsView';
+import FilesListView from './components/FilesListView';
+import { index as previewRoute } from '@/routes/document/preview';
+
+interface Props {
+    document: Document;
+    files: DocumentFile[];
+}
+
+export default function PreviewDocuments({ document, files }: Props) {
+    const { setNavItems } = useSidebar();
+
+    useEffect(() => {
+        const custom = defaultItems.map((item) => ({ ...item }));
+        custom[1] = {
+            ...custom[1],
+            subItems: [
+                { name: defaultItems[1].name, href: defaultItems[1].href },
+                {
+                    name: 'Preview',
+                    href: previewRoute.url(document.id),
+                },
+            ],
+        };
+        setNavItems(custom);
+    }, [document, setNavItems]);
+
+    return (
+        <AppLayout>
+            <Head title={`Preview: ${document.title}`} />
+            <div className="flex h-full flex-1 flex-col gap-6 px-4 py-2">
+                <Heading
+                    variant="default-small-margin"
+                    title="Preview Dokumen"
+                    description="Lihat detail dokumen dan file yang telah diupload."
+                />
+
+                {/* Main Content */}
+                <div className="flex flex-col gap-6 lg:flex-row">
+                    {/* Left Side - Files List */}
+                    <div className="flex flex-col gap-8 lg:flex-4">
+                        <FilesListView files={files} />
+                    </div>
+
+                    {/* Right Side - Document Details */}
+                    <div className="lg:flex-3">
+                        <DocumentDetailsView document={document} />
+
+                        {/* Action Buttons */}
+                        <div className="flex justify-end gap-3 mt-4">
+                            <Button
+                                variant="bordered"
+                                onPress={() => window.history.back()}
+                                startContent={<ArrowLeft className="size-4 mt-0.5" />}
+                            >
+                                Kembali
+                            </Button>
+                            <Button
+                                color="primary"
+                                startContent={<Download className="size-4" />}
+                                onPress={() => {                                    
+                                    console.log('Download all files');
+                                }}
+                            >
+                                Download Semua
+                            </Button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </AppLayout>
+    );
+}

@@ -1,23 +1,7 @@
 import { Button, Divider, Progress } from '@heroui/react';
 import { CheckCircle, FileText, LucideImage, X } from 'lucide-react';
 import { formatFileSize } from '@/lib/utils';
-
-interface UploadedFileData {
-    id: number;
-    filename: string;
-    size: number;
-    mime_type: string;
-    path?: string;
-    fileurl?: string;
-}
-
-interface UploadingFile {
-    id: string;
-    file: File;
-    progress: number;
-    status: 'uploading' | 'uploaded' | 'error' | 'on server';
-    uploadedData?: UploadedFileData;
-}
+import type { UploadingFile } from '@/types/models';
 
 interface UploadedFileItemProps {
     uploadFile: UploadingFile;
@@ -63,8 +47,7 @@ export default function UploadedFileItem({
                                     </>
                                 ) : (
                                     <>
-                                        {formatFileSize(uploadFile.file.size)}{' '}
-                                        •{' '}
+                                        {formatFileSize(uploadFile.file.size)} •{' '}
                                         {uploadFile.status === 'uploaded'
                                             ? 'Upload Selesai'
                                             : isSubmitting
