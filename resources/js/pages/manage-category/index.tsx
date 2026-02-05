@@ -1,33 +1,15 @@
-import {
-    Button,
-    Card,
-    CardBody,
-    Dropdown,
-    DropdownTrigger,
-    DropdownMenu,
-    DropdownItem,
-    Select,
-    SelectItem,
-    Table,
-    TableHeader,
-    TableColumn,
-    TableBody,
-    TableRow,
-    TableCell,
-    Pagination,
-    Chip,
-    Avatar,
-} from '@heroui/react';
+import { Button, Chip } from '@heroui/react';
 import { Head } from '@inertiajs/react';
-
 import axios from 'axios';
-import { Plus, MoreVertical } from 'lucide-react';
+import { Plus } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import Heading from '@/components/Heading';
+import PaginationControls from '@/components/PaginationControls';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import AppLayout from '@/layouts/app';
-import { initialsName } from '@/lib/utils';
 import type { Category } from '@/types/models';
+import CategoriesTable from './components/CategoriesTable';
+import CategorySortFilter from './components/CategorySortFilter';
 import { useCategoryDialog } from './useCategoryDialog';
 
 interface CategoryWithDocsCount extends Category {
@@ -244,201 +226,27 @@ export default function ManageCategory({ categories, filters }: Props) {
                 />
 
                 {/* Search and Sort */}
-                <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-2">
-                        <span className="text-sm text-default-500">
-                            Urutkan:
-                        </span>
-                        <Select
-                            className="w-56"
-                            size="sm"
-                            variant="bordered"
-                            defaultSelectedKeys={['category_asc']}
-                            onChange={(e) => handleSortChange(e.target.value)}
-                            aria-label="Sort categories"
-                        >
-                            <SelectItem key="documents-count_desc">
-                                Jumlah Dokumen (Desc)
-                            </SelectItem>
-                            <SelectItem key="documents-count_asc">
-                                Jumlah Dokumen (Asc)
-                            </SelectItem>
-                            <SelectItem key="category_asc">
-                                Nama Kategori (A-Z)
-                            </SelectItem>
-                            <SelectItem key="category_desc">
-                                Nama Kategori (Z-A)
-                            </SelectItem>
-                        </Select>
-                    </div>
-                </div>
+                <CategorySortFilter onSortChange={handleSortChange} />
 
                 {/* Categories Table */}
-                <Card className="flex-1">
-                    <CardBody className="p-0">
-                        <Table
-                            aria-label="Categories table"
-                            removeWrapper
-                            className="min-h-100"
-                        >
-                            <TableHeader>
-                                <TableColumn width={'70%'}>
-                                    NAMA KATEGORI
-                                </TableColumn>
-                                <TableColumn width={'10%'}>
-                                    JUMLAH DOKUMEN
-                                </TableColumn>
-                                <TableColumn width={'5%'}>ARAH</TableColumn>
-                                <TableColumn width={'3%'}>AKSI</TableColumn>
-                            </TableHeader>
-                            <TableBody isLoading={loading}>
-                                <>
-                                    {categoriesData.data.map((category) => {
-                                        const direction =
-                                            category.direction.substring(0, 1) +
-                                            category.direction
-                                                .toLowerCase()
-                                                .substring(1);
-
-                                        return (
-                                            <TableRow key={category.id}>
-                                                <TableCell>
-                                                    <div className="flex items-center gap-3">
-                                                        <div className="flex size-8 items-center justify-center overflow-hidden rounded-md bg-primary-100">
-                                                            {category.icon_url ? (
-                                                                <Avatar
-                                                                    className="size-8 rounded-md"
-                                                                    src={
-                                                                        category.icon_url
-                                                                    }
-                                                                    alt={
-                                                                        category.category
-                                                                    }
-                                                                />
-                                                            ) : (
-                                                                <span className="text-sm font-semibold text-primary-600">
-                                                                    {initialsName(
-                                                                        category.category,
-                                                                    )}
-                                                                </span>
-                                                            )}
-                                                        </div>
-                                                        <span className="font-medium">
-                                                            {category.category}
-                                                        </span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Chip
-                                                        size="sm"
-                                                        variant="flat"
-                                                        color="default"
-                                                    >
-                                                        {category.documents_count ||
-                                                            0}{' '}
-                                                        file
-                                                    </Chip>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Chip
-                                                        size="sm"
-                                                        variant="flat"
-                                                        color={
-                                                            direction == 'Masuk'
-                                                                ? 'success'
-                                                                : 'danger'
-                                                        }
-                                                    >
-                                                        {direction}
-                                                    </Chip>
-                                                </TableCell>
-                                                <TableCell>
-                                                    <Dropdown>
-                                                        <DropdownTrigger>
-                                                            <Button
-                                                                isIconOnly
-                                                                size="sm"
-                                                                variant="light"
-                                                            >
-                                                                <MoreVertical className="h-4 w-4" />
-                                                            </Button>
-                                                        </DropdownTrigger>
-                                                        <DropdownMenu aria-label="Category actions">
-                                                            <DropdownItem
-                                                                key="edit"
-                                                                onPress={() =>
-                                                                    handleEditCategory(
-                                                                        category,
-                                                                    )
-                                                                }
-                                                            >
-                                                                Edit
-                                                            </DropdownItem>
-                                                            <DropdownItem
-                                                                key="delete"
-                                                                className="text-danger"
-                                                                color="danger"
-                                                                onPress={() =>
-                                                                    handleDeleteCategory(
-                                                                        category,
-                                                                    )
-                                                                }
-                                                            >
-                                                                Delete
-                                                            </DropdownItem>
-                                                        </DropdownMenu>
-                                                    </Dropdown>
-                                                </TableCell>
-                                            </TableRow>
-                                        );
-                                    })}
-                                </>
-                                <>
-                                    {categoriesData.data.length === 0 && (
-                                        <TableRow>
-                                            <TableCell
-                                                colSpan={4}
-                                                className="h-24 text-center"
-                                            >
-                                                Tidak ada Kategori
-                                            </TableCell>
-                                        </TableRow>
-                                    )}
-                                </>
-                            </TableBody>
-                        </Table>
-                    </CardBody>
-                </Card>
+                <CategoriesTable
+                    categories={categoriesData.data}
+                    loading={loading}
+                    onEdit={handleEditCategory}
+                    onDelete={handleDeleteCategory}
+                />
 
                 {/* Pagination */}
-                <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-3">
-                        <Select
-                            label="Tampilkan"
-                            size="sm"
-                            variant="bordered"
-                            className="w-32"
-                            selectedKeys={[perPage.toString()]}
-                            onChange={(e) =>
-                                handlePerPageChange(e.target.value)
-                            }
-                        >
-                            <SelectItem key="10">10</SelectItem>
-                            <SelectItem key="25">25</SelectItem>
-                            <SelectItem key="50">50</SelectItem>
-                        </Select>
-                        <p className="text-sm text-default-500">
-                            Showing {categoriesData.from}-{categoriesData.to} of{' '}
-                            {categoriesData.total} results
-                        </p>
-                    </div>
-                    <Pagination
-                        total={categoriesData.last_page}
-                        page={categoriesData.current_page}
-                        onChange={handlePageChange}
-                        showControls
-                    />
-                </div>
+                <PaginationControls
+                    currentPage={categoriesData.current_page}
+                    lastPage={categoriesData.last_page}
+                    from={categoriesData.from}
+                    to={categoriesData.to}
+                    total={categoriesData.total}
+                    perPage={perPage}
+                    onPageChange={handlePageChange}
+                    onPerPageChange={handlePerPageChange}
+                />
                 {CategoryDialog}
                 {ConfirmDialog}
             </div>
