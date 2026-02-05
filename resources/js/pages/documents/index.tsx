@@ -67,9 +67,7 @@ export default function DokumenKu({
     );
     const [perPage, setPerPage] = useState<number>(10);
     const [direction, setDirection] = useState<string>('');
-    const [documentDate, setDocumentDate] = useState(
-        new Date().toISOString().split('T')[0],
-    );
+    const [documentDate, setDocumentDate] = useState('');
     const [loading, setLoading] = useState<boolean>(false);
     const [documentsData, setDocumentsData] = useState(documents);
 

@@ -93,7 +93,7 @@ class DocumentController extends Controller
 
         $directions = Category::select('direction')->distinct()->get();
 
-        return Inertia::render('documents/alter-documents', [
+        return Inertia::render('documents/alter-documents/index', [
             'categories' => $categories,
             'directions' => $directions,
             'mode' => 'create',
@@ -128,7 +128,7 @@ class DocumentController extends Controller
             ];
         });
 
-        return Inertia::render('documents/alter-documents', [
+        return Inertia::render('documents/alter-documents/index', [
             'categories' => $categories,
             'directions' => $directions,
             'document' => $document,
