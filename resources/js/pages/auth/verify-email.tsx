@@ -1,8 +1,6 @@
-// Components
+import { Button, Card, CardBody } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
 import TextLink from '@/components/TextLink';
-import { Button } from '@/components/ui/button';
-import { Spinner } from '@/components/ui/spinner';
 import AuthLayout from '@/layouts/auth';
 import { logout } from '@/routes';
 import { send } from '@/routes/verification';
@@ -15,30 +13,43 @@ export default function VerifyEmail({ status }: { status?: string }) {
         >
             <Head title="Email verification" />
 
-            {status === 'verification-link-sent' && (
-                <div className="mb-4 text-center text-sm font-medium text-green-600">
-                    A new verification link has been sent to the email address
-                    you provided during registration.
-                </div>
-            )}
+            <Card className="px-6 py-8">
+                <CardBody>
+                    {status === 'verification-link-sent' && (
+                        <div className="mb-4 text-center text-sm font-medium text-success">
+                            A new verification link has been sent to the email
+                            address you provided during registration.
+                        </div>
+                    )}
 
-            <Form {...send.form()} className="space-y-6 text-center">
-                {({ processing }) => (
-                    <>
-                        <Button disabled={processing} variant="secondary">
-                            {processing && <Spinner />}
-                            Resend verification email
-                        </Button>
+                    <Form
+                        {...send.form()}
+                        className="flex flex-col items-center gap-4"
+                    >
+                        {({ processing }) => (
+                            <>
+                                <Button
+                                    type="submit"
+                                    className="font-semibold"
+                                    isDisabled={processing}
+                                    isLoading={processing}
+                                    color="secondary"
+                                    fullWidth
+                                >
+                                    Resend verification email
+                                </Button>
 
-                        <TextLink
-                            href={logout()}
-                            className="mx-auto block text-sm"
-                        >
-                            Log out
-                        </TextLink>
-                    </>
-                )}
-            </Form>
+                                <TextLink
+                                    href={logout()}
+                                    className="text-sm"
+                                >
+                                    Log out
+                                </TextLink>
+                            </>
+                        )}
+                    </Form>
+                </CardBody>
+            </Card>
         </AuthLayout>
     );
 }

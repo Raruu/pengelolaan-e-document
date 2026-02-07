@@ -3,7 +3,6 @@ import { Form, Head } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 import InputError from '@/components/InputError';
 import TextLink from '@/components/TextLink';
-import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth';
 import { login } from '@/routes';
 import { email } from '@/routes/password';
@@ -28,11 +27,12 @@ export default function ForgotPassword({ status }: { status?: string }) {
                         {({ processing, errors }) => (
                             <>
                                 <div className="grid gap-2">
-                                    <Label htmlFor="email">Email address</Label>
                                     <Input
                                         id="email"
                                         type="email"
                                         name="email"
+                                        label="Alamat Email"
+                                        labelPlacement="outside"
                                         autoComplete="off"
                                         autoFocus
                                         placeholder="email@example.com"
@@ -58,7 +58,7 @@ export default function ForgotPassword({ status }: { status?: string }) {
                     </Form>
                 </CardBody>
                 <CardFooter className="flex items-center justify-center p-0">
-                    <div className="space-x-1 text-center text-sm text-muted-foreground">
+                    <div className="text-muted-foreground space-x-1 text-center text-sm">
                         <span>Sudah ingat? Kembali ke halaman</span>
                         <TextLink
                             className="ml-auto text-sm font-semibold text-primary-700"

@@ -1,9 +1,7 @@
+import { Button, Card, CardBody, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/InputError';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Eye, EyeOff, Mail } from 'lucide-react';
+import { useState } from 'react';
 import AuthLayout from '@/layouts/auth';
 import { update } from '@/routes/password';
 
@@ -13,6 +11,15 @@ type Props = {
 };
 
 export default function ResetPassword({ token, email }: Props) {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+    const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+        useState(false);
+
+    const togglePasswordVisibility = () =>
+        setIsPasswordVisible(!isPasswordVisible);
+    const toggleConfirmPasswordVisibility = () =>
+        setIsConfirmPasswordVisible(!isConfirmPasswordVisible);
+
     return (
         <AuthLayout
             title="Reset password"
@@ -20,74 +27,126 @@ export default function ResetPassword({ token, email }: Props) {
         >
             <Head title="Reset password" />
 
-            <Form
-                {...update.form()}
-                transform={(data) => ({ ...data, token, email })}
-                resetOnSuccess={['password', 'password_confirmation']}
-            >
-                {({ processing, errors }) => (
-                    <div className="grid gap-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="email">Email</Label>
-                            <Input
-                                id="email"
-                                type="email"
-                                name="email"
-                                autoComplete="email"
-                                value={email}
-                                className="mt-1 block w-full"
-                                readOnly
-                            />
-                            <InputError
-                                message={errors.email}
-                                className="mt-2"
-                            />
-                        </div>
+            <Card className="px-6 py-8">
+                <CardBody>
+                    <Form
+                        {...update.form()}
+                        transform={(data) => ({ ...data, token, email })}
+                        resetOnSuccess={['password', 'password_confirmation']}
+                        className="flex flex-col gap-6"
+                    >
+                        {({ processing, errors, clearErrors }) => (
+                            <div className="grid gap-4">
+                                <Input
+                                    radius="md"
+                                    id="email"
+                                    type="email"
+                                    name="email"
+                                    label="Email"
+                                    labelPlacement="outside"
+                                    autoComplete="email"
+                                    value={email}
+                                    isReadOnly
+                                    isInvalid={!!errors.email}
+                                    errorMessage={errors.email}
+                                    onChange={() => clearErrors('email')}
+                                    endContent={
+                                        <Mail className="pointer-events-none size-4 shrink-0 text-default-400" />
+                                    }
+                                />
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                name="password"
-                                autoComplete="new-password"
-                                className="mt-1 block w-full"
-                                autoFocus
-                                placeholder="Password"
-                            />
-                            <InputError message={errors.password} />
-                        </div>
+                                <Input
+                                    radius="md"
+                                    id="password"
+                                    type={
+                                        isPasswordVisible
+                                            ? 'text'
+                                            : 'password'
+                                    }
+                                    name="password"
+                                    label="Password"
+                                    labelPlacement="outside"
+                                    placeholder="Password"
+                                    isRequired
+                                    autoFocus
+                                    autoComplete="new-password"
+                                    isInvalid={!!errors.password}
+                                    errorMessage={errors.password}
+                                    onChange={() => clearErrors('password')}
+                                    endContent={
+                                        <button
+                                            className="focus:outline-none"
+                                            type="button"
+                                            onClick={togglePasswordVisibility}
+                                            aria-label="toggle password visibility"
+                                        >
+                                            {isPasswordVisible ? (
+                                                <EyeOff className="size-4 text-default-400" />
+                                            ) : (
+                                                <Eye className="size-4 text-default-400" />
+                                            )}
+                                        </button>
+                                    }
+                                />
 
-                        <div className="grid gap-2">
-                            <Label htmlFor="password_confirmation">
-                                Confirm password
-                            </Label>
-                            <Input
-                                id="password_confirmation"
-                                type="password"
-                                name="password_confirmation"
-                                autoComplete="new-password"
-                                className="mt-1 block w-full"
-                                placeholder="Confirm password"
-                            />
-                            <InputError
-                                message={errors.password_confirmation}
-                                className="mt-2"
-                            />
-                        </div>
+                                <Input
+                                    radius="md"
+                                    id="password_confirmation"
+                                    type={
+                                        isConfirmPasswordVisible
+                                            ? 'text'
+                                            : 'password'
+                                    }
+                                    name="password_confirmation"
+                                    label="Confirm password"
+                                    labelPlacement="outside"
+                                    placeholder="Confirm password"
+                                    isRequired
+                                    autoComplete="new-password"
+                                    isInvalid={!!errors.password_confirmation}
+                                    errorMessage={errors.password_confirmation}
+                                    onChange={() =>
+                                        clearErrors('password_confirmation')
+                                    }
+                                    endContent={
+                                        <button
+                                            className="focus:outline-none"
+                                            type="button"
+                                            onClick={
+                                                toggleConfirmPasswordVisibility
+                                            }
+                                            aria-label="toggle password visibility"
+                                        >
+                                            {isConfirmPasswordVisible ? (
+                                                <EyeOff className="size-4 text-default-400" />
+                                            ) : (
+                                                <Eye className="size-4 text-default-400" />
+                                            )}
+                                        </button>
+                                    }
+                                />
 
-                        <Button
-                            type="submit"
-                            className="mt-4 w-full"
-                            disabled={processing}
-                            data-test="reset-password-button"
-                        >
-                            {processing && <Spinner />}
-                            Reset password
-                        </Button>
-                    </div>
-                )}
-            </Form>
+                                <Button
+                                    type="submit"
+                                    className="mt-2 font-semibold"
+                                    isDisabled={processing}
+                                    isLoading={processing}
+                                    data-test="reset-password-button"
+                                    color="primary"
+                                    fullWidth
+                                    onPress={() => {
+                                        clearErrors('email');
+                                        clearErrors('password');
+                                        clearErrors('password_confirmation');
+                                    }}
+                                >
+                                    Reset password
+                                </Button>
+                            </div>
+                        )}
+                    </Form>
+                </CardBody>
+            </Card>
         </AuthLayout>
     );
 }

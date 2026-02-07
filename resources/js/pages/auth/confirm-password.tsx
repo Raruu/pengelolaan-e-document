@@ -1,13 +1,16 @@
+import { Button, Card, CardBody, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
-import InputError from '@/components/InputError';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Spinner } from '@/components/ui/spinner';
+import { Eye, EyeOff } from 'lucide-react';
+import { useState } from 'react';
 import AuthLayout from '@/layouts/auth';
 import { store } from '@/routes/password/confirm';
 
 export default function ConfirmPassword() {
+    const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+
+    const togglePasswordVisibility = () =>
+        setIsPasswordVisible(!isPasswordVisible);
+
     return (
         <AuthLayout
             title="Confirm your password"
@@ -15,36 +18,66 @@ export default function ConfirmPassword() {
         >
             <Head title="Confirm password" />
 
-            <Form {...store.form()} resetOnSuccess={['password']}>
-                {({ processing, errors }) => (
-                    <div className="space-y-6">
-                        <div className="grid gap-2">
-                            <Label htmlFor="password">Password</Label>
-                            <Input
-                                id="password"
-                                type="password"
-                                name="password"
-                                placeholder="Password"
-                                autoComplete="current-password"
-                                autoFocus
-                            />
+            <Card className="px-6 py-8">
+                <CardBody>
+                    <Form
+                        {...store.form()}
+                        resetOnSuccess={['password']}
+                        className="flex flex-col gap-6"
+                    >
+                        {({ processing, errors, clearErrors }) => (
+                            <div className="grid gap-4">
+                                <Input
+                                    radius="md"
+                                    id="password"
+                                    type={
+                                        isPasswordVisible
+                                            ? 'text'
+                                            : 'password'
+                                    }
+                                    name="password"
+                                    label="Password"
+                                    labelPlacement="outside"
+                                    placeholder="Password"
+                                    isRequired
+                                    autoFocus
+                                    autoComplete="current-password"
+                                    isInvalid={!!errors.password}
+                                    errorMessage={errors.password}
+                                    onChange={() => clearErrors('password')}
+                                    endContent={
+                                        <button
+                                            className="focus:outline-none"
+                                            type="button"
+                                            onClick={togglePasswordVisibility}
+                                            aria-label="toggle password visibility"
+                                        >
+                                            {isPasswordVisible ? (
+                                                <EyeOff className="size-4 text-default-400" />
+                                            ) : (
+                                                <Eye className="size-4 text-default-400" />
+                                            )}
+                                        </button>
+                                    }
+                                />
 
-                            <InputError message={errors.password} />
-                        </div>
-
-                        <div className="flex items-center">
-                            <Button
-                                className="w-full"
-                                disabled={processing}
-                                data-test="confirm-password-button"
-                            >
-                                {processing && <Spinner />}
-                                Confirm password
-                            </Button>
-                        </div>
-                    </div>
-                )}
-            </Form>
+                                <Button
+                                    type="submit"
+                                    className="mt-2 font-semibold"
+                                    isDisabled={processing}
+                                    isLoading={processing}
+                                    data-test="confirm-password-button"
+                                    color="primary"
+                                    fullWidth
+                                    onPress={() => clearErrors('password')}
+                                >
+                                    Confirm password
+                                </Button>
+                            </div>
+                        )}
+                    </Form>
+                </CardBody>
+            </Card>
         </AuthLayout>
     );
 }

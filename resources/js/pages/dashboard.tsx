@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/ui/placeholder-pattern';
+import { PlaceholderPattern } from '@/components/PlaceholderPattern';
 import WelcomeBanner from '@/components/WelcomeBanner';
 import AppLayout from '@/layouts/app';
 

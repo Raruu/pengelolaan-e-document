@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Input } from '@heroui/react';
+import { Button, Card, CardBody, Checkbox, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import { useState } from 'react';
@@ -90,15 +90,25 @@ export default function Login({ status, canResetPassword }: Props) {
                                         }
                                     />
 
-                                    {canResetPassword && (
-                                        <TextLink
-                                            href={request()}
-                                            className="ml-auto text-sm font-semibold text-primary-700"
-                                            tabIndex={5}
+                                    <div className="flex flex-row items-center justify-between">
+                                        <Checkbox
+                                            name="remember"
+                                            tabIndex={3}
+                                            value={'on'}
                                         >
-                                            Lupa Password?
-                                        </TextLink>
-                                    )}
+                                            Ingat Saya
+                                        </Checkbox>
+
+                                        {canResetPassword && (
+                                            <TextLink
+                                                href={request()}
+                                                className="ml-auto text-sm font-semibold text-primary-700"
+                                                tabIndex={5}
+                                            >
+                                                Lupa Password?
+                                            </TextLink>
+                                        )}
+                                    </div>
 
                                     <Button
                                         type="submit"
