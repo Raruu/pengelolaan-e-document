@@ -94,8 +94,8 @@ class DocumentController extends Controller
                 'id' => $file->id,
                 'filename' => $file->file_name . '.' . $file->file_extension,
                 'size' => $file->file_size_kb,
-                'mime_type' => $file->file_type ?? 'application/octet-stream',
                 'fileurl' => $file->file_url,
+                'uploaded_at' => $file->created_at
             ];
         });
 
@@ -149,6 +149,7 @@ class DocumentController extends Controller
                 'filename' => $file->file_name . '.' . $file->file_extension,
                 'size' => $file->file_size_kb,
                 'fileurl' => $file->file_url,
+                'uploaded_at' => $file->created_at
             ];
         });
 

@@ -44,7 +44,7 @@ export default function FileUploadZone({
             </div>
 
             <h3 className="mb-2 text-lg font-semibold text-default-700">
-                Tarik & drop file disini
+                Tarik & drop file disini (Maks 25MB)
             </h3>
             <p className="mb-4 text-sm text-default-500">
                 atau klik untuk memilih file

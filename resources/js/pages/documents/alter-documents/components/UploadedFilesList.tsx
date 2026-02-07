@@ -7,40 +7,61 @@ interface UploadedFilesListProps {
     uploadingFiles: UploadingFile[];
     isSubmitting: boolean;
     validationError?: string;
-    onRemoveFile: (fileId: string) => void;
+    onHandlePreview: (file: UploadingFile) => void;
+    onRemoveFile: (file: UploadingFile) => void;
 }
+
+const Header = ({ uploadingFiles }: { uploadingFiles: UploadingFile[] }) => {
+    return (
+        <div className="mb-4">
+            <h3 className="text-lg font-semibold text-default-700">
+                Daftar Dokumen
+            </h3>
+            <p className="text-xs text-default-500">
+                {uploadingFiles.length} file
+            </p>
+        </div>
+    );
+};
 
 export default function UploadedFilesList({
     uploadingFiles,
     isSubmitting,
     validationError,
+    onHandlePreview,
     onRemoveFile,
 }: UploadedFilesListProps) {
+    const filteredFiles = uploadingFiles.filter(
+        (file) => file.status !== 'deleted',
+    );
+
     return (
         <Card>
             <CardBody className="p-6">
-                {uploadingFiles.length > 0 ? (
-                    <div className="mt-6">
-                        <h4 className="mb-3 text-sm font-semibold text-default-500 uppercase">
-                            Daftar dokumen
-                        </h4>
+                {filteredFiles.length > 0 ? (
+                    <div>
+                        <Header uploadingFiles={filteredFiles} />
                         <div className="space-y-3">
-                            {uploadingFiles.map((uploadFile, index) => (
-                                <UploadedFileItem
-                                    key={uploadFile.id}
-                                    uploadFile={uploadFile}
-                                    isSubmitting={isSubmitting}
-                                    showDivider={index > 0}
-                                    onRemove={onRemoveFile}
-                                />
-                            ))}
+                            {filteredFiles
+                                .slice()
+                                .reverse()
+                                .map((uploadFile, index) => {
+                                    return (
+                                        <UploadedFileItem
+                                            key={uploadFile.id}
+                                            uploadFile={uploadFile}
+                                            isSubmitting={isSubmitting}
+                                            showDivider={index > 0}
+                                            handlePreview={onHandlePreview}
+                                            onRemove={onRemoveFile}
+                                        />
+                                    );
+                                })}
                         </div>
                     </div>
                 ) : (
                     <>
-                        <h4 className="mb-3 text-sm font-semibold text-default-500 uppercase">
-                            Daftar dokumen
-                        </h4>
+                        <Header uploadingFiles={uploadingFiles} />
 
                         {validationError ? (
                             <div className="m-2 flex items-start gap-2 rounded-lg bg-danger-50 p-3 text-danger-600">

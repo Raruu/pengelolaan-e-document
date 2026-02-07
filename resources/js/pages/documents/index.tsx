@@ -8,10 +8,10 @@ import PaginationControls from '@/components/PaginationControls';
 import AppLayout from '@/layouts/app';
 import { index as create } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
+import { index as previewRoute } from '@/routes/document/preview';
 import type { Category, Document } from '@/types/models';
 import DocumentsFilters from './components/DocumentsFilters';
 import DocumentsTable from './components/DocumentsTable';
-import { index as previewRoute } from '@/routes/document/preview';
 
 interface Props {
     documents: {

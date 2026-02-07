@@ -1,14 +1,16 @@
-import { Button } from '@heroui/react';
-import { Head } from '@inertiajs/react';
+import { Head, router } from '@inertiajs/react';
 import axios from 'axios';
-import { X, Upload, Save } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import Heading from '@/components/Heading';
 import { defaultItems } from '@/constants/nav-items';
 import { useSidebar } from '@/hooks/SidebarContext';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
+import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import AppLayout from '@/layouts/app';
+import { formatFileSize } from '@/lib/utils';
 import { index as createRoute } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
+import { index as previewRoute } from '@/routes/document/preview';
 import type {
     Category,
     Document,
@@ -47,7 +49,6 @@ export default function AlterDocuments({
             ? document.document_date.split('T')[0]
             : new Date().toISOString().split('T')[0],
     );
-
     const [uploadingFiles, setUploadingFiles] = useState<UploadingFile[]>(
         files?.map<UploadingFile>((file) => {
             return {
@@ -64,6 +65,11 @@ export default function AlterDocuments({
     const [validationErrors, setValidationErrors] = useState<
         Record<string, string>
     >({});
+
+    const { confirm, DialogComponent: DialogComponentConfirm } =
+        useConfirmDialog();
+    const { preview, DialogComponent: DialogComponentPreview } =
+        usePreviewDialog();
     const { setNavItems } = useSidebar();
 
     useEffect(() => {
@@ -156,7 +162,7 @@ export default function AlterDocuments({
 
     const handleFiles = useCallback((files: File[]) => {
         const newFiles: UploadingFile[] = files.map((file) => ({
-            id: Math.random().toString(36).substring(7),
+            id: `up-{Math.random().toString(36).substring(7)}`,
             file,
             progress: 0,
             status: 'uploading',
@@ -178,8 +184,40 @@ export default function AlterDocuments({
         [handleFiles],
     );
 
-    const handleRemoveFile = (fileId: string) => {
-        setUploadingFiles((prev) => prev.filter((f) => f.id !== fileId));
+    const onHandlePreview = (file: UploadingFile) => {
+        if (file.status === 'on server') {
+            preview({
+                url: file.uploadedData?.fileurl ?? '',
+                filename: file.uploadedData?.filename ?? '',
+                title: file.uploadedData?.filename ?? '',
+                subtitle: formatFileSize(file.uploadedData?.size ?? 0),
+            });
+        } else if (file.file instanceof Blob) {
+            const url = window.URL.createObjectURL(file.file);
+            preview({
+                url,
+                filename: file.file.name,
+                title: file.file.name,
+                subtitle: formatFileSize(file.file.size),
+            });
+        }
+    };
+
+    const handleRemoveFile = async (file: UploadingFile) => {
+        const yesDelete = await confirm({
+            title: 'Anda yakin ingin menghapus file ini?',
+            message: `File ${file.uploadedData?.filename || file.file.name} akan dihapus.`,
+            variant: 'danger',
+            noCancle: false,
+            disabled: isSubmitting,
+        });
+        if (yesDelete) {
+            setUploadingFiles((prev) =>
+                prev.map((f) =>
+                    f.id === file.id ? { ...f, status: 'deleted' } : f,
+                ),
+            );
+        }
     };
 
     const handleSubmit = async () => {
@@ -199,7 +237,11 @@ export default function AlterDocuments({
         if (!documentDate) {
             errors.document_date = 'Tanggal dokumen harus diisi';
         }
-        if (uploadingFiles.length === 0 && mode === 'create') {
+
+        const nonDeletedFiles = uploadingFiles.filter(
+            (file) => file.status !== 'deleted',
+        );
+        if (nonDeletedFiles.length === 0) {
             errors.files = 'Silakan unggah setidak kurang satu file';
         }
 
@@ -218,6 +260,19 @@ export default function AlterDocuments({
 
         if (description) {
             formData.append('description', description);
+        }
+
+        if (mode === 'edit') {
+            const deletedFileIds = uploadingFiles
+                .filter(
+                    (file) =>
+                        file.status === 'deleted' && file.uploadedData?.id,
+                )
+                .map((file) => file.uploadedData!.id);
+
+            deletedFileIds.forEach((fileId) => {
+                formData.append('deleted_files[]', String(fileId));
+            });
         }
 
         try {
@@ -239,14 +294,20 @@ export default function AlterDocuments({
             const documentId = response.data.document.id;
 
             for (const file of uploadingFiles) {
-                if (file.status === 'on server') continue;
+                if (file.status === 'on server' || file.status === 'deleted')
+                    continue;
                 uploadFile(file.id, file.file, documentId);
             }
 
-            // router.visit(response.data.redirect || '/documents', {
-            //     preserveScroll: true,
-            // });
-            console.log(response.data);
+            await confirm({
+                title: 'Dokumen berhasil diupload',
+                message: 'Dokumen berhasil diupload',
+                variant: 'success',
+                confirmText: 'OK',
+                noCancle: true,
+            });
+
+            router.visit(previewRoute(response.data.document.id));
         } catch (error) {
             if (axios.isAxiosError(error) && error.response) {
                 if (error.response.status === 422) {
@@ -309,6 +370,7 @@ export default function AlterDocuments({
                             uploadingFiles={uploadingFiles}
                             isSubmitting={isSubmitting}
                             validationError={validationErrors.files}
+                            onHandlePreview={onHandlePreview}
                             onRemoveFile={handleRemoveFile}
                         />
                     </div>
@@ -324,6 +386,9 @@ export default function AlterDocuments({
                             categories={categories}
                             directions={directions}
                             validationErrors={validationErrors}
+                            isSubmitting={isSubmitting}
+                            mode={mode}
+                            handleSubmit={handleSubmit}
                             onTitleChange={(value) => {
                                 setTitle(value);
                                 if (validationErrors.title) {
@@ -355,40 +420,11 @@ export default function AlterDocuments({
                                 }
                             }}
                         />
-
-                        {/* Action Buttons */}
-                        <div className="flex justify-end gap-3 mt-4">
-                            <Button
-                                variant="bordered"
-                                onPress={() => window.history.back()}
-                                isDisabled={isSubmitting}
-                                startContent={<X className="size-4" />}
-                            >
-                                Batal
-                            </Button>
-                            <Button
-                                color="primary"
-                                onPress={handleSubmit}
-                                isDisabled={isSubmitting}
-                                isLoading={isSubmitting}
-                                startContent={
-                                    !isSubmitting && mode === 'edit' ? (
-                                        <Save className="size-4" />
-                                    ) : (
-                                        <Upload className="size-4" />
-                                    )
-                                }
-                            >
-                                {isSubmitting
-                                    ? 'Uploading...'
-                                    : mode === 'edit'
-                                      ? 'Perbarui'
-                                      : 'Upload'}
-                            </Button>
-                        </div>
                     </div>
                 </div>
             </div>
+            {DialogComponentConfirm}
+            {DialogComponentPreview}
         </AppLayout>
     );
 }

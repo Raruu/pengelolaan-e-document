@@ -20,7 +20,8 @@ interface UseConfirmDialogOptions {
     confirmText?: string;
     cancelText?: string;
     disabled?: boolean;
-    variant?: 'primary' | 'danger' | 'warning';
+    noCancle?: boolean;
+    variant?: 'primary' | 'danger' | 'warning' | 'success';
 }
 
 export const useConfirmDialog = () => {
@@ -86,19 +87,22 @@ export const useConfirmDialog = () => {
                     )}
                 </ModalBody>
                 <ModalFooter>
-                    <Button
-                        color="danger"
-                        variant="light"
-                        onPress={handleClose}
-                        startContent={<X className="size-4" />}
-                    >
-                        {options.cancelText || 'Tidak'}
-                    </Button>
+                    {!options.noCancle && (
+                        <Button
+                            color={options.variant || 'primary'}
+                            variant="light"
+                            onPress={handleClose}
+                            startContent={<X className="size-4" />}
+                        >
+                            {options.cancelText || 'Tidak'}
+                        </Button>
+                    )}
+
                     <Button
                         color={options.variant || 'primary'}
                         onPress={handleSave}
                         isDisabled={options.disabled}
-                        startContent={<Check className="size-4" />}
+                        startContent={options.noCancle ? null : <Check className="size-4" />}
                     >
                         {options.confirmText || 'Ya'}
                     </Button>

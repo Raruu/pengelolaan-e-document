@@ -5,7 +5,7 @@ import { useState } from 'react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
 import Heading from '@/components/Heading';
 import { useImageCrop } from '@/hooks/useImageCrop';
-import { useImagePreview } from '@/hooks/useImagePreview';
+import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import AppLayout from '@/layouts/app';
 import SettingsLayout from '@/layouts/settings';
 import { initialsName } from '@/lib/utils';
@@ -21,7 +21,7 @@ export default function Profile({
 }) {
     const { auth } = usePage<SharedData>().props;
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
-    const { preview, DialogComponent: PreviewDialog } = useImagePreview();
+    const { preview, DialogComponent: PreviewDialog } = usePreviewDialog();
     const { cropImage, DialogComponent: CropDialog } = useImageCrop();
 
     const initials = initialsName(auth.user.name);
@@ -104,11 +104,11 @@ export default function Profile({
                                                         auth.user
                                                             .profile_photo_url;
                                                     if (url) {
-                                                        preview(
+                                                        preview({
                                                             url,
-                                                            `${auth.user.name}-profile-photo.jpg`,
-                                                            'Foto Profil',
-                                                        );
+                                                            filename: `${auth.user.name}-profile-photo.webp`,
+                                                            title: 'Foto Profil',
+                                                        });
                                                     }
                                                 }}
                                             />

@@ -1,13 +1,14 @@
 import { Button, Divider, Progress } from '@heroui/react';
-import { CheckCircle, FileText, LucideImage, X } from 'lucide-react';
-import { formatFileSize } from '@/lib/utils';
+import { CheckCircle, Eye, FileText, LucideImage, Trash2 } from 'lucide-react';
+import { formatDate, formatFileSize } from '@/lib/utils';
 import type { UploadingFile } from '@/types/models';
 
 interface UploadedFileItemProps {
     uploadFile: UploadingFile;
     isSubmitting: boolean;
     showDivider: boolean;
-    onRemove: (fileId: string) => void;
+    handlePreview: (file: UploadingFile) => void;
+    onRemove: (file: UploadingFile) => void;
 }
 
 const getFileIcon = (filename: string) => {
@@ -23,6 +24,7 @@ export default function UploadedFileItem({
     uploadFile,
     isSubmitting,
     showDivider,
+    handlePreview,
     onRemove,
 }: UploadedFileItemProps) {
     return (
@@ -39,40 +41,49 @@ export default function UploadedFileItem({
                                 {uploadFile.file.name}
                             </p>
                             <p className="text-xs text-default-500">
-                                {uploadFile.status === 'on server' ? (
-                                    <>
-                                        {formatFileSize(
-                                            uploadFile.uploadedData?.size || 0,
-                                        )}
-                                    </>
-                                ) : (
-                                    <>
-                                        {formatFileSize(uploadFile.file.size)} •{' '}
-                                        {uploadFile.status === 'uploaded'
-                                            ? 'Upload Selesai'
-                                            : isSubmitting
-                                              ? `${uploadFile.progress}% mengupload`
-                                              : 'Menunggu Upload...'}
-                                    </>
-                                )}
+                                {formatFileSize(
+                                    uploadFile.uploadedData?.size ??
+                                        uploadFile.file.size,
+                                )}{' '}
+                                •{' '}
+                                {uploadFile.status === 'on server'
+                                    ? formatDate(
+                                          uploadFile.uploadedData!.uploaded_at!,
+                                      )
+                                    : uploadFile.status === 'uploaded'
+                                      ? 'Upload Selesai'
+                                      : isSubmitting
+                                        ? `${uploadFile.progress}% mengupload`
+                                        : 'Menunggu Upload...'}
                             </p>
                         </div>
-                        <Button
-                            isIconOnly
-                            size="sm"
-                            variant="light"
-                            color="danger"
-                            className="text-foreground-800"
-                            onPress={() => onRemove(uploadFile.id)}
-                        >
-                            <X className="size-4" />
-                        </Button>
+                        <div className="flex flex-row items-center gap-2">
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                color="default"
+                                onPress={() => handlePreview(uploadFile)}
+                            >
+                                <Eye className="size-4" />
+                            </Button>
+                            <Button
+                                isIconOnly
+                                size="sm"
+                                variant="light"
+                                color="danger"
+                                className="text-foreground-800"
+                                onPress={() => onRemove(uploadFile)}
+                            >
+                                <Trash2 className="size-4" />
+                            </Button>
+                        </div>
                     </div>
                     {uploadFile.status === 'uploaded' ? (
                         <div className="mt-2 flex items-center gap-2">
                             <CheckCircle className="size-4 text-success-500" />
                             <span className="text-xs text-success-500">
-                                Complete
+                                Upload Selesai
                             </span>
                         </div>
                     ) : isSubmitting && uploadFile.status === 'uploading' ? (

@@ -47,3 +47,12 @@ export const formatDate = (dateString: string): string => {
         day: 'numeric',
     });
 };
+
+export const isDoc = (ext: string): boolean =>
+    ext.endsWith('.pdf') ||
+    ext.endsWith('.doc') ||
+    ext.endsWith('.docx') ||
+    ext.endsWith('.xls') ||
+    ext.endsWith('.xlsx') ||
+    ext.endsWith('.ppt') ||
+    ext.endsWith('.pptx');

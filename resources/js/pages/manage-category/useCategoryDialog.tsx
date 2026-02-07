@@ -12,7 +12,7 @@ import { LucideFile, Plus, Save, X } from 'lucide-react';
 import { useCallback, useState } from 'react';
 import MaterialCategoryRounded from '@/components/custom-icons/MaterialCategoryRounded';
 import { useImageCrop } from '@/hooks/useImageCrop';
-import { useImagePreview } from '@/hooks/useImagePreview';
+import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import type { Category } from '@/types/models';
 
 interface UseCategoryDialogReturn {
@@ -45,7 +45,7 @@ export function useCategoryDialog(): UseCategoryDialogReturn {
     >(null);
     const [iconPreview, setIconPreview] = useState<string | null>(null);
     const [iconFile, setIconFile] = useState<File | null>(null);
-    const { preview, DialogComponent: PreviewDialog } = useImagePreview();
+    const { preview, DialogComponent: PreviewDialog } = usePreviewDialog();
     const { cropImage, DialogComponent: CropDialog } = useImageCrop();
 
     const openDialog = (
@@ -164,11 +164,11 @@ export function useCategoryDialog(): UseCategoryDialogReturn {
                                     onClick={() => {
                                         const url = iconPreview;
                                         if (url) {
-                                            preview(
+                                            preview({
                                                 url,
-                                                `${categoryData.category}-icon.jpg`,
-                                                'Ikon Kategori',
-                                            );
+                                                filename: `${categoryData.category}-icon.jpg`,
+                                                title: 'Ikon Kategori',
+                                            });
                                         }
                                     }}
                                 />

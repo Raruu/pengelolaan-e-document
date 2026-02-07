@@ -153,6 +153,8 @@ class DocumentApiController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
             'document_date' => 'required|date',
+            'deleted_files' => 'nullable|array',
+            'deleted_files.*' => 'integer|exists:document_files,id',
         ]);
 
         $category = Category::where([
@@ -172,6 +174,12 @@ class DocumentApiController extends Controller
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],
         ]);
+
+        if (!empty($validated['deleted_files'])) {
+            $document->files()
+                ->whereIn('id', $validated['deleted_files'])
+                ->delete();
+        }
 
         return response()->json([
             'message' => 'Document updated successfully.',

@@ -6,10 +6,10 @@ import Heading from '@/components/Heading';
 import { defaultItems } from '@/constants/nav-items';
 import { useSidebar } from '@/hooks/SidebarContext';
 import AppLayout from '@/layouts/app';
+import { index as previewRoute } from '@/routes/document/preview';
 import type { Document, DocumentFile } from '@/types/models';
 import DocumentDetailsView from './components/DocumentDetailsView';
 import FilesListView from './components/FilesListView';
-import { index as previewRoute } from '@/routes/document/preview';
 
 interface Props {
     document: Document;
