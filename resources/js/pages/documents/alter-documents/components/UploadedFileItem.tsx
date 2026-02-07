@@ -52,7 +52,7 @@ export default function UploadedFileItem({
                                       )
                                     : uploadFile.status === 'uploaded'
                                       ? 'Upload Selesai'
-                                      : isSubmitting
+                                      : uploadFile.status === 'uploading'
                                         ? `${uploadFile.progress}% mengupload`
                                         : 'Menunggu Upload...'}
                             </p>
@@ -86,7 +86,7 @@ export default function UploadedFileItem({
                                 Upload Selesai
                             </span>
                         </div>
-                    ) : isSubmitting && uploadFile.status === 'uploading' ? (
+                    ) : uploadFile.status === 'uploading' ? (
                         <Progress
                             value={uploadFile.progress}
                             className="mt-2"

@@ -6,6 +6,8 @@ import { useState, useEffect, useCallback } from 'react';
 import Heading from '@/components/Heading';
 import PaginationControls from '@/components/PaginationControls';
 import AppLayout from '@/layouts/app';
+import { downloadAllDocument } from '@/lib/donwload-all';
+import { index as documentsIndex } from '@/routes/api/documents';
 import { index as create } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
 import { index as previewRoute } from '@/routes/document/preview';
@@ -76,7 +78,7 @@ export default function DokumenKu({
                         date_from: documentDate,
                     };
                 }
-                const response = await axios.get('/api/documents', {
+                const response = await axios.get(documentsIndex.url(), {
                     params,
                 });
                 setDocumentsData(response.data);
@@ -157,7 +159,7 @@ export default function DokumenKu({
                     loading={loading}
                     onEdit={(id) => router.visit(editRoute.url(id))}
                     onView={(id) => router.visit(previewRoute.url(id))}
-                    onDownload={() => {}}
+                    onDownload={(d) => downloadAllDocument({ theDocument: d })}
                     onDelete={() => {}}
                 />
 

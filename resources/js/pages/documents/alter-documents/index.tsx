@@ -8,6 +8,7 @@ import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import AppLayout from '@/layouts/app';
 import { formatFileSize } from '@/lib/utils';
+import { store, update, storeFile } from '@/routes/api/documents';
 import { index as createRoute } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
 import { index as previewRoute } from '@/routes/document/preview';
@@ -100,73 +101,15 @@ export default function AlterDocuments({
         }
     }, []);
 
-    const uploadFile = useCallback(
-        async (fileId: string, file: File, documentId: string) => {
-            const formData = new FormData();
-            formData.append('file', file);
-            formData.append('document_id', documentId);
-
-            try {
-                const response = await axios.post(
-                    '/api/documents/file',
-                    formData,
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                        },
-                        onUploadProgress: (progressEvent) => {
-                            const progress = progressEvent.total
-                                ? Math.round(
-                                      (progressEvent.loaded * 100) /
-                                          progressEvent.total,
-                                  )
-                                : 0;
-                            setUploadingFiles((prev) =>
-                                prev.map((f) =>
-                                    f.id === fileId
-                                        ? {
-                                              ...f,
-                                              progress,
-                                              status: 'uploading',
-                                          }
-                                        : f,
-                                ),
-                            );
-                        },
-                    },
-                );
-
-                setUploadingFiles((prev) =>
-                    prev.map((f) =>
-                        f.id === fileId
-                            ? {
-                                  ...f,
-                                  progress: 100,
-                                  status: 'uploaded',
-                                  uploadedData: response.data.data,
-                              }
-                            : f,
-                    ),
-                );
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            } catch (error) {
-                setUploadingFiles((prev) =>
-                    prev.map((f) =>
-                        f.id === fileId ? { ...f, status: 'error' } : f,
-                    ),
-                );
-            }
-        },
-        [],
-    );
-
     const handleFiles = useCallback((files: File[]) => {
         const newFiles: UploadingFile[] = files.map((file) => ({
-            id: `up-{Math.random().toString(36).substring(7)}`,
+            id: `up-${Math.random().toString(36).substring(7)}`,
             file,
             progress: 0,
-            status: 'uploading',
+            status: 'wait upload',
         }));
+
+        console.log(newFiles);
 
         setUploadingFiles((prev) => [...prev, ...newFiles]);
     }, []);
@@ -215,6 +158,63 @@ export default function AlterDocuments({
             setUploadingFiles((prev) =>
                 prev.map((f) =>
                     f.id === file.id ? { ...f, status: 'deleted' } : f,
+                ),
+            );
+        }
+    };
+
+    const uploadFile = async (
+        fileId: string,
+        file: File,
+        documentId: string,
+    ) => {
+        const formData = new FormData();
+        formData.append('file', file);
+        formData.append('document_id', documentId);
+
+        try {
+            const response = await axios.post(storeFile.url(), formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+                onUploadProgress: (progressEvent) => {
+                    const progress = progressEvent.total
+                        ? Math.round(
+                              (progressEvent.loaded * 100) /
+                                  progressEvent.total,
+                          )
+                        : 0;
+                    setUploadingFiles((prev) =>
+                        prev.map((f) => {
+                            return f.id === fileId
+                                ? {
+                                      ...f,
+                                      progress,
+                                      status: 'uploading',
+                                  }
+                                : f;
+                        }),
+                    );
+                },
+            });
+
+            setUploadingFiles((prev) =>
+                prev.map((f) =>
+                    f.id === fileId
+                        ? {
+                              ...f,
+                              progress: 100,
+                              status: 'uploaded',
+                              uploadedData: response.data.data,
+                          }
+                        : f,
+                ),
+            );
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            setUploadingFiles((prev) =>
+                prev.map((f) =>
+                    f.id === fileId ? { ...f, status: 'error' } : f,
                 ),
             );
         }
@@ -278,8 +278,8 @@ export default function AlterDocuments({
         try {
             const url =
                 mode === 'edit' && document
-                    ? `/api/documents/${document.id}`
-                    : '/api/documents';
+                    ? update.url({ document: document.id })
+                    : store.url();
 
             if (mode === 'edit' && document) {
                 formData.append('_method', 'PUT');
@@ -296,7 +296,7 @@ export default function AlterDocuments({
             for (const file of uploadingFiles) {
                 if (file.status === 'on server' || file.status === 'deleted')
                     continue;
-                uploadFile(file.id, file.file, documentId);
+                await uploadFile(file.id, file.file, documentId);
             }
 
             await confirm({

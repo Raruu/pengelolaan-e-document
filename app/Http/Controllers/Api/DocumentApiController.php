@@ -8,6 +8,8 @@ use App\Models\Document;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\StreamedResponse;
+use ZipArchive;
 
 class DocumentApiController extends Controller
 {
@@ -205,5 +207,77 @@ class DocumentApiController extends Controller
         $document->delete();
 
         return response()->json(['message' => 'Document moved to trash.']);
+    }
+
+    public function downloadAll(Request $request, Document $document): StreamedResponse
+    {
+        if ($document->uploaded_by !== $request->user()->id) {
+            abort(403);
+        }
+
+        $files = $document->files;
+
+        if ($files->isEmpty()) {
+            abort(404, 'No files found for this document.');
+        }
+
+        $zipFileName = 'document_' . $document->id . '_' . $document->title . '_' . time() . '.zip';
+        $zipPath = storage_path('app/temp/' . $zipFileName);
+
+        if (!file_exists(storage_path('app/temp'))) {
+            mkdir(storage_path('app/temp'), 0755, true);
+        }
+
+        $zip = new ZipArchive();
+
+        if ($zip->open($zipPath, ZipArchive::CREATE | ZipArchive::OVERWRITE) !== true) {
+            abort(500, 'Could not create zip file.');
+        }
+
+        // metadata.json
+        $metadata = [
+            'id' => $document->id,
+            'title' => $document->title,
+            'description' => $document->description,
+            'document_date' => $document->document_date->format('d-m-Y'),
+            'created_at' => $document->created_at->toIso8601String(),
+            'updated_at' => $document->updated_at->toIso8601String(),
+            'category' => [
+                'name' => $document->category->category,
+                'direction' => $document->category->direction,
+            ],
+            'uploader' => [
+                'id' => $document->uploader->id,
+                'name' => $document->uploader->name,
+                'email' => $document->uploader->email,
+            ],
+            'files' => $files->map(function ($file) {
+                return [
+                    'id' => $file->id,
+                    'filename' => basename($file->file_path),
+                    'size' => $file->file_size,
+                    'created_at' => $file->created_at->toIso8601String(),
+                ];
+            })->toArray(),
+        ];
+
+        $zip->addFromString('metadata.json', json_encode($metadata, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+        // Add all files
+        foreach ($files as $file) {
+            $filePath = Storage::disk('public')->path($file->file_path);
+            if (file_exists($filePath)) {
+                $zip->addFile($filePath, basename($file->file_path));
+            }
+        }
+
+        $zip->close();
+
+        return response()->streamDownload(function () use ($zipPath) {
+            readfile($zipPath);
+            unlink($zipPath); // Delete temp file after streaming
+        }, $zipFileName, [
+            'Content-Type' => 'application/zip',
+        ]);
     }
 }

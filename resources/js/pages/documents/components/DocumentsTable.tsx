@@ -24,7 +24,7 @@ interface DocumentsTableProps {
     loading: boolean;
     onEdit: (id: number) => void;
     onView: (id: number) => void;
-    onDownload: (id: number) => void;
+    onDownload: (document: Document) => void;
     onDelete: (id: number) => void;
 }
 
@@ -157,7 +157,7 @@ export default function DocumentsTable({
                                                             onView(doc.id);
                                                             break;
                                                         case 'download':
-                                                            onDownload(doc.id);
+                                                            onDownload(doc);
                                                             break;
                                                         case 'delete':
                                                             onDelete(doc.id);

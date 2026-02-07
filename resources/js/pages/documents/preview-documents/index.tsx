@@ -1,6 +1,4 @@
-import { Button } from '@heroui/react';
 import { Head } from '@inertiajs/react';
-import { ArrowLeft, Download } from 'lucide-react';
 import { useEffect } from 'react';
 import Heading from '@/components/Heading';
 import { defaultItems } from '@/constants/nav-items';
@@ -54,26 +52,6 @@ export default function PreviewDocuments({ document, files }: Props) {
                     {/* Right Side - Document Details */}
                     <div className="lg:flex-3">
                         <DocumentDetailsView document={document} />
-
-                        {/* Action Buttons */}
-                        <div className="flex justify-end gap-3 mt-4">
-                            <Button
-                                variant="bordered"
-                                onPress={() => window.history.back()}
-                                startContent={<ArrowLeft className="size-4 mt-0.5" />}
-                            >
-                                Kembali
-                            </Button>
-                            <Button
-                                color="primary"
-                                startContent={<Download className="size-4" />}
-                                onPress={() => {                                    
-                                    console.log('Download all files');
-                                }}
-                            >
-                                Download Semua
-                            </Button>
-                        </div>
                     </div>
                 </div>
             </div>

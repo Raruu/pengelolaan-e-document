@@ -7,6 +7,12 @@ import Heading from '@/components/Heading';
 import PaginationControls from '@/components/PaginationControls';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import AppLayout from '@/layouts/app';
+import {
+    index as indexCategories,
+    store as createCategory,
+    update as updateCategory,
+    destroy as deleteCategory,
+} from '@/routes/api/categories';
 import type { Category } from '@/types/models';
 import CategoriesTable from './components/CategoriesTable';
 import CategorySortFilter from './components/CategorySortFilter';
@@ -46,7 +52,7 @@ export default function ManageCategory({ categories, filters }: Props) {
             setLoading(true);
 
             try {
-                const response = await axios.get('/api/categories', {
+                const response = await axios.get(indexCategories.url(), {
                     params: {
                         ...filters,
                         ...params,
@@ -99,7 +105,7 @@ export default function ManageCategory({ categories, filters }: Props) {
                     formData.append('icon_path', result.iconFile);
                 }
 
-                await axios.post('/api/categories', formData, {
+                await axios.post(createCategory.url(), formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -131,7 +137,7 @@ export default function ManageCategory({ categories, filters }: Props) {
                     formData.append('icon_path', result.iconFile);
                 }
 
-                await axios.post(`/api/categories/${category.id}`, formData, {
+                await axios.post(updateCategory.url(category.id), formData, {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
@@ -198,7 +204,7 @@ export default function ManageCategory({ categories, filters }: Props) {
             })
         ) {
             try {
-                await axios.delete(`/api/categories/${category.id}`);
+                await axios.delete(deleteCategory.url(category.id));
                 fetchCategories();
             } catch (error) {
                 console.error('Error deleting category:', error);
