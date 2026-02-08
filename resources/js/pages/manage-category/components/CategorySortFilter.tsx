@@ -1,20 +1,24 @@
-import { Select, SelectItem } from '@heroui/react';
+import { Select, SelectItem, Switch } from '@heroui/react';
 
 interface CategorySortFilterProps {
     onSortChange: (sortValue: string) => void;
+    onToggleCombine?: (isCombined: boolean) => void;
+    isCombined?: boolean;
 }
 
 export default function CategorySortFilter({
     onSortChange,
+    onToggleCombine,
+    isCombined = false,
 }: CategorySortFilterProps) {
     return (
         <div className="flex items-center gap-3">
-            <div className="flex items-center gap-2">
-                <span className="text-sm text-default-500">Urutkan:</span>
+            <div className="flex items-center gap-2">                
                 <Select
                     className="w-56"
                     size="sm"
                     variant="bordered"
+                    label="Urutkan"
                     defaultSelectedKeys={['category_asc']}
                     onChange={(e) => onSortChange(e.target.value)}
                     aria-label="Sort categories"
@@ -33,6 +37,17 @@ export default function CategorySortFilter({
                     </SelectItem>
                 </Select>
             </div>
+            {onToggleCombine && (
+                <div className="flex items-center gap-2">
+                    <Switch
+                        size="sm"
+                        isSelected={isCombined}
+                        onValueChange={onToggleCombine}
+                    >
+                        Gabungkan Jumlah Masuk & Keluar
+                    </Switch>
+                </div>
+            )}
         </div>
     );
 }

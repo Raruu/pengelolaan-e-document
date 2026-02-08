@@ -36,12 +36,14 @@ interface Props {
         search?: string;
         sort_by: string;
         sort_order: string;
+        is_combined: boolean;
     };
 }
 
 export default function ManageCategory({ categories, filters }: Props) {
     const [perPage, setPerPage] = useState<number>(10);
     const [loading, setLoading] = useState<boolean>(false);
+    const [isCombined, setIsCombined] = useState<boolean>(filters.is_combined);
     const [categoriesData, setCategoriesData] = useState(categories);
     const { openCategoryDialog, DialogComponent: CategoryDialog } =
         useCategoryDialog();
@@ -57,17 +59,17 @@ export default function ManageCategory({ categories, filters }: Props) {
                         ...filters,
                         ...params,
                         per_page: perPage,
+                        is_combined: isCombined,
                     },
                 });
                 setCategoriesData(response.data);
-                // console.log(response.data);
             } catch (error) {
                 console.error('Error fetching categories:', error);
             } finally {
                 setLoading(false);
             }
         },
-        [filters, perPage],
+        [filters, perPage, isCombined],
     );
 
     useEffect(() => {
@@ -81,6 +83,10 @@ export default function ManageCategory({ categories, filters }: Props) {
             sort_order,
             page: 1,
         });
+    };
+
+    const handleToggleCombine = (value: boolean) => {
+        setIsCombined(value);
     };
 
     const handlePageChange = (page: number) => {
@@ -119,8 +125,7 @@ export default function ManageCategory({ categories, filters }: Props) {
 
     const handleEditCategory = async (
         category: Category & { documents_count: number },
-    ) => {
-        // console.log(category);
+    ) => {        
         const result = await openCategoryDialog({
             id: category.id,
             category: category.category,
@@ -232,12 +237,17 @@ export default function ManageCategory({ categories, filters }: Props) {
                 />
 
                 {/* Search and Sort */}
-                <CategorySortFilter onSortChange={handleSortChange} />
+                <CategorySortFilter
+                    onSortChange={handleSortChange}
+                    onToggleCombine={handleToggleCombine}
+                    isCombined={isCombined}
+                />
 
                 {/* Categories Table */}
                 <CategoriesTable
                     categories={categoriesData.data}
                     loading={loading}
+                    isCombined={isCombined}
                     onEdit={handleEditCategory}
                     onDelete={handleDeleteCategory}
                 />

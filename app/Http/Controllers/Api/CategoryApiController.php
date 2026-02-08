@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Drivers\Gd\Driver;
 use Intervention\Image\ImageManager;
@@ -22,7 +23,22 @@ class CategoryApiController extends Controller
             'sort_order' => 'nullable|string|in:asc,desc',
         ]);
 
-        $query = Category::withCount('documents');
+        $isCombined = $request->boolean('is_combined', false);
+
+        if ($isCombined) {
+            $query = Category::select(
+                'category',
+                'icon_path',
+                DB::raw('MAX(id) as id'),
+                DB::raw('MAX(direction) as direction'),
+                DB::raw('SUM(
+                    (SELECT COUNT(*) FROM documents WHERE documents.category_id = categories.id)
+                ) as documents_count')
+            )
+                ->groupBy('category', 'icon_path');
+        } else {
+            $query = Category::withCount('documents');
+        }
 
         // Search
         if (!empty($validated['search'])) {
@@ -170,7 +186,19 @@ class CategoryApiController extends Controller
 
     public function destroy(Category $category): JsonResponse
     {
+        if ($category->icon_path) {
+            Storage::disk('public')->delete($category->icon_path);
+        }
+        $sibling = $category->sibling();
+        if ($sibling) {
+            if ($sibling->icon_path) {
+                Storage::disk('public')->delete($sibling->icon_path);
+            }
+        }
+
         $category->delete();
+
+
 
         return response()->json(['message' => 'Category deleted successfully']);
     }

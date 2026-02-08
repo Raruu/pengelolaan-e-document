@@ -51,13 +51,13 @@ class DocumentApiController extends Controller
             $query->whereDate('document_date', '>=', $validated['date_from']);
         }
 
-        if (!empty($validated['date_to'])) {
-            $query->whereDate('document_date', '<=', $validated['date_to']);
-        }
+        // if (!empty($validated['date_to'])) {
+        //     $query->whereDate('document_date', '<=', $validated['date_to']);
+        // }
 
-        if (!empty($validated['date_updated'])) {
-            $query->whereDate('updated_at', '<=', $validated['date_updated']);
-        }
+        // if (!empty($validated['date_updated'])) {
+        //     $query->whereDate('updated_at', '<=', $validated['date_updated']);
+        // }
 
         // Starred
         if (!empty($validated['starred'])) {
@@ -140,6 +140,8 @@ class DocumentApiController extends Controller
             'file_path' => $path,
             'file_size' => round($file->getSize() / 1024, 2),
         ]);
+
+        $document->touch();
 
         return response()->json([
             'message' => 'File added successfully.',

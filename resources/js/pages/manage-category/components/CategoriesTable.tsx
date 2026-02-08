@@ -26,6 +26,7 @@ interface CategoryWithDocsCount extends Category {
 interface CategoriesTableProps {
     categories: (CategoryWithDocsCount & { sibling: CategoryWithDocsCount })[];
     loading: boolean;
+    isCombined: boolean;
     onEdit: (category: CategoryWithDocsCount) => void;
     onDelete: (
         category: CategoryWithDocsCount & { sibling: CategoryWithDocsCount },
@@ -35,6 +36,7 @@ interface CategoriesTableProps {
 export default function CategoriesTable({
     categories,
     loading,
+    isCombined,
     onEdit,
     onDelete,
 }: CategoriesTableProps) {
@@ -103,12 +105,16 @@ export default function CategoriesTable({
                                                 size="sm"
                                                 variant="flat"
                                                 color={
-                                                    direction == 'Masuk'
-                                                        ? 'success'
-                                                        : 'danger'
+                                                    isCombined
+                                                        ? 'primary'
+                                                        : direction == 'Masuk'
+                                                          ? 'success'
+                                                          : 'danger'
                                                 }
                                             >
-                                                {direction}
+                                                {isCombined
+                                                    ? 'Gabungan'
+                                                    : direction}
                                             </Chip>
                                         </TableCell>
                                         <TableCell>

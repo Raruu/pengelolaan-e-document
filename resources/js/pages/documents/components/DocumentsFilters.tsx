@@ -35,7 +35,7 @@ export default function DocumentsFilters({
         const date = new Date();
         switch (selected) {
             case 'today':
-                date.setDate(date.getDate() - 1);
+                date.setDate(date.getDate());
                 break;
             case '2-years':
                 date.setFullYear(date.getFullYear() - 2);
@@ -55,7 +55,7 @@ export default function DocumentsFilters({
     return (
         <div className="flex flex-wrap items-center gap-3">
             <Select
-                label="Tampilkan"
+                label="Dokumen Dari"
                 className="w-48"
                 size="sm"
                 variant="bordered"
