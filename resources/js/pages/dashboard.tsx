@@ -1,28 +1,51 @@
 import { Head } from '@inertiajs/react';
-import { PlaceholderPattern } from '@/components/PlaceholderPattern';
+import { Star } from 'lucide-react';
+import RecentFiles from '@/components/RecentFiles';
 import WelcomeBanner from '@/components/WelcomeBanner';
 import AppLayout from '@/layouts/app';
+import { index as documentsIndex } from '@/routes/documents';
+import { index as documentsStarredIndex } from '@/routes/documents_starred';
+import type { Document as typeDocument } from '@/types/models';
 
-export default function Dashboard() {
+
+interface Document extends typeDocument {
+    files_count: number;
+}
+
+interface DashboardProps {
+    recentDocuments: Document[];
+    starredDocuments: Document[];
+}
+
+export default function Dashboard({
+    recentDocuments,
+    starredDocuments,
+}: DashboardProps) {
     return (
         <AppLayout>
             <Head title="Dashboard" />
             <div className="flex h-full flex-1 flex-col gap-4 overflow-x-auto rounded-xl p-4">
-                <WelcomeBanner  />
-                <div className="grid auto-rows-min gap-4 md:grid-cols-3">
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                    <div className="relative aspect-video overflow-hidden rounded-xl border border-sidebar-border/70 dark:border-sidebar-border">
-                        <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                    </div>
-                </div>
-                <div className="relative min-h-[100vh] flex-1 overflow-hidden rounded-xl border border-sidebar-border/70 md:min-h-min dark:border-sidebar-border">
-                    <PlaceholderPattern className="absolute inset-0 size-full stroke-neutral-900/20 dark:stroke-neutral-100/20" />
-                </div>
+                <WelcomeBanner />
+
+                <RecentFiles
+                    title="Dokumen Terbaru"
+                    documents={recentDocuments}
+                    viewAllLink={documentsIndex.url()}
+                />
+
+                <RecentFiles
+                    title={
+                        <div className="flex flex-row items-center gap-2">
+                            <Star
+                                className="size-5 text-[#ede05d]"
+                                fill="#ede05d"
+                            />
+                            <div>Dokumen Favorit</div>
+                        </div>
+                    }
+                    documents={starredDocuments}
+                    viewAllLink={documentsStarredIndex.url()}
+                />
             </div>
         </AppLayout>
     );

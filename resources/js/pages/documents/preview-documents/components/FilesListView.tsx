@@ -1,6 +1,6 @@
 import { Card, CardBody, Button, Divider } from '@heroui/react';
 import { Download, Eye } from 'lucide-react';
-import { getFileIcon } from '@/components/FileIcon';
+import { FileIcon } from '@/components/FileIcon';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import { formatDate, formatFileSize } from '@/lib/utils';
 import type { DocumentFile } from '@/types/models';
@@ -65,7 +65,7 @@ export default function FilesListView({ files }: FilesListViewProps) {
                                 {index > 0 && <Divider className="mb-3" />}
                                 <div className="flex items-start gap-3 py-1">
                                     <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
-                                        {getFileIcon(file.filename)}
+                                        <FileIcon extension={file.filename} />
                                     </div>
                                     <div className="min-w-0 flex-1">
                                         <div className="flex items-start justify-between gap-2">

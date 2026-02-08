@@ -1,6 +1,6 @@
 import { Button, Card, CardBody, Divider } from '@heroui/react';
 import { RotateCcw, Trash2 } from 'lucide-react';
-import { getFileIcon } from '@/components/FileIcon';
+import { FileIcon } from '@/components/FileIcon';
 import { formatDate, formatFileSize } from '@/lib/utils';
 import type { DocumentFile } from '@/types/models';
 import type { TrashDocument } from '@/types/models/trash';
@@ -42,7 +42,9 @@ export default function DeletedFilesListView({
                                 <div className="flex flex-col gap-3 py-1 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex flex-row items-start gap-3">
                                         <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
-                                            {getFileIcon(file.filename)}
+                                            <FileIcon
+                                                extension={file.filename}
+                                            />
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-default-700">

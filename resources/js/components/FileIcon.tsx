@@ -73,8 +73,8 @@ const WordIcon = () => (
     </svg>
 );
 
-export const getFileIcon = (filename: string) => {
-    const ext = filename.split('.').pop()?.toLowerCase();
+export const FileIcon = ({ extension }: { extension: string }) => {
+    const ext = extension.toLowerCase();
     if (ext === 'docs' || ext === 'doc' || ext === 'docx') {
         return <WordIcon />;
     } else if (ext === 'pdf') {
