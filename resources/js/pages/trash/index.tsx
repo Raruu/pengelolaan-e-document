@@ -52,6 +52,7 @@ export default function Trash({
     const [perPage, setPerPage] = useState<number>(10);
     const [direction, setDirection] = useState<string>('');
     const [deletedDate, setDeletedDate] = useState('');
+    const [searchTerm, setSearchTerm] = useState<string>(filters.search || '');
     const [loading, setLoading] = useState<boolean>(false);
     const [itemsData, setItemsData] = useState(items);
 
@@ -79,6 +80,13 @@ export default function Trash({
                     };
                 }
 
+                if (searchTerm !== '') {
+                    params = {
+                        ...params,
+                        search: searchTerm,
+                    };
+                }
+
                 const response = await axios.get(trashIndex.url(), {
                     params,
                 });
@@ -89,7 +97,7 @@ export default function Trash({
                 setLoading(false);
             }
         },
-        [direction, deletedDate, filters, perPage],
+        [direction, deletedDate, filters, perPage, searchTerm],
     );
 
     useEffect(() => {
@@ -209,6 +217,7 @@ export default function Trash({
                     categories={categories}
                     directions={directions}
                     selectedCategory={selectedCategory}
+                    searchValue={searchTerm}
                     onCategoryChange={(category) => {
                         setSelectedCategory(category || '');
                         fetchItems({ category, page: 1 });
@@ -220,6 +229,9 @@ export default function Trash({
                     onDateRangeChange={(dateFrom) => {
                         setDeletedDate(dateFrom);
                         fetchItems({ date_from: dateFrom || undefined });
+                    }}
+                    onSearchChange={(search) => {
+                        setSearchTerm(search);
                     }}
                     onClearCategory={clearCategoryFilter}
                 />

@@ -7,6 +7,7 @@ use App\Models\Document;
 use App\Models\DocumentFile;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Storage;
 
 class TrashApiController extends Controller
 {
@@ -134,7 +135,7 @@ class TrashApiController extends Controller
                 'title' => $document->title,
                 'description' => $document->description,
                 'category' => $document->category,
-                'deleted_at' => $deletedFiles->max('deleted_at')->toISOString(),
+                'deleted_at' => $document->deleted_at?->toISOString() ?? $deletedFiles->max('deleted_at')->toISOString(),
                 'document_date' => $document->document_date?->toISOString(),
                 'files_count' => $totalFiles,
                 'deleted_files_count' => $deletedFiles->count(),
@@ -173,7 +174,12 @@ class TrashApiController extends Controller
         if ($validated['type'] === 'document') {
             $document = Document::onlyTrashed()
                 ->where('uploaded_by', $request->user()->id)
-                ->findOrFail($validated['id']);
+                ->find($validated['id']);
+
+            if (!$document) {
+                $document = Document::where('uploaded_by', $request->user()->id)
+                    ->find($validated['id']);
+            }
 
             $document->files()->onlyTrashed()->restore();
             $document->restore();
@@ -206,19 +212,32 @@ class TrashApiController extends Controller
         if ($validated['type'] === 'document') {
             $document = Document::onlyTrashed()
                 ->where('uploaded_by', $request->user()->id)
-                ->findOrFail($validated['id']);
+                ->find($validated['id']);
 
-            // Delete all associated files permanently
-            foreach ($document->files()->withTrashed()->get() as $file) {
-                \Storage::delete($file->file_path);
-                $file->forceDelete();
+            if ($document) {
+                foreach ($document->files()->withTrashed()->get() as $file) {
+                    Storage::disk('public')->delete($file->file_path);
+                    $file->forceDelete();
+                }
+
+                $document->forceDelete();
+
+                return response()->json([
+                    'message' => 'Document permanently deleted',
+                ]);
+            } else {
+                $document = Document::where('uploaded_by', $request->user()->id)
+                    ->find($validated['id']);
+
+                foreach ($document->files()->onlyTrashed()->get() as $file) {
+                    Storage::disk('public')->delete($file->file_path);
+                    $file->forceDelete();
+                }
+
+                return response()->json([
+                    'message' => 'File permanently deleted',
+                ]);
             }
-
-            $document->forceDelete();
-
-            return response()->json([
-                'message' => 'Document permanently deleted',
-            ]);
         } else {
             $file = DocumentFile::onlyTrashed()
                 ->whereHas('document', function ($query) use ($request) {
@@ -226,7 +245,7 @@ class TrashApiController extends Controller
                 })
                 ->findOrFail($validated['id']);
 
-            \Storage::delete($file->file_path);
+            Storage::disk('public')->delete($file->file_path);
             $file->forceDelete();
 
             return response()->json([
@@ -256,7 +275,7 @@ class TrashApiController extends Controller
         foreach ($documents as $document) {
             // Delete all associated files
             foreach ($document->files()->withTrashed()->get() as $file) {
-                \Storage::delete($file->file_path);
+                Storage::disk('public')->delete($file->file_path);
                 $file->forceDelete();
             }
             $document->forceDelete();
@@ -265,7 +284,7 @@ class TrashApiController extends Controller
 
         // Permanently delete standalone files
         foreach ($files as $file) {
-            \Storage::delete($file->file_path);
+            Storage::disk('public')->delete($file->file_path);
             $file->forceDelete();
             $deletedCount++;
         }

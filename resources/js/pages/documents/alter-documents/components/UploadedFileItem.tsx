@@ -21,7 +21,7 @@ export default function UploadedFileItem({
         <div>
             {showDivider && <Divider className="mb-3" />}
             <div className="flex items-start gap-3 py-1">
-                <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
+                <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
                     {getFileIcon(uploadFile.file.name)}
                 </div>
                 <div className="min-w-0 flex-1">

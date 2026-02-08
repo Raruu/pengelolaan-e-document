@@ -92,6 +92,7 @@ class DocumentApiController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
             'document_date' => 'required|date',
+            'starred' => 'nullable|boolean',
         ]);
 
         $category = Category::where([
@@ -111,6 +112,7 @@ class DocumentApiController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],
+            'starred' => $validated['starred'] ?? false,
         ]);
 
         return response()->json([
@@ -159,6 +161,7 @@ class DocumentApiController extends Controller
             'document_date' => 'required|date',
             'deleted_files' => 'nullable|array',
             'deleted_files.*' => 'integer|exists:document_files,id',
+            'starred' => 'nullable|boolean',
         ]);
 
         $category = Category::where([
@@ -177,6 +180,7 @@ class DocumentApiController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],
+            'starred' => $validated['starred'] ?? false,
         ]);
 
         if (!empty($validated['deleted_files'])) {

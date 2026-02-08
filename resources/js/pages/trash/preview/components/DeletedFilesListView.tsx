@@ -1,4 +1,4 @@
-import { Button, Card, CardBody, Chip, Divider } from '@heroui/react';
+import { Button, Card, CardBody, Divider } from '@heroui/react';
 import { RotateCcw, Trash2 } from 'lucide-react';
 import { getFileIcon } from '@/components/FileIcon';
 import { formatDate, formatFileSize } from '@/lib/utils';
@@ -41,21 +41,15 @@ export default function DeletedFilesListView({
                                 {index > 0 && <Divider className="mb-3" />}
                                 <div className="flex flex-col gap-3 py-1 sm:flex-row sm:items-center sm:justify-between">
                                     <div className="flex flex-row items-start gap-3">
-                                        <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
+                                        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
                                             {getFileIcon(file.filename)}
                                         </div>
                                         <div className="min-w-0 flex-1">
                                             <p className="truncate text-sm font-medium text-default-700">
                                                 {file.filename}
                                             </p>
-                                            <div className="flex flex-row items-center gap-2 text-xs text-default-500">
-                                                <Chip
-                                                    size="sm"
-                                                    variant="flat"
-                                                    color="default"
-                                                >
-                                                    {formatFileSize(file.size)}
-                                                </Chip>
+                                            <div className="flex flex-row items-center gap-1 text-xs text-default-500">
+                                                {formatFileSize(file.size)}
                                                 <span>•</span>
                                                 <span>
                                                     Dihapus:{' '}

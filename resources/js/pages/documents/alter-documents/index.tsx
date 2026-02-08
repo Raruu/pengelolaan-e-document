@@ -61,6 +61,8 @@ export default function AlterDocuments({
             };
         }) || [],
     );
+    const [starred, setStarred] = useState(document?.starred || false);
+
     const [dragActive, setDragActive] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [validationErrors, setValidationErrors] = useState<
@@ -257,6 +259,7 @@ export default function AlterDocuments({
         formData.append('category', category);
         formData.append('direction', direction);
         formData.append('document_date', documentDate);
+        formData.append('starred', starred ? '1' : '0');
 
         if (description) {
             formData.append('description', description);
@@ -385,6 +388,7 @@ export default function AlterDocuments({
                             documentDate={documentDate}
                             categories={categories}
                             directions={directions}
+                            starred={starred}
                             validationErrors={validationErrors}
                             isSubmitting={isSubmitting}
                             mode={mode}
@@ -419,6 +423,7 @@ export default function AlterDocuments({
                                     clearValidationError('document_date');
                                 }
                             }}
+                            onStarredChange={(value) => setStarred(value)}
                         />
                     </div>
                 </div>

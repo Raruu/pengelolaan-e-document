@@ -1,6 +1,6 @@
 import { Card, CardBody, Textarea, Button, addToast } from '@heroui/react';
 import { router } from '@inertiajs/react';
-import { ArrowLeft, Copy, Download, Edit2 } from 'lucide-react';
+import { ArrowLeft, Copy, Download, Edit2, Star } from 'lucide-react';
 import { useState } from 'react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { downloadAllDocument } from '@/lib/donwload-all';
@@ -53,6 +53,12 @@ export default function DocumentDetailsView({
                             </div>
 
                             <div className="flex flex-row items-center gap-2">
+                                {theDocument.starred && (
+                                    <Star
+                                        className="size-6 text-[#ede05d]"
+                                        fill="#ede05d"
+                                    />
+                                )}
                                 <Button
                                     variant="flat"
                                     onPress={() =>

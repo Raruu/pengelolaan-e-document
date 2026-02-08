@@ -7,7 +7,7 @@ import {
     Textarea,
 } from '@heroui/react';
 import { router } from '@inertiajs/react';
-import { ArrowLeft, Copy, RotateCcw, Trash2 } from 'lucide-react';
+import { ArrowLeft, Copy, RotateCcw, Star, Trash2 } from 'lucide-react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { formatDate } from '@/lib/utils';
 import { index as trashIndex } from '@/routes/trash';
@@ -50,6 +50,12 @@ export default function TrashDocumentDetailsView({
                                     {formatDate(document.deleted_at || '')}
                                 </p>
                             </div>
+                            {document.starred && (
+                                <Star
+                                    className="size-6 text-[#ede05d]"
+                                    fill="#ede05d"
+                                />
+                            )}
                         </div>
 
                         <div className="flex flex-col gap-2">

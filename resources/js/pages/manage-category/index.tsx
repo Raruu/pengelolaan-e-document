@@ -44,6 +44,7 @@ export default function ManageCategory({ categories, filters }: Props) {
     const [perPage, setPerPage] = useState<number>(10);
     const [loading, setLoading] = useState<boolean>(false);
     const [isCombined, setIsCombined] = useState<boolean>(filters.is_combined);
+    const [searchTerm, setSearchTerm] = useState<string>(filters.search || '');
     const [categoriesData, setCategoriesData] = useState(categories);
     const { openCategoryDialog, DialogComponent: CategoryDialog } =
         useCategoryDialog();
@@ -60,6 +61,7 @@ export default function ManageCategory({ categories, filters }: Props) {
                         ...params,
                         per_page: perPage,
                         is_combined: isCombined,
+                        search: searchTerm || undefined,
                     },
                 });
                 setCategoriesData(response.data);
@@ -69,7 +71,7 @@ export default function ManageCategory({ categories, filters }: Props) {
                 setLoading(false);
             }
         },
-        [filters, perPage, isCombined],
+        [filters, perPage, isCombined, searchTerm],
     );
 
     useEffect(() => {
@@ -238,8 +240,12 @@ export default function ManageCategory({ categories, filters }: Props) {
 
                 {/* Search and Sort */}
                 <CategorySortFilter
+                    searchValue={searchTerm}
                     onSortChange={handleSortChange}
                     onToggleCombine={handleToggleCombine}
+                    onSearchChange={(search) => {
+                        setSearchTerm(search);
+                    }}
                     isCombined={isCombined}
                 />
 

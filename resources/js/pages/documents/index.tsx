@@ -54,6 +54,7 @@ export default function DokumenKu({
     const [perPage, setPerPage] = useState<number>(10);
     const [direction, setDirection] = useState<string>('');
     const [documentDate, setDocumentDate] = useState('');
+    const [searchTerm, setSearchTerm] = useState<string>(filters.search || '');
     const [loading, setLoading] = useState<boolean>(false);
     const [documentsData, setDocumentsData] = useState(documents);
 
@@ -81,6 +82,13 @@ export default function DokumenKu({
                         date_from: documentDate,
                     };
                 }
+
+                if (searchTerm !== '') {
+                    params = {
+                        ...params,
+                        search: searchTerm,
+                    };
+                }
                 const response = await axios.get(documentsIndex.url(), {
                     params,
                 });
@@ -91,7 +99,7 @@ export default function DokumenKu({
                 setLoading(false);
             }
         },
-        [direction, documentDate, filters, perPage, starred],
+        [direction, documentDate, filters, perPage, starred, searchTerm],
     );
 
     useEffect(() => {
@@ -180,6 +188,7 @@ export default function DokumenKu({
                     categories={categories}
                     directions={directions}
                     selectedCategory={selectedCategory}
+                    searchValue={searchTerm}
                     onCategoryChange={(category) => {
                         setSelectedCategory(category || '');
                         fetchDocuments({ category, page: 1 });
@@ -191,6 +200,9 @@ export default function DokumenKu({
                     onDateRangeChange={(dateFrom) => {
                         setDocumentDate(dateFrom);
                         fetchDocuments({ date_from: dateFrom || undefined });
+                    }}
+                    onSearchChange={(search) => {
+                        setSearchTerm(search);
                     }}
                     onClearCategory={clearCategoryFilter}
                 />
