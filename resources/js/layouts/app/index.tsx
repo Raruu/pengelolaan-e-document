@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { useSidebar } from '../../hooks/SidebarContext';
+import { useSidebar } from '../../hooks/useSidebar';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
 import Backdrop from './Backdrop';

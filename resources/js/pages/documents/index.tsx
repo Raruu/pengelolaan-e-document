@@ -1,13 +1,15 @@
-import { Button } from '@heroui/react';
+import { addToast, Button } from '@heroui/react';
 import { Head, Link, router } from '@inertiajs/react';
 import axios from 'axios';
 import { Plus } from 'lucide-react';
 import { useState, useEffect, useCallback } from 'react';
 import Heading from '@/components/Heading';
 import PaginationControls from '@/components/PaginationControls';
+import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import AppLayout from '@/layouts/app';
 import { downloadAllDocument } from '@/lib/donwload-all';
 import { index as documentsIndex } from '@/routes/api/documents';
+import { destroy as documentDestroy } from '@/routes/api/documents';
 import { index as create } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
 import { index as previewRoute } from '@/routes/document/preview';
@@ -45,6 +47,7 @@ export default function DokumenKu({
     filters,
     starred,
 }: Props) {
+    const { confirm, DialogComponent } = useConfirmDialog();
     const [selectedCategory, setSelectedCategory] = useState<string>(
         filters.category || '',
     );
@@ -110,6 +113,45 @@ export default function DokumenKu({
         setPerPage(perPage);
     };
 
+    const handleDeleteDocument = async (document: Document) => {
+        const yes = await confirm({
+            title: 'Apakah Anda yakin?',
+            message: `Apakah Anda yakin ingin menghapus permanen dokumen '${document.title}'? Aksi ini tidak dapat dibatalkan!`,
+            variant: 'danger',
+        });
+
+        if (!yes) return;
+
+        setLoading(true);
+        try {
+            await axios.delete(documentDestroy.url(document.id), {
+                data: {
+                    id: document.id,
+                    type: 'document',
+                },
+            });
+            fetchDocuments();
+            addToast({
+                title: 'Dihapus!',
+                description: `Dokumen ${document.title} berhasil dihapus!`,
+                timeout: 2000,
+                shouldShowTimeoutProgress: true,
+                color: 'success',
+            });
+        } catch (error) {
+            console.error('Error deleting document:', error);
+            addToast({
+                title: 'Gagal!',
+                description: `Dokumen ${document.title} gagal dihapus!`,
+                timeout: 2000,
+                shouldShowTimeoutProgress: true,
+                color: 'danger',
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
     return (
         <AppLayout>
             <Head title="Dokumenku" />
@@ -160,7 +202,7 @@ export default function DokumenKu({
                     onEdit={(id) => router.visit(editRoute.url(id))}
                     onView={(id) => router.visit(previewRoute.url(id))}
                     onDownload={(d) => downloadAllDocument({ theDocument: d })}
-                    onDelete={() => {}}
+                    onDelete={handleDeleteDocument}
                 />
 
                 {/* Pagination */}
@@ -175,6 +217,7 @@ export default function DokumenKu({
                     onPerPageChange={handlePerPageChange}
                 />
             </div>
+            {DialogComponent}
         </AppLayout>
     );
 }

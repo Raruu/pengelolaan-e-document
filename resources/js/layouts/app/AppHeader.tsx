@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSidebar } from '../../hooks/SidebarContext';
+import { useSidebar } from '../../hooks/useSidebar';
 import UserDropdown from './components/header/UserDropdown';
 
 const AppHeader: React.FC = () => {

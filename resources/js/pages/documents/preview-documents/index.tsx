@@ -2,7 +2,7 @@ import { Head } from '@inertiajs/react';
 import { useEffect } from 'react';
 import Heading from '@/components/Heading';
 import { defaultItems } from '@/constants/nav-items';
-import { useSidebar } from '@/hooks/SidebarContext';
+import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
 import { index as previewRoute } from '@/routes/document/preview';
 import type { Document, DocumentFile } from '@/types/models';
@@ -24,7 +24,7 @@ export default function PreviewDocuments({ document, files }: Props) {
             subItems: [
                 { name: defaultItems[1].name, href: defaultItems[1].href },
                 {
-                    name: 'Preview',
+                    name: 'Detail',
                     href: previewRoute.url(document.id),
                 },
             ],

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TrashController;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use Laravel\Fortify\Features;
@@ -22,6 +23,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('document/preview/{document}', [DocumentController::class, 'indexPreview'])->name('document.preview.index');
     Route::get('document/create', [DocumentController::class, 'indexCreate'])->name('document.create.index');
     Route::get('document/{document}/edit', [DocumentController::class, 'indexEdit'])->name('document.edit.index');
+
+    Route::get('trash', [TrashController::class, 'index'])->name('trash.index');
+    Route::get('trash/preview/{id}', [TrashController::class, 'preview'])->name('trash.preview.index');
 
     Route::get('manage-category', [CategoryController::class, 'index'])->name('categories.index');
 });

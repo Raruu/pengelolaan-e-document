@@ -195,15 +195,7 @@ class DocumentApiController extends Controller
             abort(403);
         }
 
-        if ($document->trashed()) {
-            foreach ($document->files as $file) {
-                Storage::disk('public')->delete($file->file_path);
-            }
-            $document->forceDelete();
-
-            return response()->json(['message' => 'Document permanently deleted.'], status: 204);
-        }
-
+        $document->files()->delete();
         $document->delete();
 
         return response()->json(['message' => 'Document moved to trash.']);

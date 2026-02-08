@@ -30,16 +30,18 @@ export const initialsName = (name: string): string =>
         .toUpperCase()
         .slice(0, 2);
 
-export const formatDate = (dateString: string): string => {
+export const formatDate = (dateString: string, simple = true): string => {
     const date = new Date(dateString);
     const now = new Date();
     const diffTime = Math.abs(now.getTime() - date.getTime());
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-    if (diffDays === 0) return 'Hari ini';
-    if (diffDays === 1) return 'Kemarin';
-    if (diffDays < 7) return `${diffDays} hari lalu`;
-    if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
+    if (simple) {
+        if (diffDays === 0) return 'Hari ini';
+        if (diffDays === 1) return 'Kemarin';
+        if (diffDays < 7) return `${diffDays} hari lalu`;
+        if (diffDays < 30) return `${Math.floor(diffDays / 7)} minggu lalu`;
+    }
 
     return date.toLocaleDateString('id-ID', {
         year: 'numeric',

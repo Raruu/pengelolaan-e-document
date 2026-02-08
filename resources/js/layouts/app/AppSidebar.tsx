@@ -5,7 +5,7 @@ import AppLogoIcon from '@/components/AppLogoIcon';
 import { defaultItems } from '@/constants/nav-items';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types/navigation';
-import { useSidebar } from '../../hooks/SidebarContext';
+import { useSidebar } from '../../hooks/useSidebar';
 
 const AppSidebar: React.FC = () => {
     const {

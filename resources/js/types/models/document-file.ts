@@ -4,6 +4,7 @@ export interface DocumentFile {
     size: number;
     fileurl?: string;
     uploaded_at?: string;
+    deleted_at?: string;
 }
 
 export interface UploadingFile {

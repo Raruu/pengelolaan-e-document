@@ -1,5 +1,6 @@
 import { Card, CardBody, Button, Divider } from '@heroui/react';
-import { FileText, LucideImage, Download, Eye } from 'lucide-react';
+import { Download, Eye } from 'lucide-react';
+import { getFileIcon } from '@/components/FileIcon';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import { formatDate, formatFileSize } from '@/lib/utils';
 import type { DocumentFile } from '@/types/models';
@@ -7,15 +8,6 @@ import type { DocumentFile } from '@/types/models';
 interface FilesListViewProps {
     files: DocumentFile[];
 }
-
-const getFileIcon = (filename: string) => {
-    const ext = filename.split('.').pop()?.toLowerCase();
-    if (ext === 'docs' || ext === 'pdf' || ext === 'doc' || ext === 'docx') {
-        return <FileText className="size-5 text-primary-500" />;
-    } else {
-        return <LucideImage className="size-5 text-danger-300" />;
-    }
-};
 
 export default function FilesListView({ files }: FilesListViewProps) {
     const { preview, DialogComponent } = usePreviewDialog();
@@ -62,7 +54,7 @@ export default function FilesListView({ files }: FilesListViewProps) {
                         <h3 className="text-lg font-semibold text-default-700">
                             File Dokumen
                         </h3>
-                        <p className="text-xs text-default-500">
+                        <p className="text-sm text-default-500">
                             {files.length} file tersedia
                         </p>
                     </div>
@@ -72,7 +64,7 @@ export default function FilesListView({ files }: FilesListViewProps) {
                             <div key={file.id}>
                                 {index > 0 && <Divider className="mb-3" />}
                                 <div className="flex items-start gap-3 py-1">
-                                    <div className="mt-1 shrink-0">
+                                    <div className="mt-1 flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-default-100">
                                         {getFileIcon(file.filename)}
                                     </div>
                                     <div className="min-w-0 flex-1">

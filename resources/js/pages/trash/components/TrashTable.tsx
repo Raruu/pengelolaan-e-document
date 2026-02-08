@@ -17,47 +17,45 @@ import {
 import { Star, MoreVertical } from 'lucide-react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { formatDate } from '@/lib/utils';
-import type { Document } from '@/types/models';
+import type { TrashDocument } from '@/types/models/trash';
 
-interface DocumentsTableProps {
-    documents: Document[];
+interface TrashTableProps {
+    items: TrashDocument[];
     loading: boolean;
-    onEdit: (id: number) => void;
     onView: (id: number) => void;
-    onDownload: (document: Document) => void;
-    onDelete: (document: Document) => void;
+    onRestore: (doc: TrashDocument, type: 'document' | 'file') => void;
+    onPermanentDelete: (doc: TrashDocument, type: 'document' | 'file') => void;
 }
 
-export default function DocumentsTable({
-    documents,
+export default function TrashTable({
+    items,
     loading,
-    onEdit,
     onView,
-    onDownload,
-    onDelete,
-}: DocumentsTableProps) {
+    onRestore,
+    onPermanentDelete,
+}: TrashTableProps) {
     return (
         <Card className="flex-1">
             <CardBody className="p-0">
                 <Table
-                    aria-label="Documents table"
+                    aria-label="Trash table"
                     removeWrapper
                     className="min-h-100"
                 >
                     <TableHeader>
                         <TableColumn width={'40%'}>NAMA DOKUMEN</TableColumn>
-                        <TableColumn width={'15%'}>KATEGORI</TableColumn>
+                        <TableColumn width={'7%'}>KATEGORI</TableColumn>
+                        <TableColumn width={'1%'}>PENGHAPUSAN</TableColumn>
                         <TableColumn width={'1%'}>JUMLAH FILE</TableColumn>
-                        <TableColumn width={'1%'}>TANGGAL DOKUMEN</TableColumn>
-                        <TableColumn width={'1%'}>TERAKHIR DIUBAH</TableColumn>
+                        <TableColumn width={'1%'}>TANGGAL DIHAPUS</TableColumn>
                         <TableColumn width={'1%'}>AKSI</TableColumn>
                     </TableHeader>
                     <TableBody isLoading={loading}>
-                        {documents.length > 0 ? (
-                            documents.map((doc) => (
-                                <TableRow key={doc.id}>
-                                    <TableCell  className="max-w-96 overflow-hidden">
-                                        <div className="flex flex-col truncate">
+                        {items.length > 0 ? (
+                            items.map((doc) => (
+                                <TableRow key={`document-${doc.id}`}>
+                                    <TableCell className="max-w-96 overflow-hidden">
+                                        <div className="m-0 flex flex-col truncate">
                                             <span className="flex flex-row items-center gap-2 font-medium">
                                                 {doc.title}
                                                 {doc.starred && (
@@ -68,7 +66,7 @@ export default function DocumentsTable({
                                                 )}
                                             </span>
                                             {doc.description && (
-                                                <span className="text-xs text-default-400 truncate">
+                                                <span className="truncate text-xs text-default-400">
                                                     {doc.description}
                                                 </span>
                                             )}
@@ -84,22 +82,32 @@ export default function DocumentsTable({
                                         <Chip
                                             size="sm"
                                             variant="flat"
-                                            color="default"
+                                            color={
+                                                doc.deletion_type === 'full'
+                                                    ? 'danger'
+                                                    : 'warning'
+                                            }
                                         >
-                                            {doc.files.length} file
+                                            {doc.deletion_type === 'full'
+                                                ? 'Dokumen'
+                                                : 'Sebagian'}
                                         </Chip>
                                     </TableCell>
                                     <TableCell>
-                                        {new Intl.DateTimeFormat('id-ID', {
-                                            year: 'numeric',
-                                            month: 'short',
-                                            day: 'numeric',
-                                        }).format(new Date(doc.document_date))}
+                                        <Chip
+                                            size="sm"
+                                            variant="flat"
+                                            color="default"
+                                        >
+                                            {doc.deletion_type === 'partial'
+                                                ? `${doc.deleted_files_count}/${doc.files_count} file`
+                                                : `${doc.files_count} file`}
+                                        </Chip>
                                     </TableCell>
                                     <TableCell>
-                                        {doc.updated_at
-                                            ? formatDate(doc.updated_at)
-                                            : formatDate(doc.created_at)}
+                                        {doc.deleted_at
+                                            ? formatDate(doc.deleted_at)
+                                            : '-'}
                                     </TableCell>
                                     <TableCell>
                                         <Dropdown>
@@ -116,17 +124,20 @@ export default function DocumentsTable({
                                                 aria-label="Document actions"
                                                 onAction={(key) => {
                                                     switch (key) {
-                                                        case 'edit':
-                                                            onEdit(doc.id);
-                                                            break;
                                                         case 'view':
                                                             onView(doc.id);
                                                             break;
-                                                        case 'download':
-                                                            onDownload(doc);
+                                                        case 'restore':
+                                                            onRestore(
+                                                                doc,
+                                                                'document',
+                                                            );
                                                             break;
                                                         case 'delete':
-                                                            onDelete(doc);
+                                                            onPermanentDelete(
+                                                                doc,
+                                                                'document',
+                                                            );
                                                             break;
                                                     }
                                                 }}
@@ -134,18 +145,22 @@ export default function DocumentsTable({
                                                 <DropdownItem key="view">
                                                     Lihat Detail
                                                 </DropdownItem>
-                                                <DropdownItem key="download">
-                                                    Download
-                                                </DropdownItem>
-                                                <DropdownItem key="edit">
-                                                    Edit
+                                                <DropdownItem
+                                                    key="restore"
+                                                    color="success"
+                                                >
+                                                    Pulihkan{' '}
+                                                    {doc.deletion_type ===
+                                                    'full'
+                                                        ? 'Dokumen'
+                                                        : 'Semua File'}
                                                 </DropdownItem>
                                                 <DropdownItem
                                                     key="delete"
                                                     className="text-danger"
                                                     color="danger"
                                                 >
-                                                    Hapus
+                                                    Hapus Permanen
                                                 </DropdownItem>
                                             </DropdownMenu>
                                         </Dropdown>
@@ -158,7 +173,7 @@ export default function DocumentsTable({
                                     colSpan={6}
                                     className="h-24 text-center"
                                 >
-                                    Tidak ada dokumen
+                                    Tidak ada item di tong sampah
                                 </TableCell>
                             </TableRow>
                         )}

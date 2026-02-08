@@ -11,6 +11,7 @@ import { index as categoriesIndex } from '@/routes/categories';
 import { index as documentsIndex } from '@/routes/documents';
 import { index as documentsIndexStarred } from '@/routes/documents_starred';
 import { edit } from '@/routes/profile';
+import { index as trashIndex } from '@/routes/trash';
 import { edit as editPassword } from '@/routes/user-password';
 import type { NavItem } from '@/types/navigation';
 
@@ -33,7 +34,7 @@ export const defaultItems: NavItem[] = [
     {
         icon: <LucideTrash2 />,
         name: 'Sampah',
-        href: dashboard.url(),
+        href: trashIndex.url(),
     },
     {
         icon: <MaterialCategoryRounded />,

@@ -1,22 +1,31 @@
-import { Card, CardBody, Textarea, Button, addToast } from '@heroui/react';
+import {
+    addToast,
+    Button,
+    Card,
+    CardBody,
+    Chip,
+    Textarea,
+} from '@heroui/react';
 import { router } from '@inertiajs/react';
-import { ArrowLeft, Copy, Download, Edit2 } from 'lucide-react';
-import { useState } from 'react';
+import { ArrowLeft, Copy, RotateCcw, Trash2 } from 'lucide-react';
 import { ChipKategori } from '@/components/ChipKategori';
-import { downloadAllDocument } from '@/lib/donwload-all';
-import { index as editRoute } from '@/routes/document/edit';
-import { index as documentsIndex } from '@/routes/documents';
-import type { Document } from '@/types/models';
+import { formatDate } from '@/lib/utils';
+import { index as trashIndex } from '@/routes/trash';
+import type { TrashDocument } from '@/types/models/trash';
 
-interface DocumentDetailsViewProps {
-    document: Document;
+interface TrashDocumentDetailsViewProps {
+    document: TrashDocument;
+    loading: boolean;
+    handleRestoreDocument: () => void;
+    handleDeleteDocument: () => void;
 }
 
-export default function DocumentDetailsView({
-    document: theDocument,
-}: DocumentDetailsViewProps) {
-    const [isDownloading, setIsDownloading] = useState(false);
-
+export default function TrashDocumentDetailsView({
+    document,
+    loading,
+    handleRestoreDocument,
+    handleDeleteDocument,
+}: TrashDocumentDetailsViewProps) {
     return (
         <div className="h-full">
             <div className="sticky top-24">
@@ -25,51 +34,27 @@ export default function DocumentDetailsView({
                         <div className="flex flex-row items-start justify-between">
                             <div>
                                 <h3 className="mb-1 text-lg font-semibold text-default-700">
-                                    {theDocument.title}
+                                    {document.title}
                                 </h3>
+
                                 <p className="text-sm text-default-500">
                                     Tanggal dokumen:{' '}
-                                    {new Intl.DateTimeFormat('id-ID', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                    }).format(
-                                        new Date(theDocument.document_date),
+                                    {formatDate(
+                                        document.document_date || '',
+                                        false,
                                     )}
                                 </p>
-                                <p className="text-sm text-default-500">
-                                    Terakhir dirubah:{' '}
-                                    {new Intl.DateTimeFormat('id-ID', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric',
-                                    }).format(
-                                        new Date(
-                                            theDocument.updated_at ??
-                                                theDocument.created_at,
-                                        ),
-                                    )}
-                                </p>
-                            </div>
 
-                            <div className="flex flex-row items-center gap-2">
-                                <Button
-                                    variant="flat"
-                                    onPress={() =>
-                                        router.visit(
-                                            editRoute.url(theDocument.id),
-                                        )
-                                    }
-                                >
-                                    <Edit2 className="mt-0.5 mr-1 size-4" />
-                                    Edit
-                                </Button>
+                                <p className="text-sm text-danger-500">
+                                    Dihapus pada:{' '}
+                                    {formatDate(document.deleted_at || '')}
+                                </p>
                             </div>
                         </div>
 
                         <div className="flex flex-col gap-2">
                             <h4 className="text-sm">Kategori</h4>
-                            <ChipKategori category={theDocument.category} />
+                            <ChipKategori category={document.category} />
                         </div>
 
                         <Textarea
@@ -77,7 +62,7 @@ export default function DocumentDetailsView({
                             labelPlacement="outside"
                             placeholder="Opsional"
                             isReadOnly
-                            value={theDocument.description || ''}
+                            value={document.description || ''}
                             variant="flat"
                             minRows={4}
                             maxRows={6}
@@ -87,7 +72,7 @@ export default function DocumentDetailsView({
                                     size="sm"
                                     onPress={async () => {
                                         const textToCopy =
-                                            theDocument.description || '';
+                                            document.description || '';
                                         if (
                                             typeof navigator !== 'undefined' &&
                                             typeof navigator.clipboard !==
@@ -122,39 +107,62 @@ export default function DocumentDetailsView({
                                 </Button>
                             }
                         />
+
+                        <div className="flex flex-col gap-4">
+                            {/* Deletion Status */}
+                            <div className="flex flex-col gap-2">
+                                <h4 className="text-sm">Jenis Penghapusan</h4>
+                                <div className="flex flex-col gap-2">
+                                    <Chip
+                                        variant="flat"
+                                        color={
+                                            document.deletion_type === 'full'
+                                                ? 'danger'
+                                                : 'warning'
+                                        }
+                                    >
+                                        {document.deletion_type === 'full'
+                                            ? 'Dokumen'
+                                            : 'Sebagian File'}
+                                    </Chip>
+                                    <p className="text-xs text-default-500">
+                                        {document.deleted_files_count}/
+                                        {document.total_files} file dihapus
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
                     </CardBody>
                 </Card>
-                {/* Action Buttons */}
                 <div className="mt-4 flex justify-end gap-3">
                     <Button
-                        variant="bordered"
-                        onPress={() => router.visit(documentsIndex.url())}
-                        startContent={<ArrowLeft className="mt-0.5 size-4" />}
+                        color="default"
+                        variant="flat"
+                        startContent={<ArrowLeft className="h-4 w-4" />}
+                        onPress={() => router.visit(trashIndex.url())}
                     >
                         Kembali
                     </Button>
                     <Button
-                        color="primary"
-                        startContent={
-                            isDownloading ? null : (
-                                <Download className="size-4" />
-                            )
-                        }
-                        onPress={() =>
-                            downloadAllDocument({
-                                theDocument,
-                                onStart() {
-                                    setIsDownloading(true);
-                                },
-                                onEnd() {
-                                    setIsDownloading(false);
-                                },
-                            })
-                        }
-                        isLoading={isDownloading}
-                        isDisabled={isDownloading}
+                        color="success"
+                        variant="flat"
+                        startContent={<RotateCcw className="h-4 w-4" />}
+                        onPress={handleRestoreDocument}
+                        isLoading={loading}
                     >
-                        {isDownloading ? 'Mengunduh...' : 'Download Semua'}
+                        Pulihkan{' '}
+                        {document.deletion_type === 'full'
+                            ? 'Dokumen'
+                            : 'Semua File'}
+                    </Button>
+                    <Button
+                        color="danger"
+                        variant="flat"
+                        startContent={<Trash2 className="h-4 w-4" />}
+                        onPress={handleDeleteDocument}
+                        isLoading={loading}
+                    >
+                        Hapus Permanen
                     </Button>
                 </div>
             </div>

@@ -17,7 +17,7 @@ const Header = ({ uploadingFiles }: { uploadingFiles: UploadingFile[] }) => {
             <h3 className="text-lg font-semibold text-default-700">
                 Daftar Dokumen
             </h3>
-            <p className="text-xs text-default-500">
+            <p className="text-sm text-default-500">
                 {uploadingFiles.length} file
             </p>
         </div>
@@ -26,7 +26,6 @@ const Header = ({ uploadingFiles }: { uploadingFiles: UploadingFile[] }) => {
 
 export default function UploadedFilesList({
     uploadingFiles,
-    isSubmitting,
     validationError,
     onHandlePreview,
     onRemoveFile,
@@ -50,7 +49,6 @@ export default function UploadedFilesList({
                                         <UploadedFileItem
                                             key={uploadFile.id}
                                             uploadFile={uploadFile}
-                                            isSubmitting={isSubmitting}
                                             showDivider={index > 0}
                                             handlePreview={onHandlePreview}
                                             onRemove={onRemoveFile}
