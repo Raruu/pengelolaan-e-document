@@ -5,8 +5,8 @@ import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import '../css/app.css';
-import { SidebarProvider } from './hooks/useSidebar';
 import { initializeTheme } from './hooks/use-appearance';
+import { SidebarProvider } from './hooks/useSidebar';
 
 // Setup axios defaults
 axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';

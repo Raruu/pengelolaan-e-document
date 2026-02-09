@@ -239,16 +239,16 @@ const AppSidebar: React.FC = () => {
                     className={`flex py-5.5 ${
                         !isExpanded && !isHovered
                             ? 'lg:justify-center'
-                            : 'justify-start'
+                            : 'justify-center'
                     }`}
                 >
                     <Link
                         href={dashboard.url()}
-                        className="flex flex-row items-center justify-center gap-4 whitespace-nowrap"
+                        className="flex flex-col items-center justify-center gap-4 whitespace-nowrap"
                         preserveState
                     >
                         <AppLogoIcon />
-                        <h1 className="text-xl font-bold text-foreground">
+                        <h1 className="-mt-6 text-xl font-bold text-foreground">
                             E-Dokumen
                         </h1>
                     </Link>

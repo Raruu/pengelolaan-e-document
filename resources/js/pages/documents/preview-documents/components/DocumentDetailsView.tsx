@@ -1,9 +1,11 @@
 import { Card, CardBody, Textarea, Button, addToast } from '@heroui/react';
 import { router } from '@inertiajs/react';
+import axios from 'axios';
 import { ArrowLeft, Copy, Download, Edit2, Star } from 'lucide-react';
 import { useState } from 'react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { downloadAllDocument } from '@/lib/donwload-all';
+import { toggleStarred as apiToggleStarred } from '@/routes/api/documents';
 import { index as editRoute } from '@/routes/document/edit';
 import { index as documentsIndex } from '@/routes/documents';
 import type { Document } from '@/types/models';
@@ -16,6 +18,40 @@ export default function DocumentDetailsView({
     document: theDocument,
 }: DocumentDetailsViewProps) {
     const [isDownloading, setIsDownloading] = useState(false);
+    const [isStarred, setIsStarred] = useState(theDocument.starred);
+    const [isTogglingStarred, setIsTogglingStarred] = useState(false);
+
+    const toggleStarred = async () => {
+        setIsTogglingStarred(true);
+        try {
+            const response = await axios.post(
+                apiToggleStarred.url(theDocument.id),
+            );
+            setIsStarred(response.data.starred);
+            addToast({
+                title: response.data.starred
+                    ? 'Diberi bintang'
+                    : 'Bintang dihapus',
+                description: response.data.starred
+                    ? 'Dokumen Diberi bintang'
+                    : 'Dokumen Bintang dihapus',
+                timeout: 2000,
+                shouldShowTimeoutProgress: true,
+                color: 'success',
+            });
+            // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        } catch (error) {
+            addToast({
+                title: 'Gagal',
+                description: 'Gagal mengubah status bintang',
+                timeout: 3000,
+                shouldShowTimeoutProgress: true,
+                color: 'danger',
+            });
+        } finally {
+            setIsTogglingStarred(false);
+        }
+    };
 
     return (
         <div className="h-full">
@@ -53,12 +89,21 @@ export default function DocumentDetailsView({
                             </div>
 
                             <div className="flex flex-row items-center gap-2">
-                                {theDocument.starred && (
-                                    <Star
-                                        className="size-6 text-[#ede05d]"
-                                        fill="#ede05d"
-                                    />
-                                )}
+                                <Button
+                                    isIconOnly
+                                    variant="light"
+                                    onPress={toggleStarred}
+                                    isDisabled={isTogglingStarred}
+                                >
+                                    {isStarred ? (
+                                        <Star
+                                            className="size-5 text-[#ede05d]"
+                                            fill="#ede05d"
+                                        />
+                                    ) : (
+                                        <Star className="size-5" />
+                                    )}
+                                </Button>
                                 <Button
                                     variant="flat"
                                     onPress={() =>

@@ -195,6 +195,21 @@ class DocumentApiController extends Controller
         ], );
     }
 
+    public function toggleStarred(Request $request, Document $document): JsonResponse
+    {
+        if ($document->uploaded_by !== $request->user()->id) {
+            abort(403);
+        }
+
+        $document->starred = !$document->starred;
+        $document->save();
+
+        return response()->json([
+            'message' => $document->starred ? 'Document starred.' : 'Document unstarred.',
+            'starred' => $document->starred
+        ]);
+    }
+
     public function destroy(Request $request, Document $document): JsonResponse
     {
         if ($document->uploaded_by !== $request->user()->id) {

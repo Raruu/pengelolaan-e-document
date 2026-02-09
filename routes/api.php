@@ -10,6 +10,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/documents', [DocumentApiController::class, 'store'])->name('api.documents.store');
     Route::put('/documents/{document}', [DocumentApiController::class, 'update'])->name('api.documents.update');
     Route::post('/documents/file', [DocumentApiController::class, 'storeFile'])->name('api.documents.storeFile');
+    Route::post('/documents/{document}/toggle-starred', [DocumentApiController::class, 'toggleStarred'])->name('api.documents.toggleStarred');
     Route::get('/documents/{document}/download-all', [DocumentApiController::class, 'downloadAll'])->name('api.documents.downloadAll');
     Route::delete('/documents/{document}', [DocumentApiController::class, 'destroy'])->name('api.documents.destroy');
 

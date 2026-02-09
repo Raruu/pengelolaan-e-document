@@ -62,7 +62,7 @@ export default function UploadedFileItem({
                                 size="sm"
                                 variant="light"
                                 color="danger"
-                                className="text-foreground-800"
+                                className="text-danger"
                                 onPress={() => onRemove(uploadFile)}
                             >
                                 <Trash2 className="size-4" />
