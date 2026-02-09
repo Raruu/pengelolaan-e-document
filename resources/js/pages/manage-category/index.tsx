@@ -127,7 +127,7 @@ export default function ManageCategory({ categories, filters }: Props) {
 
     const handleEditCategory = async (
         category: Category & { documents_count: number },
-    ) => {        
+    ) => {
         const result = await openCategoryDialog({
             id: category.id,
             category: category.category,
@@ -149,7 +149,8 @@ export default function ManageCategory({ categories, filters }: Props) {
                         'Content-Type': 'multipart/form-data',
                     },
                 });
-                fetchCategories();
+                // fetchCategories();
+                window.location.reload();
             } catch (error) {
                 console.error('Error updating category:', error);
             }
