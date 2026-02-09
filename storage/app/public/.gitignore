@@ -1,2 +1,6 @@
 *
 !.gitignore
+!category-icon
+!category-icon/2.webp
+!category-icon/4.webp
+!category-icon/6.webp
