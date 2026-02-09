@@ -14,7 +14,7 @@ import {
     DropdownMenu,
     DropdownTrigger,
 } from '@heroui/react';
-import { Star, MoreVertical } from 'lucide-react';
+import { Star, MoreVertical, Eye } from 'lucide-react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { formatDate } from '@/lib/utils';
 import type { Document } from '@/types/models';
@@ -56,7 +56,7 @@ export default function DocumentsTable({
                         {documents.length > 0 ? (
                             documents.map((doc) => (
                                 <TableRow key={doc.id}>
-                                    <TableCell  className="max-w-96 overflow-hidden">
+                                    <TableCell className="max-w-96 overflow-hidden">
                                         <div className="flex flex-col truncate">
                                             <span className="flex flex-row items-center gap-2 font-medium">
                                                 {doc.title}
@@ -68,7 +68,7 @@ export default function DocumentsTable({
                                                 )}
                                             </span>
                                             {doc.description && (
-                                                <span className="text-xs text-default-400 truncate">
+                                                <span className="truncate text-xs text-default-400">
                                                     {doc.description}
                                                 </span>
                                             )}
@@ -101,7 +101,15 @@ export default function DocumentsTable({
                                             ? formatDate(doc.updated_at)
                                             : formatDate(doc.created_at)}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="flex flex-row items-center">
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            variant="light"
+                                            onPress={() => onView(doc.id)}
+                                        >
+                                            <Eye className="size-4" />
+                                        </Button>
                                         <Dropdown>
                                             <DropdownTrigger>
                                                 <Button

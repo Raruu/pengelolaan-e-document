@@ -14,7 +14,7 @@ import {
     DropdownMenu,
     DropdownTrigger,
 } from '@heroui/react';
-import { Star, MoreVertical } from 'lucide-react';
+import { Star, MoreVertical, Eye } from 'lucide-react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { formatDate } from '@/lib/utils';
 import type { TrashDocument } from '@/types/models/trash';
@@ -109,7 +109,15 @@ export default function TrashTable({
                                             ? formatDate(doc.deleted_at)
                                             : '-'}
                                     </TableCell>
-                                    <TableCell>
+                                    <TableCell className="flex flex-row items-center">
+                                        <Button
+                                            isIconOnly
+                                            size="sm"
+                                            variant="light"
+                                            onPress={() => onView(doc.id)}
+                                        >
+                                            <Eye className="size-4" />
+                                        </Button>
                                         <Dropdown>
                                             <DropdownTrigger>
                                                 <Button

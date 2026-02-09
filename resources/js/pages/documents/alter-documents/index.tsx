@@ -1,5 +1,7 @@
+import { addToast, Button } from '@heroui/react';
 import { Head, router } from '@inertiajs/react';
 import axios from 'axios';
+import { Trash2 } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import Heading from '@/components/Heading';
 import { defaultItems } from '@/constants/nav-items';
@@ -9,9 +11,11 @@ import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
 import { formatFileSize } from '@/lib/utils';
 import { store, update, storeFile } from '@/routes/api/documents';
+import { destroy as documentDestroy } from '@/routes/api/documents';
 import { index as createRoute } from '@/routes/document/create';
 import { index as editRoute } from '@/routes/document/edit';
 import { index as previewRoute } from '@/routes/document/preview';
+import { index as documentsIndex } from '@/routes/documents';
 import type {
     Category,
     Document,
@@ -346,6 +350,43 @@ export default function AlterDocuments({
         });
     };
 
+    const handleDeleteDocument = async (document: Document) => {
+        const yes = await confirm({
+            title: 'Apakah Anda yakin?',
+            message: `Apakah Anda yakin ingin menghapus permanen dokumen '${document.title}'? Aksi ini tidak dapat dibatalkan!`,
+            variant: 'danger',
+        });
+
+        if (!yes) return;
+
+        try {
+            await axios.delete(documentDestroy.url(document.id), {
+                data: {
+                    id: document.id,
+                    type: 'document',
+                },
+            });
+
+            addToast({
+                title: 'Dihapus!',
+                description: `Dokumen ${document.title} berhasil dihapus!`,
+                timeout: 2000,
+                shouldShowTimeoutProgress: true,
+                color: 'success',
+            });
+            router.visit(documentsIndex.url());
+        } catch (error) {
+            console.error('Error deleting document:', error);
+            addToast({
+                title: 'Gagal!',
+                description: `Dokumen ${document.title} gagal dihapus!`,
+                timeout: 2000,
+                shouldShowTimeoutProgress: true,
+                color: 'danger',
+            });
+        }
+    };
+
     return (
         <AppLayout>
             <Head title={getPageTitle(mode)} />
@@ -354,6 +395,16 @@ export default function AlterDocuments({
                     variant="default-small-margin"
                     title={getPageTitle(mode)}
                     description="Upload dokumen Anda disini."
+                    trailing={
+                        <Button
+                            color="danger"
+                            variant="flat"
+                            startContent={<Trash2 className="h-4 w-4" />}
+                            onPress={() => handleDeleteDocument(document!)}
+                        >
+                            Hapus Dokumen
+                        </Button>
+                    }
                 />
 
                 {/* Main Content */}
