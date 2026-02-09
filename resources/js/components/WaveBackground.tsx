@@ -16,7 +16,7 @@ export default function WaveBackground({
         if (!ctx) return;
 
         let animationFrameId: number;
-        let time = 0;
+        const startTime = performance.now();
 
         // Set canvas size
         const resizeCanvas = () => {
@@ -40,8 +40,8 @@ export default function WaveBackground({
             '#075389',
         ];
 
-        const animate = () => {
-            time += 0.01;
+        const animate = (currentTime: number) => {
+            const time = (currentTime - startTime) * 0.001; // Convert to seconds
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Draw waves
@@ -95,7 +95,7 @@ export default function WaveBackground({
             animationFrameId = requestAnimationFrame(animate);
         };
 
-        animate();
+        animate(performance.now());
 
         return () => {
             window.removeEventListener('resize', resizeCanvas);

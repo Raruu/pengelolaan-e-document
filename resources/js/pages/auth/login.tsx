@@ -16,10 +16,7 @@ export default function Login({ status }: Props) {
     const togglePasswordVisibility = () =>
         setIsPasswordVisible(!isPasswordVisible);
     return (
-        <AuthLayout
-            title="Pengelolaan E-Dokumen"
-            description="Manajemen E-Dokumen yang aman"
-        >
+        <AuthLayout title="Pengelolaan E-Dokumen">
             <Head title="Masuk" />
 
             <Card className="px-6 py-8">
