@@ -396,14 +396,16 @@ export default function AlterDocuments({
                     title={getPageTitle(mode)}
                     description="Upload dokumen Anda disini."
                     trailing={
-                        <Button
-                            color="danger"
-                            variant="flat"
-                            startContent={<Trash2 className="h-4 w-4" />}
-                            onPress={() => handleDeleteDocument(document!)}
-                        >
-                            Hapus Dokumen
-                        </Button>
+                        mode === 'edit' && (
+                            <Button
+                                color="danger"
+                                variant="flat"
+                                startContent={<Trash2 className="h-4 w-4" />}
+                                onPress={() => handleDeleteDocument(document!)}
+                            >
+                                Hapus Dokumen
+                            </Button>
+                        )
                     }
                 />
 
