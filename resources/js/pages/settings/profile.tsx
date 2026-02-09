@@ -1,5 +1,5 @@
 import { Avatar, Button, Input } from '@heroui/react';
-import { Form, Head, Link, usePage } from '@inertiajs/react';
+import { Form, Head, usePage } from '@inertiajs/react';
 import { Camera, Save } from 'lucide-react';
 import { useState } from 'react';
 import ProfileController from '@/actions/App/Http/Controllers/Settings/ProfileController';
@@ -9,16 +9,9 @@ import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import AppLayout from '@/layouts/app';
 import SettingsLayout from '@/layouts/settings';
 import { initialsName } from '@/lib/utils';
-import { send } from '@/routes/verification';
 import type { SharedData } from '@/types';
 
-export default function Profile({
-    mustVerifyEmail,
-    status,
-}: {
-    mustVerifyEmail: boolean;
-    status?: string;
-}) {
+export default function Profile() {
     const { auth } = usePage<SharedData>().props;
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const { preview, DialogComponent: PreviewDialog } = usePreviewDialog();
@@ -174,35 +167,6 @@ export default function Profile({
                                             errorMessage={errors.email}
                                         />
                                     </div>
-
-                                    {mustVerifyEmail &&
-                                        auth.user.email_verified_at ===
-                                            null && (
-                                            <div>
-                                                <p className="text-muted-foreground -mt-4 text-sm">
-                                                    Alamat email Anda belum
-                                                    diverifikasi.{' '}
-                                                    <Link
-                                                        href={send()}
-                                                        as="button"
-                                                        className="text-foreground underline decoration-neutral-300 underline-offset-4 transition-colors duration-300 ease-out hover:decoration-current! dark:decoration-neutral-500"
-                                                    >
-                                                        Klik di sini untuk
-                                                        mengirim ulang email
-                                                        verifikasi.
-                                                    </Link>
-                                                </p>
-
-                                                {status ===
-                                                    'verification-link-sent' && (
-                                                    <div className="mt-2 text-sm font-medium text-green-600">
-                                                        Link verifikasi baru
-                                                        telah dikirim ke alamat
-                                                        email Anda.
-                                                    </div>
-                                                )}
-                                            </div>
-                                        )}
 
                                     <div className="flex items-center gap-4">
                                         <Button

@@ -2,17 +2,15 @@ import { Button, Card, CardBody, Checkbox, Input } from '@heroui/react';
 import { Form, Head } from '@inertiajs/react';
 import { Eye, EyeOff, Mail } from 'lucide-react';
 import { useState } from 'react';
-import TextLink from '@/components/TextLink';
 import AuthLayout from '@/layouts/auth';
 import { store } from '@/routes/login';
-import { request } from '@/routes/password';
 
 type Props = {
     status?: string;
     canResetPassword: boolean;
 };
 
-export default function Login({ status, canResetPassword }: Props) {
+export default function Login({ status }: Props) {
     const [isPasswordVisible, setIsPasswordVisible] = useState(false);
 
     const togglePasswordVisibility = () =>
@@ -98,16 +96,6 @@ export default function Login({ status, canResetPassword }: Props) {
                                         >
                                             Ingat Saya
                                         </Checkbox>
-
-                                        {canResetPassword && (
-                                            <TextLink
-                                                href={request()}
-                                                className="ml-auto text-sm font-semibold text-primary-700"
-                                                tabIndex={5}
-                                            >
-                                                Lupa Password?
-                                            </TextLink>
-                                        )}
                                     </div>
 
                                     <Button
