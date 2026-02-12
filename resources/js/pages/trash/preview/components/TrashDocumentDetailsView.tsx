@@ -152,7 +152,9 @@ export default function TrashDocumentDetailsView({
                     <Button
                         color="success"
                         variant="flat"
-                        startContent={<RotateCcw className="h-4 w-4" />}
+                        startContent={
+                            !loading && <RotateCcw className="h-4 w-4" />
+                        }
                         onPress={handleRestoreDocument}
                         isLoading={loading}
                     >
@@ -164,7 +166,9 @@ export default function TrashDocumentDetailsView({
                     <Button
                         color="danger"
                         variant="flat"
-                        startContent={<Trash2 className="h-4 w-4" />}
+                        startContent={
+                            !loading && <Trash2 className="h-4 w-4" />
+                        }
                         onPress={handleDeleteDocument}
                         isLoading={loading}
                     >

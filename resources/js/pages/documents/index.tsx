@@ -167,7 +167,7 @@ export default function DokumenKu({
                 <Heading
                     variant="default-small-margin"
                     title="Dokumenku"
-                    description="Daftar dokumen yang tersimpan di sistem. Anda dapat mengupload, mengedit, dan menghapus dokumen yang tersimpan."
+                    description={`Daftar dokumen yang tersimpan di sistem. ${starred ? '(berbintang)' : ''}`}
                     trailing={
                         <Link href={create.url()} preserveState>
                             <Button

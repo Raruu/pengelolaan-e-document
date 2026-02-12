@@ -193,7 +193,7 @@ export default function Trash({
                 <Heading
                     variant="default-small-margin"
                     title="Tong Sampah"
-                    description="Daftar dokumen dan file yang telah dihapus. Anda dapat memulihkan atau menghapus permanen item yang ada di sini."
+                    description="Daftar dokumen dan file yang telah dihapus."
                     trailing={
                         <div className="flex items-center gap-2">
                             {itemsData.total > 0 && (

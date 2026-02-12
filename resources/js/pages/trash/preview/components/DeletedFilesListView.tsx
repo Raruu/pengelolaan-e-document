@@ -70,7 +70,9 @@ export default function DeletedFilesListView({
                                                     variant="flat"
                                                     size="sm"
                                                     startContent={
-                                                        <RotateCcw className="h-4 w-4" />
+                                                        !loading && (
+                                                            <RotateCcw className="h-4 w-4" />
+                                                        )
                                                     }
                                                     onPress={() =>
                                                         onRestore(file)
@@ -84,7 +86,9 @@ export default function DeletedFilesListView({
                                                     variant="flat"
                                                     size="sm"
                                                     startContent={
-                                                        <Trash2 className="h-4 w-4" />
+                                                        !loading && (
+                                                            <Trash2 className="h-4 w-4" />
+                                                        )
                                                     }
                                                     onPress={() =>
                                                         onDelete(file)
