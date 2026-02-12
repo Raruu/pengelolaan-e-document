@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { defaultItems } from '@/constants/nav-items';
+import { defaultItems } from '@/lib/nav-items';
 import type { NavItem } from '@/types/navigation';
 
 type OpenSubmenu = {

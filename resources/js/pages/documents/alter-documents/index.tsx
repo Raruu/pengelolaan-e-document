@@ -4,7 +4,7 @@ import axios from 'axios';
 import { Trash2 } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import Heading from '@/components/Heading';
-import { defaultItems } from '@/constants/nav-items';
+import { defaultItems } from '@/lib/nav-items';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import { useSidebar } from '@/hooks/useSidebar';

@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react';
 import { useEffect } from 'react';
 import Heading from '@/components/Heading';
-import { defaultItems } from '@/constants/nav-items';
+import { defaultItems } from '@/lib/nav-items';
 import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
 import { index as previewRoute } from '@/routes/document/preview';

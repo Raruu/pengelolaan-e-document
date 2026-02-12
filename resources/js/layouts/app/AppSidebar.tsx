@@ -2,7 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { ChevronDown, MoreHorizontal } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
-import { defaultItems } from '@/constants/nav-items';
+import { defaultItems } from '@/lib/nav-items';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types/navigation';
 import { useSidebar } from '../../hooks/useSidebar';

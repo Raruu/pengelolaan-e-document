@@ -1,6 +1,6 @@
 import { useEffect, type PropsWithChildren } from 'react';
 import Heading from '@/components/Heading';
-import { settingsItems } from '@/constants/nav-items';
+import { settingsItems } from '@/lib/nav-items';
 import { useSidebar } from '@/hooks/useSidebar';
 
 export default function SettingsLayout({ children }: PropsWithChildren) {

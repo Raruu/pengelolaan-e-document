@@ -3,7 +3,7 @@ import { Head, router } from '@inertiajs/react';
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import Heading from '@/components/Heading';
-import { defaultItems } from '@/constants/nav-items';
+import { defaultItems } from '@/lib/nav-items';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
