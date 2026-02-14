@@ -63,7 +63,7 @@ export default function DocumentsFilters({
             <div className="flex flex-wrap items-center gap-3">
                 <Select
                     label="Dokumen Dari"
-                    className="w-48"
+                    className="w-48 rounded-lg bg-background"
                     size="sm"
                     variant="bordered"
                     defaultSelectedKeys={['all']}
@@ -81,7 +81,7 @@ export default function DocumentsFilters({
 
                 <Select
                     label="Arah"
-                    className="w-48"
+                    className="w-48 rounded-lg bg-background"
                     size="sm"
                     variant="bordered"
                     defaultSelectedKeys={['all']}
@@ -107,7 +107,7 @@ export default function DocumentsFilters({
                 <Autocomplete
                     label="Kategori"
                     placeholder="Cari kategori..."
-                    className="w-64"
+                    className="w-64 rounded-lg bg-background"
                     size="sm"
                     variant="bordered"
                     selectedKey={selectedCategory}
@@ -149,7 +149,7 @@ export default function DocumentsFilters({
 
             <Input
                 isClearable
-                className="max-w-72"
+                className="max-w-72 bg-background rounded-lg"
                 label={
                     <div className="flex flex-row items-center gap-2">
                         <Search className="h-4 w-4 text-default-400" /> Cari

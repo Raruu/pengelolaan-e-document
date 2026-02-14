@@ -48,7 +48,7 @@ export default function Profile() {
     };
 
     return (
-        <AppLayout>
+        <AppLayout useBgBackground>
             <Head title="Pengaturan Profil" />
 
             <h1 className="sr-only">Pengaturan Profil</h1>

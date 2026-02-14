@@ -28,7 +28,7 @@ export default function PaginationControls({
                     label="Tampilkan"
                     size="sm"
                     variant="bordered"
-                    className="w-32"
+                    className="w-32 bg-background rounded-lg"
                     selectedKeys={[perPage.toString()]}
                     onChange={(e) => onPerPageChange(e.target.value)}
                 >

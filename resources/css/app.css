@@ -255,7 +255,7 @@
 }
 
 :root {
-    --background: oklch(1 0 0);
+    --background: #f8fafc;
     --foreground: oklch(0.145 0 0);
     --card: oklch(1 0 0);
     --card-foreground: oklch(0.145 0 0);
@@ -291,7 +291,7 @@
 }
 
 .dark {
-    --background: oklch(0.145 0 0);
+    --background: oklch(0.2103 0.0059 285.89);
     --foreground: oklch(0.985 0 0);
     --card: oklch(0.145 0 0);
     --card-foreground: oklch(0.985 0 0);
@@ -325,6 +325,10 @@
     --sidebar-ring: oklch(0.439 0 0);
 }
 
+body {
+    background-color: var(--background);
+}
+
 @layer base {
     * {
         @apply border-border;
@@ -343,7 +347,7 @@
     }
     body {
         @apply relative z-1 bg-gray-50 font-outfit font-normal;
-        @apply bg-background text-foreground;
+        @apply text-foreground;
     }
 }
 
@@ -951,4 +955,45 @@ span.flatpickr-weekday,
 
 .simplebar-scrollbar.simplebar-visible:before {
     @apply opacity-100;
+}
+
+@theme inline {
+    --animate-bounce-vertical: bounceV 20s infinite ease-in-out;
+    --animate-bounce-horizontal: bounceH 30s infinite ease-in-out;
+    --animate-move-in-circle: moveInCircle 30s linear infinite;
+    @keyframes bounceV {
+        0%,
+        100% {
+            transform: translateY(-50%);
+        }
+        50% {
+            transform: translateY(50%);
+        }
+    }
+    @keyframes bounceH {
+        0%,
+        100% {
+            transform: translateX(-50%) translateY(-10%);
+        }
+        50% {
+            transform: translateX(50%) translateY(10%);
+        }
+    }
+    @keyframes moveInCircle {
+        0% {
+            transform: rotate(0deg);
+        }
+        100% {
+            transform: rotate(360deg);
+        }
+    }
+}
+
+@layer base {
+    * {
+        @apply border-border outline-ring/50;
+    }
+    body {
+        @apply bg-background text-foreground;
+    }
 }

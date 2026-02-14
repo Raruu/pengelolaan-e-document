@@ -6,11 +6,12 @@ const WelcomeBanner = () => {
     const { auth } = usePage<SharedData>().props;
     const name = auth.user.name;
     return (
-        <div className="relative w-full rounded-2xl bg-linear-to-r from-primary-500/50 to-primary-700/80 p-8 text-white shadow-lg overflow-hidden">
-            <div className="absolute top-0 left-0 h-full w-full -z-1 blur-[2px]">
-                <WaveBackground variant='component' />
+        <div className="relative w-full overflow-hidden rounded-2xl bg-linear-to-r from-primary-500/50 to-primary-700/80 p-8 text-white shadow-lg">
+            <div className="absolute top-0 left-0 h-full w-full blur-[2px]">
+                <WaveBackground variant="component" />
+            <div className="absolute top-0 left-0 h-full w-full bg-linear-to-r from-primary-500/50 to-primary-700/80"></div>
             </div>
-            <div className="flex flex-col z-1">
+            <div className="relative z-1 flex flex-col">
                 <h1 className="mb-2 text-3xl font-bold tracking-tight">
                     Selamat Datang, {name}!
                 </h1>

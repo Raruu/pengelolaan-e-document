@@ -17,7 +17,7 @@ export default function Password() {
         useState(false);
 
     return (
-        <AppLayout>
+        <AppLayout useBgBackground>
             <Head title="Pengaturan Kata Sandi" />
 
             <h1 className="sr-only">Pengaturan Kata Sandi</h1>

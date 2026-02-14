@@ -21,7 +21,7 @@ export default function CategorySortFilter({
             <div className="flex flex-wrap items-center gap-3">
                 <div className="flex items-center gap-2">
                     <Select
-                        className="w-56"
+                        className="w-56 bg-background rounded-lg"
                         size="sm"
                         variant="bordered"
                         label="Urutkan"
@@ -57,7 +57,7 @@ export default function CategorySortFilter({
             </div>
             <Input
                 isClearable
-                className="max-w-72"
+                className="max-w-72 bg-background rounded-lg"
                 label={
                     <div className="flex flex-row items-center gap-2">
                         <Search className="h-4 w-4 text-default-400" /> Cari

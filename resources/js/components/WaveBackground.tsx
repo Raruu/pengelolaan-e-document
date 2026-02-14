@@ -112,8 +112,10 @@ export default function WaveBackground({
         >
             <div
                 className={cn(
-                    'relative w-full overflow-hidden bg-[#EDF4FC]',
-                    variant == 'full-screen' ? 'h-screen' : 'h-full',
+                    'relative w-full overflow-hidden',
+                    variant == 'full-screen'
+                        ? 'h-screen bg-[#EDF4FC]'
+                        : 'h-full',
                 )}
             >
                 <canvas
