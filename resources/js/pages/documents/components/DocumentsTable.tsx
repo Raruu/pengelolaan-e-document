@@ -58,9 +58,7 @@ export default function DocumentsTable({
                             documents.map((doc) => (
                                 <TableRow key={doc.id}>
                                     <TableCell>
-                                        <span className="text-sm text-default-500">
-                                            {doc.no_document}
-                                        </span>
+                                         {doc.no_document}
                                     </TableCell>
                                     <TableCell className="max-w-96 overflow-hidden">
                                         <div className="flex flex-col truncate">
