@@ -1,6 +1,7 @@
 import type { InertiaLinkProps } from '@inertiajs/react';
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { serveFile } from '@/routes/api/documents';
 
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs));
@@ -58,3 +59,10 @@ export const isDoc = (ext: string): boolean =>
     ext.endsWith('.xlsx') ||
     ext.endsWith('.ppt') ||
     ext.endsWith('.pptx');
+
+export const getFileUrl = (documentId: number, fileId: number) => {
+    return serveFile.url({
+        document: documentId,
+        fileId: fileId,
+    });
+};

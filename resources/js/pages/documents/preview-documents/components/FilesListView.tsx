@@ -2,14 +2,18 @@ import { Card, CardBody, Button, Divider } from '@heroui/react';
 import { Download, Eye } from 'lucide-react';
 import { FileIcon } from '@/components/FileIcon';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
-import { formatDate, formatFileSize } from '@/lib/utils';
+import { formatDate, formatFileSize, getFileUrl } from '@/lib/utils';
 import type { DocumentFile } from '@/types/models';
 
 interface FilesListViewProps {
     files: DocumentFile[];
+    documentId: number;
 }
 
-export default function FilesListView({ files }: FilesListViewProps) {
+export default function FilesListView({
+    files,
+    documentId,
+}: FilesListViewProps) {
     const { preview, DialogComponent } = usePreviewDialog();
 
     if (files.length === 0) {
@@ -25,9 +29,8 @@ export default function FilesListView({ files }: FilesListViewProps) {
     }
 
     const handlePreview = (file: DocumentFile) => {
-        if (file.fileurl === undefined) return;
         preview({
-            url: file.fileurl,
+            url: getFileUrl(documentId, file.id),
             filename: file.filename,
             title: file.filename,
             subtitle: formatFileSize(file.size),
@@ -35,15 +38,13 @@ export default function FilesListView({ files }: FilesListViewProps) {
     };
 
     const handleDownload = (file: DocumentFile) => {
-        if (file.fileurl) {
-            const link = document.createElement('a');
-            link.href = file.fileurl;
-            link.setAttribute('download', file.filename);
-            link.style.display = 'none';
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-        }
+        const link = document.createElement('a');
+        link.href = getFileUrl(documentId, file.id);
+        link.setAttribute('download', file.filename);
+        link.style.display = 'none';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
     };
 
     return (

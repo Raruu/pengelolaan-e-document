@@ -46,7 +46,7 @@ export default function PreviewDocuments({ document, files }: Props) {
                 <div className="flex flex-col gap-6 lg:flex-row">
                     {/* Left Side - Files List */}
                     <div className="flex flex-col gap-8 lg:flex-4">
-                        <FilesListView files={files} />
+                        <FilesListView files={files} documentId={document.id} />
                     </div>
 
                     {/* Right Side - Document Details */}

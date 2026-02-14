@@ -12,6 +12,7 @@ Route::middleware(['auth:sanctum'])->group(function () {
     Route::post('/documents/file', [DocumentApiController::class, 'storeFile'])->name('api.documents.storeFile');
     Route::post('/documents/{document}/toggle-starred', [DocumentApiController::class, 'toggleStarred'])->name('api.documents.toggleStarred');
     Route::get('/documents/{document}/download-all', [DocumentApiController::class, 'downloadAll'])->name('api.documents.downloadAll');
+    Route::get('/documents/{document}/files/{fileId}', [DocumentApiController::class, 'serveFile'])->name('api.documents.serveFile');
     Route::delete('/documents/{document}', [DocumentApiController::class, 'destroy'])->name('api.documents.destroy');
 
     Route::get('/trash', [TrashApiController::class, 'index'])->name('api.trash.index');

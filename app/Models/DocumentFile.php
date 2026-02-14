@@ -27,7 +27,6 @@ class DocumentFile extends Model
     protected $appends = [
         'file_extension',
         'file_name',
-        'file_url',
         'file_size_kb',
     ];
 
@@ -49,10 +48,5 @@ class DocumentFile extends Model
     protected function fileName(): Attribute
     {
         return Attribute::make(fn() => pathinfo($this->file_path, PATHINFO_FILENAME));
-    }
-
-    protected function fileUrl(): Attribute
-    {
-        return Attribute::make(fn() => asset('storage/' . $this->file_path));
     }
 }

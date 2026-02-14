@@ -2,7 +2,6 @@ export interface DocumentFile {
     id: number;
     filename: string;
     size: number;
-    fileurl?: string;
     uploaded_at?: string;
     deleted_at?: string;
 }

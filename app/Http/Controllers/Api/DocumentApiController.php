@@ -139,7 +139,7 @@ class DocumentApiController extends Controller
 
         $file = $request->file('file');
         $filename = $file->getClientOriginalName();
-        $path = $file->storeAs('documents/' . $document->id, $filename, 'public');
+        $path = $file->storeAs('documents/' . $document->id, $filename);
 
         $documentFile = $document->files()->create([
             'file_path' => $path,
@@ -283,7 +283,7 @@ class DocumentApiController extends Controller
 
         // Add all files
         foreach ($files as $file) {
-            $filePath = Storage::disk('public')->path($file->file_path);
+            $filePath = Storage::path($file->file_path);
             if (file_exists($filePath)) {
                 $zip->addFile($filePath, basename($file->file_path));
             }
@@ -297,5 +297,20 @@ class DocumentApiController extends Controller
         }, $zipFileName, [
             'Content-Type' => 'application/zip',
         ]);
+    }
+
+    public function serveFile(Request $request, Document $document, int $fileId): StreamedResponse
+    {
+        if ($document->uploaded_by !== $request->user()->id) {
+            abort(403);
+        }
+
+        $file = $document->files()->findOrFail($fileId);
+
+        if (!Storage::exists($file->file_path)) {
+            abort(404, 'File not found.');
+        }
+
+        return Storage::response($file->file_path, basename($file->file_path));
     }
 }

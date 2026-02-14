@@ -9,7 +9,7 @@ import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
 import { defaultItems } from '@/lib/nav-items';
-import { formatFileSize } from '@/lib/utils';
+import { formatFileSize, getFileUrl } from '@/lib/utils';
 import { store, update, storeFile } from '@/routes/api/documents';
 import { destroy as documentDestroy } from '@/routes/api/documents';
 import { index as createRoute } from '@/routes/document/create';
@@ -136,8 +136,12 @@ export default function AlterDocuments({
 
     const onHandlePreview = (file: UploadingFile) => {
         if (file.status === 'on server') {
+            const fileUrl =
+                document?.id && file.uploadedData?.id
+                    ? getFileUrl(document.id, file.uploadedData.id)
+                    : '';
             preview({
-                url: file.uploadedData?.fileurl ?? '',
+                url: fileUrl,
                 filename: file.uploadedData?.filename ?? '',
                 title: file.uploadedData?.filename ?? '',
                 subtitle: formatFileSize(file.uploadedData?.size ?? 0),
