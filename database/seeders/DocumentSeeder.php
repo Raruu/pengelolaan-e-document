@@ -19,6 +19,7 @@ class DocumentSeeder extends Seeder
         $docId1 = DB::table('documents')->insertGetId([
             'category_id' => $catUndanganId,
             'uploaded_by' => $adminId,
+            'no_document' => 'DOC-2026-001',
             'title' => 'Undangan Rapat Koordinasi Tahunan',
             'description' => 'Undangan wajib hadir bagi seluruh kepala divisi',
             'starred' => true,
@@ -29,6 +30,7 @@ class DocumentSeeder extends Seeder
         $docId2 = DB::table('documents')->insertGetId([
             'category_id' => $catRahasiaId,
             'uploaded_by' => $adminId,
+            'no_document' => 'DOC-2026-002',
             'title' => 'Laporan Intelijen Q1',
             'description' => 'Dokumen klasifikasi rahasia',
             'starred' => false,

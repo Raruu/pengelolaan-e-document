@@ -43,14 +43,14 @@ export default function DocumentsFilters({
             case 'today':
                 date.setDate(date.getDate());
                 break;
-            case '2-years':
-                date.setFullYear(date.getFullYear() - 2);
+            case '1-weeks':
+                date.setDate(date.getDate() - 7);
                 break;
-            case '5-years':
-                date.setFullYear(date.getFullYear() - 5);
+            case '1-months':
+                date.setMonth(date.getMonth() - 1);
                 break;
-            case '15-years':
-                date.setFullYear(date.getFullYear() - 15);
+            case '1-years':
+                date.setFullYear(date.getFullYear() - 1);
                 break;
             default:
                 break;
@@ -74,9 +74,9 @@ export default function DocumentsFilters({
                 >
                     <SelectItem key="all">Semua</SelectItem>
                     <SelectItem key="today">Hari ini</SelectItem>
-                    <SelectItem key="2-years">2 Tahun</SelectItem>
-                    <SelectItem key="5-years">5 Tahun</SelectItem>
-                    <SelectItem key="15-years">15 Tahun</SelectItem>
+                    <SelectItem key="1-weeks">1 Minggu lalu</SelectItem>
+                    <SelectItem key="1-months">1 Bulan lalu</SelectItem>
+                    <SelectItem key="1-years">1 Tahun lalu</SelectItem>
                 </Select>
 
                 <Select
@@ -153,7 +153,7 @@ export default function DocumentsFilters({
                 label={
                     <div className="flex flex-row items-center gap-2">
                         <Search className="h-4 w-4 text-default-400" /> Cari
-                        dokumen...
+                        dokumen. No/Nama
                     </div>
                 }
                 size="sm"

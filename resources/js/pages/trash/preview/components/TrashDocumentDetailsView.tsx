@@ -33,10 +33,12 @@ export default function TrashDocumentDetailsView({
                     <CardBody className="flex flex-col gap-4 p-6">
                         <div className="flex flex-row items-start justify-between">
                             <div>
+                                <p className="text-sm text-foreground">
+                                    No. Dokumen: {document.no_document}
+                                </p>
                                 <h3 className="mb-1 text-lg font-semibold text-default-700">
                                     {document.title}
                                 </h3>
-
                                 <p className="text-sm text-default-500">
                                     Tanggal dokumen:{' '}
                                     {formatDate(

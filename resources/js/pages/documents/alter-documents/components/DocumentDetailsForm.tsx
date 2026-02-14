@@ -18,6 +18,7 @@ import type { Category } from '@/types/models';
 
 interface DocumentDetailsFormProps {
     title: string;
+    noDocument: string;
     category: string;
     direction: string;
     description: string;
@@ -30,6 +31,7 @@ interface DocumentDetailsFormProps {
     mode: 'create' | 'edit';
     handleSubmit: () => void;
     onTitleChange: (value: string) => void;
+    onNoDocumentChange: (value: string) => void;
     onCategoryChange: (value: string) => void;
     onDirectionChange: (value: string) => void;
     onDescriptionChange: (value: string) => void;
@@ -39,6 +41,7 @@ interface DocumentDetailsFormProps {
 
 export default function DocumentDetailsForm({
     title,
+    noDocument,
     category,
     direction,
     description,
@@ -51,6 +54,7 @@ export default function DocumentDetailsForm({
     mode,
     handleSubmit,
     onTitleChange,
+    onNoDocumentChange,
     onCategoryChange,
     onDirectionChange,
     onDescriptionChange,
@@ -87,6 +91,18 @@ export default function DocumentDetailsForm({
                                 )}
                             </Button>
                         </div>
+
+                        <Input
+                            label="Nomor Dokumen"
+                            labelPlacement="outside"
+                            placeholder="xxx"
+                            isRequired
+                            value={noDocument}
+                            onValueChange={onNoDocumentChange}
+                            variant="bordered"
+                            isInvalid={!!validationErrors.no_document}
+                            errorMessage={validationErrors.no_document}
+                        />
 
                         <Input
                             label="Judul Dokumen"

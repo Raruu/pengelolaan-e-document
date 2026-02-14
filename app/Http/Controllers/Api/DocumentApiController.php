@@ -68,7 +68,8 @@ class DocumentApiController extends Controller
         if (!empty($validated['search'])) {
             $query->where(function ($q) use ($validated) {
                 $q->where('title', 'like', '%' . $validated['search'] . '%')
-                    ->orWhere('description', 'like', '%' . $validated['search'] . '%');
+                    ->orWhere('description', 'like', '%' . $validated['search'] . '%')
+                    ->orWhere('no_document', 'like', '%' . $validated['search'] . '%');
             });
         }
 
@@ -89,6 +90,7 @@ class DocumentApiController extends Controller
         $validated = $request->validate([
             'category' => 'required|exists:categories,category',
             'direction' => 'required|in:Masuk,Keluar',
+            'no_document' => 'required|string|max:50',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
             'document_date' => 'required|date',
@@ -109,6 +111,7 @@ class DocumentApiController extends Controller
         $document = Document::create([
             'category_id' => $category->id,
             'uploaded_by' => $request->user()->id,
+            'no_document' => $validated['no_document'],
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],
@@ -156,6 +159,7 @@ class DocumentApiController extends Controller
         $validated = $request->validate([
             'category' => 'required|exists:categories,category',
             'direction' => 'required|in:Masuk,Keluar',
+            'no_document' => 'required|string|max:50',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
             'document_date' => 'required|date',
@@ -177,6 +181,7 @@ class DocumentApiController extends Controller
 
         $document->update([
             'category_id' => $category->id,
+            'no_document' => $validated['no_document'],
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],

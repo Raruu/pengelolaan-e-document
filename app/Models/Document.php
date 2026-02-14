@@ -15,6 +15,7 @@ class Document extends Model
     protected $fillable = [
         'category_id',
         'uploaded_by',
+        'no_document',
         'title',
         'description',
         'starred',

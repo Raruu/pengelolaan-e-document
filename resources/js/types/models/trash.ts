@@ -5,6 +5,7 @@ export interface TrashDocument {
     type: 'document';
     deletion_type: 'full' | 'partial';
     title: string;
+    no_document: string;
     description?: string;
     category: Category;
     document_date?: string;

@@ -1,9 +1,9 @@
 import { Head } from '@inertiajs/react';
 import { useEffect } from 'react';
 import Heading from '@/components/Heading';
-import { defaultItems } from '@/lib/nav-items';
 import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
+import { defaultItems } from '@/lib/nav-items';
 import { index as previewRoute } from '@/routes/document/preview';
 import type { Document, DocumentFile } from '@/types/models';
 import DocumentDetailsView from './components/DocumentDetailsView';

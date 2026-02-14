@@ -43,7 +43,8 @@ export default function TrashTable({
                     className="min-h-100"
                 >
                     <TableHeader>
-                        <TableColumn width={'40%'}>NAMA DOKUMEN</TableColumn>
+                        <TableColumn width={'10%'}>NO. DOKUMEN</TableColumn>
+                        <TableColumn width={'30%'}>NAMA DOKUMEN</TableColumn>
                         <TableColumn width={'7%'}>KATEGORI</TableColumn>
                         <TableColumn width={'1%'}>PENGHAPUSAN</TableColumn>
                         <TableColumn width={'1%'}>JUMLAH FILE</TableColumn>
@@ -54,6 +55,11 @@ export default function TrashTable({
                         {items.length > 0 ? (
                             items.map((doc) => (
                                 <TableRow key={`document-${doc.id}`}>
+                                    <TableCell>
+                                        <span className="text-sm text-default-500">
+                                            {doc.no_document}
+                                        </span>
+                                    </TableCell>
                                     <TableCell className="max-w-96 overflow-hidden">
                                         <div className="m-0 flex flex-col truncate">
                                             <span className="flex flex-row items-center gap-2 font-medium">
@@ -178,7 +184,7 @@ export default function TrashTable({
                         ) : (
                             <TableRow>
                                 <TableCell
-                                    colSpan={6}
+                                    colSpan={7}
                                     className="h-24 text-center"
                                 >
                                     Tidak ada item di tong sampah

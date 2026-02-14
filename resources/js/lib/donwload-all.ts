@@ -26,7 +26,7 @@ export const downloadAllDocument = async ({
         link.href = url;
         link.setAttribute(
             'download',
-            `document_${theDocument.id}_${theDocument.title}_${Date.now()}.zip`,
+            `${theDocument.no_document}_${theDocument.title.substring(0, 50)}_${Date.now()}.zip`,
         );
         document.body.appendChild(link);
         link.click();

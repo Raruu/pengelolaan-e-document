@@ -16,6 +16,7 @@ return new class extends Migration
             $table->foreignId('uploaded_by')->constrained('users')->onDelete('cascade');
 
             // Metadata
+            $table->string('no_document', 50)->index();
             $table->string('title')->index();
             $table->text('description')->nullable();
             $table->boolean('starred')->default(false)->index();

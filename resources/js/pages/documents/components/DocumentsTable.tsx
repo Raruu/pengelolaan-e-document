@@ -45,7 +45,8 @@ export default function DocumentsTable({
                     className="min-h-100"
                 >
                     <TableHeader>
-                        <TableColumn width={'40%'}>NAMA DOKUMEN</TableColumn>
+                        <TableColumn width={'10%'}>NO. DOKUMEN</TableColumn>
+                        <TableColumn width={'30%'}>NAMA DOKUMEN</TableColumn>
                         <TableColumn width={'15%'}>KATEGORI</TableColumn>
                         <TableColumn width={'1%'}>JUMLAH FILE</TableColumn>
                         <TableColumn width={'1%'}>TANGGAL DOKUMEN</TableColumn>
@@ -56,6 +57,11 @@ export default function DocumentsTable({
                         {documents.length > 0 ? (
                             documents.map((doc) => (
                                 <TableRow key={doc.id}>
+                                    <TableCell>
+                                        <span className="text-sm text-default-500">
+                                            {doc.no_document}
+                                        </span>
+                                    </TableCell>
                                     <TableCell className="max-w-96 overflow-hidden">
                                         <div className="flex flex-col truncate">
                                             <span className="flex flex-row items-center gap-2 font-medium">
@@ -163,7 +169,7 @@ export default function DocumentsTable({
                         ) : (
                             <TableRow>
                                 <TableCell
-                                    colSpan={6}
+                                    colSpan={7}
                                     className="h-24 text-center"
                                 >
                                     Tidak ada dokumen

@@ -3,6 +3,7 @@ import type { DocumentFile } from './document-file';
 
 export interface Document {
     id: number;
+    no_document: string;
     title: string;
     description: string | null;
     starred: boolean;

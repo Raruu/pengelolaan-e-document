@@ -4,11 +4,11 @@ import axios from 'axios';
 import { Trash2 } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import Heading from '@/components/Heading';
-import { defaultItems } from '@/lib/nav-items';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
 import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
+import { defaultItems } from '@/lib/nav-items';
 import { formatFileSize } from '@/lib/utils';
 import { store, update, storeFile } from '@/routes/api/documents';
 import { destroy as documentDestroy } from '@/routes/api/documents';
@@ -42,6 +42,7 @@ export default function AlterDocuments({
     mode = 'create',
 }: Props) {
     const [title, setTitle] = useState(document?.title || '');
+    const [noDocument, setNoDocument] = useState(document?.no_document || '');
     const [category, setCategory] = useState<string>(
         document?.category.category || '',
     );
@@ -234,6 +235,9 @@ export default function AlterDocuments({
         if (!title.trim()) {
             errors.title = 'Judul dokumen harus diisi';
         }
+        if (!noDocument.trim()) {
+            errors.no_document = 'Nomor dokumen harus diisi';
+        }
         if (!category) {
             errors.category_id = 'Silakan pilih kategori';
         }
@@ -260,6 +264,7 @@ export default function AlterDocuments({
 
         const formData = new FormData();
         formData.append('title', title);
+        formData.append('no_document', noDocument);
         formData.append('category', category);
         formData.append('direction', direction);
         formData.append('document_date', documentDate);
@@ -435,6 +440,7 @@ export default function AlterDocuments({
                     <div className="lg:flex-3">
                         <DocumentDetailsForm
                             title={title}
+                            noDocument={noDocument}
                             category={category}
                             direction={direction}
                             description={description}
@@ -450,6 +456,12 @@ export default function AlterDocuments({
                                 setTitle(value);
                                 if (validationErrors.title) {
                                     clearValidationError('title');
+                                }
+                            }}
+                            onNoDocumentChange={(value) => {
+                                setNoDocument(value);
+                                if (validationErrors.no_document) {
+                                    clearValidationError('no_document');
                                 }
                             }}
                             onCategoryChange={(value) => {

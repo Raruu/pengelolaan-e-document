@@ -104,6 +104,7 @@ class TrashApiController extends Controller
                 'type' => 'document',
                 'deletion_type' => 'full', // Fully deleted document
                 'title' => $doc->title,
+                'no_document' => $doc->no_document,
                 'description' => $doc->description,
                 'category' => $doc->category,
                 'deleted_at' => $doc->deleted_at->toISOString(),
@@ -133,6 +134,7 @@ class TrashApiController extends Controller
                 'type' => 'document',
                 'deletion_type' => 'partial',
                 'title' => $document->title,
+                'no_document' => $document->no_document,
                 'description' => $document->description,
                 'category' => $document->category,
                 'deleted_at' => $document->deleted_at?->toISOString() ?? $deletedFiles->max('deleted_at')->toISOString(),
