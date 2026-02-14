@@ -1,4 +1,3 @@
-import DocViewer, { DocViewerRenderers } from '@cyntler/react-doc-viewer';
 import {
     Button,
     Modal,
@@ -10,7 +9,6 @@ import {
 import { Download, X } from 'lucide-react';
 import { useState } from 'react';
 import { isDoc } from '@/lib/utils';
-import '@cyntler/react-doc-viewer/dist/index.css';
 
 interface PreviewParams {
     url: string;
@@ -25,6 +23,12 @@ interface UseImagePreviewReturn {
     DialogComponent: React.ReactNode;
 }
 
+export const isPreviewAble = (filename: string): boolean => {
+    const previewAble = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'pdf'];
+    const ext = filename.split('.').pop() || '';
+    return previewAble.includes(ext);
+};
+
 export function usePreviewDialog(): UseImagePreviewReturn {
     const [isOpen, setIsOpen] = useState(false);
     const [url, setUrl] = useState<string>('');
@@ -32,7 +36,6 @@ export function usePreviewDialog(): UseImagePreviewReturn {
     const [title, setTitle] = useState<string>('Preview');
     const [subTitle, setSubtitle] = useState<string | null>('');
     const [isDocument, setIsDocument] = useState<boolean>(false);
-    const [iframeError, setIframeError] = useState<boolean>(false);
     const [hideDownload, setHideDownload] = useState<boolean>(false);
 
     const preview = ({
@@ -48,7 +51,6 @@ export function usePreviewDialog(): UseImagePreviewReturn {
         setSubtitle(subtitle);
         const ext = filename.toLowerCase();
         setIsDocument(isDoc(ext));
-        setIframeError(false);
         setIsOpen(true);
         setHideDownload(hideDownload);
     };
@@ -68,7 +70,7 @@ export function usePreviewDialog(): UseImagePreviewReturn {
         <Modal
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
-            size={isDocument ? '5xl' : '2xl'}            
+            size={isDocument ? '5xl' : '2xl'}
         >
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
@@ -80,28 +82,11 @@ export function usePreviewDialog(): UseImagePreviewReturn {
                 <ModalBody>
                     <div className="flex items-center justify-center">
                         {isDocument ? (
-                            iframeError ? (
-                                <div className="h-[70vh] w-full overflow-auto">
-                                    <DocViewer
-                                        documents={[
-                                            { uri: url, fileName: filename },
-                                        ]}
-                                        pluginRenderers={DocViewerRenderers}
-                                        config={{
-                                            header: {
-                                                disableHeader: true,
-                                            },
-                                        }}
-                                    />
-                                </div>
-                            ) : (
-                                <iframe
-                                    src={url}
-                                    className="h-[70vh] w-full rounded-lg"
-                                    title="PDF Preview"
-                                    onError={() => setIframeError(true)}
-                                />
-                            )
+                            <iframe
+                                src={url}
+                                className="h-[70vh] w-full rounded-lg"
+                                title="PDF Preview"
+                            />
                         ) : (
                             <img
                                 src={url}

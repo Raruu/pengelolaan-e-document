@@ -1,7 +1,7 @@
 import { Card, CardBody, Button, Divider } from '@heroui/react';
 import { Download, Eye } from 'lucide-react';
 import { FileIcon } from '@/components/FileIcon';
-import { usePreviewDialog } from '@/hooks/usePreviewDialog';
+import { isPreviewAble, usePreviewDialog } from '@/hooks/usePreviewDialog';
 import { formatDate, formatFileSize, getFileUrl } from '@/lib/utils';
 import type { DocumentFile } from '@/types/models';
 
@@ -83,17 +83,21 @@ export default function FilesListView({
                                                 </p>
                                             </div>
                                             <div className="flex flex-row items-center gap-2">
-                                                <Button
-                                                    isIconOnly
-                                                    size="sm"
-                                                    variant="light"
-                                                    color="default"
-                                                    onPress={() =>
-                                                        handlePreview(file)
-                                                    }
-                                                >
-                                                    <Eye className="size-4" />
-                                                </Button>
+                                                {isPreviewAble(
+                                                    file.filename,
+                                                ) && (
+                                                    <Button
+                                                        isIconOnly
+                                                        size="sm"
+                                                        variant="light"
+                                                        color="default"
+                                                        onPress={() =>
+                                                            handlePreview(file)
+                                                        }
+                                                    >
+                                                        <Eye className="size-4" />
+                                                    </Button>
+                                                )}
                                                 <Button
                                                     isIconOnly
                                                     size="sm"

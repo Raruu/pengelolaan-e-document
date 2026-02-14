@@ -1,6 +1,7 @@
 import { Button, Divider, Progress } from '@heroui/react';
 import { CheckCircle, Eye, Trash2 } from 'lucide-react';
 import { FileIcon } from '@/components/FileIcon';
+import { isPreviewAble } from '@/hooks/usePreviewDialog';
 import { formatDate, formatFileSize } from '@/lib/utils';
 import type { UploadingFile } from '@/types/models';
 
@@ -48,15 +49,17 @@ export default function UploadedFileItem({
                             </p>
                         </div>
                         <div className="flex flex-row items-center gap-2">
-                            <Button
-                                isIconOnly
-                                size="sm"
-                                variant="light"
-                                color="default"
-                                onPress={() => handlePreview(uploadFile)}
-                            >
-                                <Eye className="size-4" />
-                            </Button>
+                            {isPreviewAble(uploadFile.file.name) && (
+                                <Button
+                                    isIconOnly
+                                    size="sm"
+                                    variant="light"
+                                    color="default"
+                                    onPress={() => handlePreview(uploadFile)}
+                                >
+                                    <Eye className="size-4" />
+                                </Button>
+                            )}
                             <Button
                                 isIconOnly
                                 size="sm"

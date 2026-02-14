@@ -1,5 +1,6 @@
 import type { ReactNode } from 'react';
 import BubbleBackground from '@/components/BubbleBackground';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { cn } from '@/lib/utils';
 import { useSidebar } from '../../hooks/useSidebar';
 import AppHeader from './AppHeader';
@@ -16,6 +17,7 @@ const LayoutContent: React.FC<LayoutContentProps> = ({
     useBgBackground = false,
 }) => {
     const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+    useBgBackground = useIsMobile();
 
     return (
         <>
