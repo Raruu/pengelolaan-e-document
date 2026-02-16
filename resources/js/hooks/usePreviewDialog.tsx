@@ -6,6 +6,7 @@ import {
     ModalFooter,
     ModalHeader,
 } from '@heroui/react';
+import { Link } from '@inertiajs/react';
 import { Download, X } from 'lucide-react';
 import { useState } from 'react';
 import { isDoc } from '@/lib/utils';
@@ -70,7 +71,7 @@ export function usePreviewDialog(): UseImagePreviewReturn {
         <Modal
             isOpen={isOpen}
             onClose={() => setIsOpen(false)}
-            size={isDocument ? '5xl' : '2xl'}
+            size={isDocument ? '5xl' : '4xl'}
         >
             <ModalContent>
                 <ModalHeader className="flex flex-col gap-1">
@@ -82,11 +83,25 @@ export function usePreviewDialog(): UseImagePreviewReturn {
                 <ModalBody>
                     <div className="flex items-center justify-center">
                         {isDocument ? (
-                            <iframe
-                                src={url}
+                            <object
+                                data={url}
                                 className="h-[70vh] w-full rounded-lg"
                                 title="PDF Preview"
-                            />
+                                type="application/pdf"
+                            >
+                                <div className="flex items-center justify-center">
+                                    <h1>
+                                        Melihat pesan ini?{' '}
+                                        <Link
+                                            onClick={handleDownload}
+                                            className="text-blue-500 hover:text-blue-700"
+                                        >
+                                            download
+                                        </Link>{' '}
+                                        dokumennya saja
+                                    </h1>
+                                </div>
+                            </object>
                         ) : (
                             <img
                                 src={url}
