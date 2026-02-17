@@ -1,7 +1,5 @@
 import type { ReactNode } from 'react';
-import BubbleBackground from '@/components/BubbleBackground';
 import { useIsMobile } from '@/hooks/use-mobile';
-import { cn } from '@/lib/utils';
 import { useSidebar } from '../../hooks/useSidebar';
 import AppHeader from './AppHeader';
 import AppSidebar from './AppSidebar';
@@ -17,11 +15,12 @@ const LayoutContent: React.FC<LayoutContentProps> = ({
     useBgBackground = false,
 }) => {
     const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     useBgBackground = useIsMobile();
 
     return (
         <>
-            {!useBgBackground && (
+            {/* {!useBgBackground && (
                 <div className="absolute top-0 left-0 -z-2 min-h-screen min-w-screen blur-3xl">
                     <BubbleBackground
                         bgColorA="rgb(255,255,255)"
@@ -36,15 +35,15 @@ const LayoutContent: React.FC<LayoutContentProps> = ({
                         }}
                     />
                 </div>
-            )}
+            )} */}
 
-            <div
+            {/* <div
                 className={cn(
                     'absolute top-0 left-0 -z-1 h-full w-full',
                     useBgBackground && 'bg-background',
                 )}
-                style={{ backgroundColor: 'rgba(255, 255, 255, 0.87)' }}
-            ></div>
+                style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)' }}
+            ></div> */}
             <div className="relative z-1 min-h-screen xl:flex">
                 <div>
                     <AppSidebar />
