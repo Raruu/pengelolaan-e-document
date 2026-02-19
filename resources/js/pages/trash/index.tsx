@@ -87,6 +87,13 @@ export default function Trash({
                     };
                 }
 
+                if (selectedCategory !== '') {
+                    params = {
+                        ...params,
+                        category: selectedCategory,
+                    };
+                }
+
                 const response = await axios.get(trashIndex.url(), {
                     params,
                 });
@@ -97,12 +104,29 @@ export default function Trash({
                 setLoading(false);
             }
         },
-        [direction, deletedDate, filters, perPage, searchTerm],
+        [
+            filters,
+            perPage,
+            direction,
+            deletedDate,
+            searchTerm,
+            selectedCategory,
+        ],
     );
 
+    const [calledFirstTime, setCalledFirstTime] = useState(true);
+
     useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        if (calledFirstTime) {
+            setCalledFirstTime(false);
+            return;
+        }
+
         fetchItems();
-    }, [fetchItems]);
+    }, [calledFirstTime, fetchItems]);
 
     const clearCategoryFilter = () => {
         setSelectedCategory('');

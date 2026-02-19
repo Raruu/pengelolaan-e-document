@@ -89,6 +89,13 @@ export default function DokumenKu({
                         search: searchTerm,
                     };
                 }
+
+                if (selectedCategory !== '') {
+                    params = {
+                        ...params,
+                        category: selectedCategory,
+                    };
+                }
                 const response = await axios.get(documentsIndex.url(), {
                     params,
                 });
@@ -99,17 +106,30 @@ export default function DokumenKu({
                 setLoading(false);
             }
         },
-        [direction, documentDate, filters, perPage, starred, searchTerm],
+        [
+            filters,
+            perPage,
+            starred,
+            direction,
+            documentDate,
+            searchTerm,
+            selectedCategory,
+        ],
     );
 
-    useEffect(() => {
-        fetchDocuments();
-    }, [fetchDocuments]);
+    const [calledFirstTime, setCalledFirstTime] = useState(true);
 
-    const clearCategoryFilter = () => {
-        setSelectedCategory('');
-        fetchDocuments({ category: undefined, page: 1 });
-    };
+    useEffect(() => {
+        if (typeof window === 'undefined') {
+            return;
+        }
+        if (calledFirstTime) {
+            setCalledFirstTime(false);
+            return;
+        }
+
+        fetchDocuments();
+    }, [calledFirstTime, fetchDocuments]);
 
     const handlePageChange = (page: number) => {
         fetchDocuments({ page });
@@ -190,21 +210,17 @@ export default function DokumenKu({
                     selectedCategory={selectedCategory}
                     searchValue={searchTerm}
                     onCategoryChange={(category) => {
-                        setSelectedCategory(category || '');
-                        fetchDocuments({ category, page: 1 });
+                        setSelectedCategory(category);
                     }}
                     onDirectionChange={(direction) => {
                         setDirection(direction);
-                        fetchDocuments({ direction: direction || undefined });
                     }}
                     onDateRangeChange={(dateFrom) => {
                         setDocumentDate(dateFrom);
-                        fetchDocuments({ date_from: dateFrom || undefined });
                     }}
                     onSearchChange={(search) => {
                         setSearchTerm(search);
                     }}
-                    onClearCategory={clearCategoryFilter}
                 />
 
                 {/* Documents Table */}

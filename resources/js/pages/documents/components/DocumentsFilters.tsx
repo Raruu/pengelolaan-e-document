@@ -15,10 +15,9 @@ interface DocumentsFiltersProps {
     directions: { direction: string }[];
     selectedCategory: string;
     searchValue?: string;
-    onCategoryChange: (category: string | undefined) => void;
+    onCategoryChange: (category: string) => void;
     onDirectionChange: (direction: string) => void;
     onDateRangeChange: (dateFrom: string) => void;
-    onClearCategory: () => void;
     onSearchChange?: (search: string) => void;
 }
 
@@ -30,7 +29,6 @@ export default function DocumentsFilters({
     onCategoryChange,
     onDirectionChange,
     onDateRangeChange,
-    onClearCategory,
     onSearchChange,
 }: DocumentsFiltersProps) {
     const handleDateRangeChange = (selected: string) => {
@@ -114,10 +112,9 @@ export default function DocumentsFilters({
                     onSelectionChange={(key) => {
                         const categoryValue =
                             key == 'all' ? '' : key?.toString() || '';
-                        onCategoryChange(categoryValue || undefined);
+                        onCategoryChange(categoryValue || '');
                     }}
                     isClearable
-                    onClear={onClearCategory}
                 >
                     <AutocompleteItem key="all">Semua</AutocompleteItem>
                     <>
@@ -149,7 +146,7 @@ export default function DocumentsFilters({
 
             <Input
                 isClearable
-                className="max-w-72 bg-background rounded-lg"
+                className="max-w-72 rounded-lg bg-background"
                 label={
                     <div className="flex flex-row items-center gap-2">
                         <Search className="h-4 w-4 text-default-400" /> Cari

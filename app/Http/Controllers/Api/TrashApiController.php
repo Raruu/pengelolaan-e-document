@@ -73,7 +73,7 @@ class TrashApiController extends Controller
         if (!empty($validated['search'])) {
             $documentsQuery->where(function ($q) use ($validated) {
                 $q->where('title', 'like', '%' . $validated['search'] . '%')
-                    ->orWhere('description', 'like', '%' . $validated['search'] . '%');
+                    ->orWhere('no_document', 'like', '%' . $validated['search'] . '%');
             });
             $filesQuery->whereHas('document', function ($q) use ($validated) {
                 $q->where('title', 'like', '%' . $validated['search'] . '%')
