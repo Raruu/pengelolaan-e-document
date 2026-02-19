@@ -126,7 +126,8 @@ export default function Trash({
         }
 
         fetchItems();
-    }, [calledFirstTime, fetchItems]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchItems]);
 
     const clearCategoryFilter = () => {
         setSelectedCategory('');

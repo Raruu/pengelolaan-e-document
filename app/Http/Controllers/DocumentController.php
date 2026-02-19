@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Api\DocumentApiController;
 use App\Models\Document;
 use App\Models\Category;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Storage;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -13,42 +13,13 @@ class DocumentController extends Controller
 {
     public function index(Request $request, bool $starred = false): Response
     {
-        $query = Document::with(['category', 'uploader', 'files'])
-            ->where('uploaded_by', $request->user()->id);
-
-        // Filter by category
-        if ($request->has('category')) {
-            $query->where('category_id', $request->category);
-        }
-
-        // Filter by date range
-        if ($request->has('date_from')) {
-            $query->whereDate('document_date', '>=', $request->date_from);
-        }
-
-        if ($request->has('date_to')) {
-            $query->whereDate('document_date', '<=', $request->date_to);
-        }
-
-        // Starred
         if ($starred) {
-            $query->where('starred', true);
+            $request->merge(['starred' => true]);
         }
 
-        // Search
-        if ($request->has('search')) {
-            $query->where(function ($q) use ($request) {
-                $q->where('title', 'like', '%' . $request->search . '%')
-                    ->orWhere('no_document', 'like', '%' . $request->search . '%');
-            });
-        }
-
-        // Sort
-        $sortBy = $request->get('sort_by', 'created_at');
-        $sortOrder = $request->get('sort_order', 'desc');
-        $query->orderBy($sortBy, $sortOrder);
-
-        $documents = $query->paginate(10);
+        // Use the API controller's method to get documents
+        $apiController = new DocumentApiController();
+        $documents = $apiController->getDocumentsQuery($request);
 
         $categories = Category::select('category', 'icon_path')
             ->distinct('category')
@@ -69,8 +40,8 @@ class DocumentController extends Controller
                 'date_from' => $request->date_from,
                 'date_to' => $request->date_to,
                 'search' => $request->search,
-                'sort_by' => $sortBy,
-                'sort_order' => $sortOrder,
+                'sort_by' => $request->get('sort_by', 'created_at'),
+                'sort_order' => $request->get('sort_order', 'desc'),
             ],
             'starred' => $starred
         ]);

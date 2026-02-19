@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Storage;
 
 class TrashApiController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function getTrashItemsQuery(Request $request)
     {
         $validated = $request->validate([
             'page' => 'nullable|integer|min:1',
@@ -102,7 +102,7 @@ class TrashApiController extends Controller
             $items->push([
                 'id' => $doc->id,
                 'type' => 'document',
-                'deletion_type' => 'full', // Fully deleted document
+                'deletion_type' => 'full',
                 'title' => $doc->title,
                 'no_document' => $doc->no_document,
                 'description' => $doc->description,
@@ -111,7 +111,7 @@ class TrashApiController extends Controller
                 'document_date' => $doc->document_date?->toISOString(),
                 'files_count' => $doc->files()->withTrashed()->count(),
                 'starred' => $doc->starred,
-                'deleted_files' => [], // All files are deleted with the document
+                'deleted_files' => [],
             ]);
         }
 
@@ -155,7 +155,7 @@ class TrashApiController extends Controller
         $total = $items->count();
         $items = $items->forPage($page, $perPage)->values();
 
-        return response()->json([
+        return [
             'data' => $items,
             'current_page' => (int) $page,
             'last_page' => (int) ceil($total / $perPage),
@@ -163,7 +163,13 @@ class TrashApiController extends Controller
             'total' => $total,
             'from' => ($page - 1) * $perPage + 1,
             'to' => min($page * $perPage, $total),
-        ]);
+        ];
+    }
+
+    public function index(Request $request): JsonResponse
+    {
+        $items = $this->getTrashItemsQuery($request);
+        return response()->json($items);
     }
 
     public function restore(Request $request): JsonResponse

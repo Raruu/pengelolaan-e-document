@@ -13,7 +13,7 @@ use Intervention\Image\ImageManager;
 
 class CategoryApiController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function getCategories(Request $request)
     {
         $validated = $request->validate([
             'page' => 'nullable|integer|min:1',
@@ -66,8 +66,15 @@ class CategoryApiController extends Controller
             return $category;
         });
 
+        return $categories;
+    }
+    
+    public function index(Request $request): JsonResponse
+    {
+        $categories = $this->getCategories($request);
         return response()->json($categories);
     }
+
 
     public function store(Request $request): JsonResponse
     {

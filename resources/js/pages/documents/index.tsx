@@ -129,7 +129,8 @@ export default function DokumenKu({
         }
 
         fetchDocuments();
-    }, [calledFirstTime, fetchDocuments]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [fetchDocuments]);
 
     const handlePageChange = (page: number) => {
         fetchDocuments({ page });

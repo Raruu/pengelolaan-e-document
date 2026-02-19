@@ -13,7 +13,7 @@ use ZipArchive;
 
 class DocumentApiController extends Controller
 {
-    public function index(Request $request): JsonResponse
+    public function getDocumentsQuery(Request $request)
     {
         $validated = $request->validate([
             'page' => 'nullable|integer|min:1',
@@ -68,7 +68,6 @@ class DocumentApiController extends Controller
         if (!empty($validated['search'])) {
             $query->where(function ($q) use ($validated) {
                 $q->where('title', 'like', '%' . $validated['search'] . '%')
-                    ->orWhere('description', 'like', '%' . $validated['search'] . '%')
                     ->orWhere('no_document', 'like', '%' . $validated['search'] . '%');
             });
         }
@@ -79,9 +78,13 @@ class DocumentApiController extends Controller
         $query->orderBy($sortBy, $sortOrder);
 
         // Pagination
-        $perPage = $validated['per_page'] ?? 24;
-        $documents = $query->paginate($perPage);
+        $perPage = $validated['per_page'] ?? 10;
+        return $query->paginate($perPage);
+    }
 
+    public function index(Request $request): JsonResponse
+    {
+        $documents = $this->getDocumentsQuery($request);
         return response()->json($documents);
     }
 
