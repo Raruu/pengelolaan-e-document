@@ -2,6 +2,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { ChevronDown, MoreHorizontal } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import AppLogoIcon from '@/components/AppLogoIcon';
+import WaveBackground from '@/components/WaveBackground';
 import { defaultItems } from '@/lib/nav-items';
 import { dashboard } from '@/routes';
 import type { NavItem } from '@/types/navigation';
@@ -224,7 +225,7 @@ const AppSidebar: React.FC = () => {
 
     return (
         <aside
-            className={`fixed top-0 left-0 z-50 mt-16 flex h-screen flex-col border-r bg-[#ecf4fa] border-gray-200 px-5 text-gray-900 transition-all duration-300 ease-in-out lg:mt-0 dark:border-gray-800 ${
+            className={`fixed top-0 left-0 z-50 mt-16 flex h-screen flex-col border-r border-gray-200 bg-[#def0fc] px-5 text-gray-900 transition-all duration-300 ease-in-out lg:mt-0 dark:border-gray-800 ${
                 isExpanded || isMobileOpen
                     ? 'w-72.5'
                     : isHovered
@@ -280,6 +281,11 @@ const AppSidebar: React.FC = () => {
                         </div>
                     </div>
                 </nav>
+            </div>
+            <div className="absolute right-0 bottom-0 left-0 h-24 w-full blur-[2px]">
+                <div className="absolute top-0 left-0 h-full w-full">
+                    <WaveBackground variant="component" />
+                </div>
             </div>
         </aside>
     );

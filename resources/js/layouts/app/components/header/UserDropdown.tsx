@@ -40,7 +40,7 @@ export default function UserDropdown() {
         <div className="relative" ref={dropdownRef}>
             <button
                 onClick={() => setIsOpen(!isOpen)}
-                className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-brand-200 dark:hover:bg-gray-800"
             >
                 <Avatar
                     src={auth.user.profile_photo_url}
