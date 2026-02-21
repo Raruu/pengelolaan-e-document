@@ -45,6 +45,10 @@ export default function ManageCategory({ categories, filters }: Props) {
     const [loading, setLoading] = useState<boolean>(false);
     const [isCombined, setIsCombined] = useState<boolean>(filters.is_combined);
     const [searchTerm, setSearchTerm] = useState<string>(filters.search || '');
+    const [sort, setSort] = useState({
+        by: filters.sort_by,
+        order: filters.sort_order,
+    });
     const [categoriesData, setCategoriesData] = useState(categories);
     const { openCategoryDialog, DialogComponent: CategoryDialog } =
         useCategoryDialog();
@@ -54,15 +58,24 @@ export default function ManageCategory({ categories, filters }: Props) {
         async (params = {}) => {
             setLoading(true);
 
+            params = {
+                ...params,
+                per_page: perPage,
+                is_combined: isCombined,
+                sort_by: sort.by,
+                sort_order: sort.order,
+            };
+
+            if (searchTerm !== '') {
+                params = {
+                    ...params,
+                    search: searchTerm,
+                };
+            }
+
             try {
                 const response = await axios.get(indexCategories.url(), {
-                    params: {
-                        ...filters,
-                        ...params,
-                        per_page: perPage,
-                        is_combined: isCombined,
-                        search: searchTerm || undefined,
-                    },
+                    params,
                 });
                 setCategoriesData(response.data);
             } catch (error) {
@@ -71,19 +84,33 @@ export default function ManageCategory({ categories, filters }: Props) {
                 setLoading(false);
             }
         },
-        [filters, perPage, isCombined, searchTerm],
+        [perPage, isCombined, searchTerm, sort],
     );
 
+    const [calledFirstTime, setCalledFirstTime] = useState(true);
+
     useEffect(() => {
-        fetchCategories();
+        if (typeof window === 'undefined') {
+            return;
+        }
+        if (calledFirstTime) {
+            setCalledFirstTime(false);
+            return;
+        }
+
+        const timeoutId = setTimeout(() => {
+            fetchCategories();
+        }, 250);
+
+        return () => clearTimeout(timeoutId);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchCategories]);
 
     const handleSortChange = (value: string) => {
         const [sort_by, sort_order] = value.split('_');
-        fetchCategories({
-            sort_by: sort_by.replaceAll('-', '_'),
-            sort_order,
-            page: 1,
+        setSort({
+            by: sort_by.replaceAll('-', '_'),
+            order: sort_order,
         });
     };
 

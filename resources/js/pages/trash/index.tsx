@@ -125,14 +125,13 @@ export default function Trash({
             return;
         }
 
-        fetchItems();
+        const timeoutId = setTimeout(() => {
+            fetchItems();
+        }, 250);
+
+        return () => clearTimeout(timeoutId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchItems]);
-
-    const clearCategoryFilter = () => {
-        setSelectedCategory('');
-        fetchItems({ category: undefined, page: 1 });
-    };
 
     const handlePageChange = (page: number) => {
         fetchItems({ page });
@@ -245,20 +244,16 @@ export default function Trash({
                     searchValue={searchTerm}
                     onCategoryChange={(category) => {
                         setSelectedCategory(category || '');
-                        fetchItems({ category, page: 1 });
                     }}
                     onDirectionChange={(direction) => {
                         setDirection(direction);
-                        fetchItems({ direction: direction || undefined });
                     }}
                     onDateRangeChange={(dateFrom) => {
                         setDeletedDate(dateFrom);
-                        fetchItems({ date_from: dateFrom || undefined });
                     }}
                     onSearchChange={(search) => {
                         setSearchTerm(search);
                     }}
-                    onClearCategory={clearCategoryFilter}
                 />
 
                 {/* Trash Table */}

@@ -128,7 +128,11 @@ export default function DokumenKu({
             return;
         }
 
-        fetchDocuments();
+        const timeoutId = setTimeout(() => {
+            fetchDocuments();
+        }, 250);
+
+        return () => clearTimeout(timeoutId);
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [fetchDocuments]);
 
