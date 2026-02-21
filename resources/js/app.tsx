@@ -1,4 +1,5 @@
-import { HeroUIProvider, ToastProvider } from '@heroui/react';
+import { HeroUIProvider } from '@heroui/system';
+import { ToastProvider } from '@heroui/toast';
 import { createInertiaApp, router } from '@inertiajs/react';
 import axios from 'axios';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';

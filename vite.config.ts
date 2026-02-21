@@ -24,4 +24,27 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
+    build: {
+        rollupOptions: {
+            output: {
+                manualChunks(id) {
+                    if (
+                        id.includes('framer-motion') ||
+                        id.includes('@motionone/')
+                    ) {
+                        return 'vendor-motion';
+                    }
+                    if (
+                        id.includes('@heroui/system') ||
+                        id.includes('@heroui/toast') ||
+                        id.includes('@heroui/theme') ||
+                        id.includes('@heroui/react-utils') ||
+                        id.includes('@heroui/shared-utils')
+                    ) {
+                        return 'vendor-heroui-core';
+                    }
+                },
+            },
+        },
+    },
 });
