@@ -1,6 +1,9 @@
 import { useEffect, useRef } from 'react';
 import { cn } from '@/lib/utils';
 
+// Persist start time at module level so animation doesn't restart on remount
+let persistentStartTime: number | null = null;
+
 export default function WaveBackground({
     variant = 'full-screen',
 }: {
@@ -16,7 +19,10 @@ export default function WaveBackground({
         if (!ctx) return;
 
         let animationFrameId: number;
-        const startTime = performance.now();
+        if (persistentStartTime === null) {
+            persistentStartTime = performance.now();
+        }
+        const startTime = persistentStartTime;
 
         // Set canvas size
         const resizeCanvas = () => {
