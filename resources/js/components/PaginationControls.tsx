@@ -1,4 +1,5 @@
 import { Select, SelectItem, Pagination } from '@heroui/react';
+import { useState } from 'react';
 
 interface PaginationControlsProps {
     currentPage: number;
@@ -21,16 +22,26 @@ export default function PaginationControls({
     onPageChange,
     onPerPageChange,
 }: PaginationControlsProps) {
+    const [containerElement, setContainerElement] = useState<Element | null>();
+
     return (
-        <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+        <div
+            className="relative flex items-center justify-between"
+            ref={setContainerElement}
+        >
+            <div className="relative flex items-center gap-3">
                 <Select
                     label="Tampilkan"
                     size="sm"
                     variant="bordered"
-                    className="w-32 bg-background rounded-lg"
+                    className="w-32 rounded-lg bg-background"
                     selectedKeys={[perPage.toString()]}
                     onChange={(e) => onPerPageChange(e.target.value)}
+                    popoverProps={{
+                        shouldFlip: true,
+                        placement: 'top',
+                        portalContainer: containerElement as Element,
+                    }}
                 >
                     <SelectItem key="10">10</SelectItem>
                     <SelectItem key="25">25</SelectItem>
