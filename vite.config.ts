@@ -28,20 +28,19 @@ export default defineConfig({
         rollupOptions: {
             output: {
                 manualChunks(id) {
-                    if (
-                        id.includes('framer-motion') ||
-                        id.includes('@motionone/')
-                    ) {
-                        return 'vendor-motion';
-                    }
+                    // Only the two root providers — loaded at startup, must stay small
                     if (
                         id.includes('@heroui/system') ||
-                        id.includes('@heroui/toast') ||
+                        id.includes('@heroui/toast')
+                    ) {
+                        return 'vendor-heroui-core';
+                    }
+                    if (
                         id.includes('@heroui/theme') ||
                         id.includes('@heroui/react-utils') ||
                         id.includes('@heroui/shared-utils')
                     ) {
-                        return 'vendor-heroui-core';
+                        return 'vendor-heroui-utils';
                     }
                 },
             },
