@@ -35,6 +35,9 @@ export default function UserDropdown() {
     if (!user) return null;
 
     const initials = initialsName(user.name);
+    const profilePhotoUrl = user.profile_photo_url
+        ? `${user.profile_photo_url}${user.profile_photo_url.includes('?') ? '&' : '?'}v=${encodeURIComponent(user.updated_at)}`
+        : undefined;
 
     return (
         <div className="relative" ref={dropdownRef}>
@@ -43,11 +46,11 @@ export default function UserDropdown() {
                 className="flex items-center gap-3 rounded-lg px-2 py-2 hover:bg-brand-200 dark:hover:bg-gray-800"
             >
                 <Avatar
-                    src={auth.user.profile_photo_url}
+                    src={profilePhotoUrl}
                     icon={initials}
                     className="size-10 bg-primary text-sm font-semibold text-white"
                     radius="full"
-                />             
+                />
                 <div className="hidden text-left lg:block">
                     <p className="text-sm font-medium text-gray-900 dark:text-white">
                         {user.name}

@@ -38,7 +38,8 @@ class ProfileController extends Controller
         $user->fill($request->validated());
 
         if ($request->hasFile('profile_photo_path')) {
-            $user->profile_photo_path =  $this->updateProfilePhoto($request, $user);
+            $user->profile_photo_path =  $this->updateProfilePhoto($request, $user);            
+            $user->updated_at = now();
         }
 
         if ($user->isDirty('email')) {

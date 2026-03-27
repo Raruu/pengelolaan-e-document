@@ -13,11 +13,15 @@ import type { SharedData } from '@/types';
 
 export default function Profile() {
     const { auth } = usePage<SharedData>().props;
+    const user = auth.user;
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const { preview, DialogComponent: PreviewDialog } = usePreviewDialog();
     const { cropImage, DialogComponent: CropDialog } = useImageCrop();
 
-    const initials = initialsName(auth.user.name);
+    const initials = initialsName(user.name);
+    const profilePhotoUrl = user.profile_photo_url
+        ? `${user.profile_photo_url}${user.profile_photo_url.includes('?') ? '&' : '?'}v=${encodeURIComponent(user.updated_at)}`
+        : undefined;
 
     const handlePhotoChange = async (
         e: React.ChangeEvent<HTMLInputElement>,
@@ -86,7 +90,7 @@ export default function Profile() {
                                             <Avatar
                                                 src={
                                                     photoPreview ||
-                                                    auth.user.profile_photo_url
+                                                    profilePhotoUrl
                                                 }
                                                 icon={initials}
                                                 className="size-20 cursor-pointer bg-primary text-sm font-semibold text-white transition-opacity hover:opacity-80"
@@ -94,12 +98,11 @@ export default function Profile() {
                                                 onClick={() => {
                                                     const url =
                                                         photoPreview ||
-                                                        auth.user
-                                                            .profile_photo_url;
+                                                        profilePhotoUrl;
                                                     if (url) {
                                                         preview({
                                                             url,
-                                                            filename: `${auth.user.name}-profile-photo.webp`,
+                                                            filename: `${user.name}-profile-photo.webp`,
                                                             title: 'Foto Profil',
                                                         });
                                                     }
