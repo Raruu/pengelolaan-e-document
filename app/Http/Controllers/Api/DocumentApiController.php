@@ -26,7 +26,6 @@ class DocumentApiController extends Controller
             'search' => 'nullable|string|max:255',
             'sort_by' => 'nullable|string|in:created_at,updated_at,title,document_date',
             'sort_order' => 'nullable|string|in:asc,desc',
-            'starred' => 'nullable|boolean',
         ]);
 
         $query = Document::with(['category', 'uploader', 'files'])
@@ -51,18 +50,6 @@ class DocumentApiController extends Controller
             $query->whereDate('document_date', '>=', $validated['date_from']);
         }
 
-        // if (!empty($validated['date_to'])) {
-        //     $query->whereDate('document_date', '<=', $validated['date_to']);
-        // }
-
-        // if (!empty($validated['date_updated'])) {
-        //     $query->whereDate('updated_at', '<=', $validated['date_updated']);
-        // }
-
-        // Starred
-        if (!empty($validated['starred'])) {
-            $query->where('starred', true);
-        }
 
         // Search
         if (!empty($validated['search'])) {
@@ -97,7 +84,6 @@ class DocumentApiController extends Controller
             'title' => 'required|string|max:255',
             'description' => 'nullable|string|max:2000',
             'document_date' => 'required|date',
-            'starred' => 'nullable|boolean',
         ]);
 
         $category = Category::where([
@@ -118,7 +104,6 @@ class DocumentApiController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],
-            'starred' => $validated['starred'] ?? false,
         ]);
 
         return response()->json([
@@ -168,7 +153,6 @@ class DocumentApiController extends Controller
             'document_date' => 'required|date',
             'deleted_files' => 'nullable|array',
             'deleted_files.*' => 'integer|exists:document_files,id',
-            'starred' => 'nullable|boolean',
         ]);
 
         $category = Category::where([
@@ -188,7 +172,6 @@ class DocumentApiController extends Controller
             'title' => $validated['title'],
             'description' => $validated['description'] ?? null,
             'document_date' => $validated['document_date'],
-            'starred' => $validated['starred'] ?? false,
         ]);
 
         if (!empty($validated['deleted_files'])) {
@@ -201,21 +184,6 @@ class DocumentApiController extends Controller
             'message' => 'Document updated successfully.',
             'document' => $document->load(['files', 'category'])
         ], );
-    }
-
-    public function toggleStarred(Request $request, Document $document): JsonResponse
-    {
-        if ($document->uploaded_by !== $request->user()->id) {
-            abort(403);
-        }
-
-        $document->starred = !$document->starred;
-        $document->save();
-
-        return response()->json([
-            'message' => $document->starred ? 'Document starred.' : 'Document unstarred.',
-            'starred' => $document->starred
-        ]);
     }
 
     public function destroy(Request $request, Document $document): JsonResponse

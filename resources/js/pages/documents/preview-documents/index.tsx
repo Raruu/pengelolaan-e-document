@@ -1,10 +1,6 @@
 import { Head } from '@inertiajs/react';
-import { useEffect } from 'react';
 import Heading from '@/components/Heading';
-import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
-import { defaultItems } from '@/lib/nav-items';
-import { index as previewRoute } from '@/routes/document/preview';
 import type { Document, DocumentFile } from '@/types/models';
 import DocumentDetailsView from './components/DocumentDetailsView';
 import FilesListView from './components/FilesListView';
@@ -15,23 +11,6 @@ interface Props {
 }
 
 export default function PreviewDocuments({ document, files }: Props) {
-    const { setNavItems } = useSidebar();
-
-    useEffect(() => {
-        const custom = defaultItems.map((item) => ({ ...item }));
-        custom[1] = {
-            ...custom[1],
-            subItems: [
-                { name: defaultItems[1].name, href: defaultItems[1].href },
-                {
-                    name: 'Detail',
-                    href: previewRoute.url(document.id),
-                },
-            ],
-        };
-        setNavItems(custom);
-    }, [document, setNavItems]);
-
     return (
         <AppLayout>
             <Head title={`Preview: ${document.title}`} />

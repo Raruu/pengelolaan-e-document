@@ -11,13 +11,10 @@ use Inertia\Response;
 
 class DocumentController extends Controller
 {
-    public function index(Request $request, bool $starred = false): Response
+    public function index(Request $request, bool $isOut = false): Response
     {
-        if ($starred) {
-            $request->merge(['starred' => true]);
-        }
-
         // Use the API controller's method to get documents
+        $request->merge(['direction' => $isOut ? 'Keluar' : 'Masuk']);
         $apiController = new DocumentApiController();
         $documents = $apiController->getDocumentsQuery($request);
 
@@ -29,12 +26,10 @@ class DocumentController extends Controller
                 return $cat;
             });
 
-        $directions = Category::select('direction')->distinct()->get();
 
         return Inertia::render('documents/index', [
             'documents' => $documents,
             'categories' => $categories,
-            'directions' => $directions,
             'filters' => [
                 'category' => $request->category,
                 'date_from' => $request->date_from,
@@ -43,11 +38,16 @@ class DocumentController extends Controller
                 'sort_by' => $request->get('sort_by', 'created_at'),
                 'sort_order' => $request->get('sort_order', 'desc'),
             ],
-            'starred' => $starred
+            'direction' => $isOut ? 'Keluar' : 'Masuk',
         ]);
     }
 
-    public function indexStarred(Request $request): Response
+    public function indexIn(Request $request): Response
+    {
+        return $this->index($request, false);
+    }
+
+    public function indexOut(Request $request): Response
     {
         return $this->index($request, true);
     }

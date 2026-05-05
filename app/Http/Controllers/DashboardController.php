@@ -11,7 +11,19 @@ class DashboardController extends Controller
 {
     public function index(Request $request): Response
     {
-        $recentDocuments = Document::with(['category'])
+        $recentDocumentsIn = Document::with(['category'])
+            ->whereHas('category', function ($query) {
+                $query->where('direction', 'Masuk');
+            })
+            ->withCount('files')
+            ->orderBy('document_date', 'desc')
+            ->limit(4)
+            ->get();
+
+        $recentDocumentsOut = Document::with(['category'])
+            ->whereHas('category', function ($query) {
+                $query->where('direction', 'Keluar');
+            })
             ->withCount('files')
             ->orderBy('document_date', 'desc')
             ->limit(4)
@@ -25,7 +37,8 @@ class DashboardController extends Controller
             ->get();
 
         return Inertia::render('dashboard', [
-            'recentDocuments' => $recentDocuments,
+            'recentDocumentsIn' => $recentDocumentsIn,
+            'recentDocumentsOut' => $recentDocumentsOut,
             'starredDocuments' => $starredDocuments,
         ]);
     }

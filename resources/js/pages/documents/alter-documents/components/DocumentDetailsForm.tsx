@@ -12,7 +12,7 @@ import {
     Button,
 } from '@heroui/react';
 import { parseDate } from '@internationalized/date';
-import { Save, Star, Upload, X } from 'lucide-react';
+import { Save, Upload, X } from 'lucide-react';
 import { initialsName } from '@/lib/utils';
 import type { Category } from '@/types/models';
 
@@ -25,7 +25,6 @@ interface DocumentDetailsFormProps {
     documentDate: string;
     categories: Category[];
     directions: { direction: string }[];
-    starred: boolean;
     validationErrors: Record<string, string>;
     isSubmitting: boolean;
     mode: 'create' | 'edit';
@@ -36,7 +35,6 @@ interface DocumentDetailsFormProps {
     onDirectionChange: (value: string) => void;
     onDescriptionChange: (value: string) => void;
     onDocumentDateChange: (value: string) => void;
-    onStarredChange: (value: boolean) => void;
 }
 
 export default function DocumentDetailsForm({
@@ -48,7 +46,6 @@ export default function DocumentDetailsForm({
     documentDate,
     categories,
     directions,
-    starred,
     validationErrors,
     isSubmitting,
     mode,
@@ -59,7 +56,6 @@ export default function DocumentDetailsForm({
     onDirectionChange,
     onDescriptionChange,
     onDocumentDateChange,
-    onStarredChange,
 }: DocumentDetailsFormProps) {
     return (
         <div className="h-full">
@@ -76,20 +72,6 @@ export default function DocumentDetailsForm({
                                     dipilih.
                                 </p>
                             </div>
-                            <Button
-                                isIconOnly
-                                variant="light"
-                                onPress={() => onStarredChange(!starred)}
-                            >
-                                {starred ? (
-                                    <Star
-                                        className="size-5 text-[#ede05d]"
-                                        fill="#ede05d"
-                                    />
-                                ) : (
-                                    <Star className="size-5" />
-                                )}
-                            </Button>
                         </div>
 
                         <Input

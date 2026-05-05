@@ -12,22 +12,18 @@ import type { Category } from '@/types/models';
 
 interface DocumentsFiltersProps {
     categories: Category[];
-    directions: { direction: string }[];
     selectedCategory: string;
     searchValue?: string;
     onCategoryChange: (category: string) => void;
-    onDirectionChange: (direction: string) => void;
     onDateRangeChange: (dateFrom: string) => void;
     onSearchChange?: (search: string) => void;
 }
 
 export default function DocumentsFilters({
     categories,
-    directions,
     selectedCategory,
     searchValue = '',
     onCategoryChange,
-    onDirectionChange,
     onDateRangeChange,
     onSearchChange,
 }: DocumentsFiltersProps) {
@@ -75,31 +71,6 @@ export default function DocumentsFilters({
                     <SelectItem key="1-weeks">1 Minggu lalu</SelectItem>
                     <SelectItem key="1-months">1 Bulan lalu</SelectItem>
                     <SelectItem key="1-years">1 Tahun lalu</SelectItem>
-                </Select>
-
-                <Select
-                    label="Arah"
-                    className="w-48 rounded-lg bg-background"
-                    size="sm"
-                    variant="bordered"
-                    defaultSelectedKeys={['all']}
-                    onSelectionChange={(keys) => {
-                        const selected = Array.from(keys)[0]?.toString() || '';
-                        if (selected === 'all' || selected === '') {
-                            onDirectionChange('');
-                            return;
-                        }
-                        onDirectionChange(selected);
-                    }}
-                >
-                    <SelectItem key="all">Semua</SelectItem>
-                    <>
-                        {directions.map((direction) => (
-                            <SelectItem key={direction.direction}>
-                                {direction.direction}
-                            </SelectItem>
-                        ))}
-                    </>
                 </Select>
 
                 <Autocomplete

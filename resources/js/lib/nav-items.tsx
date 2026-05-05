@@ -1,19 +1,19 @@
 import {
     LayoutGrid,
-    LucideFiles,
-    LucideStar,
+    LucideLogIn,
+    LucideLogOut,
     LucideTrash2,
     UserCircle,
 } from 'lucide-react';
 import MaterialCategoryRounded from '@/components/custom-icons/MaterialCategoryRounded';
 import { dashboard } from '@/routes';
 import { index as categoriesIndex } from '@/routes/categories';
-import { index as documentsIndex } from '@/routes/documents';
-import { index as documentsIndexStarred } from '@/routes/documents_starred';
+import { index as documentsIndexOut } from '@/routes/documents/out';
 import { edit } from '@/routes/profile';
 import { index as trashIndex } from '@/routes/trash';
 import { edit as editPassword } from '@/routes/user-password';
 import type { NavItem } from '@/types/navigation';
+import { index as documentsIndexIn } from '@/routes/documents/in';
 
 export const defaultItems: NavItem[] = [
     {
@@ -22,14 +22,14 @@ export const defaultItems: NavItem[] = [
         href: dashboard.url(),
     },
     {
-        icon: <LucideFiles />,
-        name: 'Dokumenku',
-        href: documentsIndex.url(),
+        icon: <LucideLogIn />,
+        name: 'Dokumen Masuk',
+        href: documentsIndexIn.url(),
     },
     {
-        icon: <LucideStar />,
-        name: 'Berbintang',
-        href: documentsIndexStarred.url(),
+        icon: <LucideLogOut />,
+        name: 'Dokumen Keluar',
+        href: documentsIndexOut.url(),
     },
     {
         icon: <LucideTrash2 />,

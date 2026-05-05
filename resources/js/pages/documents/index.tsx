@@ -28,7 +28,6 @@ interface Props {
         to: number;
     };
     categories: Category[];
-    directions: { direction: string }[];
     filters: {
         category?: string;
         date_from?: string;
@@ -37,22 +36,20 @@ interface Props {
         sort_by: string;
         sort_order: string;
     };
-    starred: boolean;
+    direction: 'Masuk' | 'Keluar';
 }
 
 export default function DokumenKu({
     documents,
-    directions,
     categories,
     filters,
-    starred,
+    direction,
 }: Props) {
     const { confirm, DialogComponent } = useConfirmDialog();
     const [selectedCategory, setSelectedCategory] = useState<string>(
         filters.category || '',
     );
     const [perPage, setPerPage] = useState<number>(10);
-    const [direction, setDirection] = useState<string>('');
     const [documentDate, setDocumentDate] = useState('');
     const [searchTerm, setSearchTerm] = useState<string>(filters.search || '');
     const [loading, setLoading] = useState<boolean>(false);
@@ -66,15 +63,8 @@ export default function DokumenKu({
                     ...filters,
                     ...params,
                     per_page: perPage,
-                    starred: starred ? 1 : 0,
+                    direction: direction,
                 };
-
-                if (direction !== '') {
-                    params = {
-                        ...params,
-                        direction: direction,
-                    };
-                }
 
                 if (documentDate !== '') {
                     params = {
@@ -109,7 +99,6 @@ export default function DokumenKu({
         [
             filters,
             perPage,
-            starred,
             direction,
             documentDate,
             searchTerm,
@@ -187,12 +176,12 @@ export default function DokumenKu({
 
     return (
         <AppLayout>
-            <Head title="Dokumenku" />
+            <Head title={`Dokumen ${direction}`}  />
             <div className="flex h-full flex-1 flex-col gap-4 px-4 py-2">
                 <Heading
                     variant="default-small-margin"
-                    title="Dokumenku"
-                    description={`Daftar dokumen yang tersimpan di sistem. ${starred ? '(berbintang)' : ''}`}
+                    title={`Dokumen ${direction}`}
+                    description={`Daftar dokumen yang tersimpan di sistem.`}
                     trailing={
                         <Link href={create.url()} preserveState>
                             <Button
@@ -211,14 +200,10 @@ export default function DokumenKu({
                 {/* Filters */}
                 <DocumentsFilters
                     categories={categories}
-                    directions={directions}
                     selectedCategory={selectedCategory}
                     searchValue={searchTerm}
                     onCategoryChange={(category) => {
                         setSelectedCategory(category);
-                    }}
-                    onDirectionChange={(direction) => {
-                        setDirection(direction);
                     }}
                     onDateRangeChange={(dateFrom) => {
                         setDocumentDate(dateFrom);

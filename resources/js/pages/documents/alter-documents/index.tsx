@@ -2,20 +2,16 @@ import { addToast, Button } from '@heroui/react';
 import { Head, router } from '@inertiajs/react';
 import axios from 'axios';
 import { Trash2 } from 'lucide-react';
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import Heading from '@/components/Heading';
 import { useConfirmDialog } from '@/hooks/useConfirmDialog';
 import { usePreviewDialog } from '@/hooks/usePreviewDialog';
-import { useSidebar } from '@/hooks/useSidebar';
 import AppLayout from '@/layouts/app';
-import { defaultItems } from '@/lib/nav-items';
 import { formatFileSize, getFileUrl } from '@/lib/utils';
 import { store, update, storeFile } from '@/routes/api/documents';
 import { destroy as documentDestroy } from '@/routes/api/documents';
-import { index as createRoute } from '@/routes/document/create';
-import { index as editRoute } from '@/routes/document/edit';
+
 import { index as previewRoute } from '@/routes/document/preview';
-import { index as documentsIndex } from '@/routes/documents';
 import type {
     Category,
     Document,
@@ -25,6 +21,7 @@ import type {
 import DocumentDetailsForm from './components/DocumentDetailsForm';
 import FileUploadZone from './components/FileUploadZone';
 import UploadedFilesList from './components/UploadedFilesList';
+import { index as documentsIndex } from '@/routes/documents/in';
 
 interface Props {
     categories: Category[];
@@ -66,7 +63,6 @@ export default function AlterDocuments({
             };
         }) || [],
     );
-    const [starred, setStarred] = useState(document?.starred || false);
 
     const [dragActive, setDragActive] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -78,25 +74,6 @@ export default function AlterDocuments({
         useConfirmDialog();
     const { preview, DialogComponent: DialogComponentPreview } =
         usePreviewDialog();
-    const { setNavItems } = useSidebar();
-
-    useEffect(() => {
-        const custom = defaultItems.map((item) => ({ ...item }));
-        custom[1] = {
-            ...custom[1],
-            subItems: [
-                { name: defaultItems[1].name, href: defaultItems[1].href },
-                {
-                    name: mode === 'edit' ? 'Edit' : 'Upload',
-                    href:
-                        mode === 'edit'
-                            ? editRoute.url(document!.id)
-                            : createRoute.url(),
-                },
-            ],
-        };
-        setNavItems(custom);
-    }, [document, mode, setNavItems]);
 
     const handleDrag = useCallback((e: React.DragEvent) => {
         e.preventDefault();
@@ -272,7 +249,6 @@ export default function AlterDocuments({
         formData.append('category', category);
         formData.append('direction', direction);
         formData.append('document_date', documentDate);
-        formData.append('starred', starred ? '1' : '0');
 
         if (description) {
             formData.append('description', description);
@@ -451,7 +427,6 @@ export default function AlterDocuments({
                             documentDate={documentDate}
                             categories={categories}
                             directions={directions}
-                            starred={starred}
                             validationErrors={validationErrors}
                             isSubmitting={isSubmitting}
                             mode={mode}
@@ -492,7 +467,6 @@ export default function AlterDocuments({
                                     clearValidationError('document_date');
                                 }
                             }}
-                            onStarredChange={(value) => setStarred(value)}
                         />
                     </div>
                 </div>
