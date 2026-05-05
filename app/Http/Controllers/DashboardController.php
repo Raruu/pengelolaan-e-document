@@ -29,17 +29,9 @@ class DashboardController extends Controller
             ->limit(4)
             ->get();
 
-        $starredDocuments = Document::with(['category', 'files'])
-            ->withCount('files')
-            ->where('starred', true)
-            ->orderBy('document_date', 'desc')
-            ->limit(4)
-            ->get();
-
         return Inertia::render('dashboard', [
             'recentDocumentsIn' => $recentDocumentsIn,
             'recentDocumentsOut' => $recentDocumentsOut,
-            'starredDocuments' => $starredDocuments,
         ]);
     }
 
