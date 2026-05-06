@@ -5,9 +5,9 @@ import { useState } from 'react';
 import { ChipKategori } from '@/components/ChipKategori';
 import { downloadAllDocument } from '@/lib/donwload-all';
 import { index as editRoute } from '@/routes/document/edit';
+import { index as documentsIndexIn } from '@/routes/documents/in';
 import { index as documentsIndexOut } from '@/routes/documents/out';
 import type { Document } from '@/types/models';
-import { index as documentsIndexIn } from '@/routes/documents/in';
 
 interface DocumentDetailsViewProps {
     document: Document;

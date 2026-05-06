@@ -250,7 +250,7 @@ const AppSidebar: React.FC = () => {
                     >
                         <AppLogoIcon />
                         <h1 className="-mt-6 text-xl font-bold text-foreground">
-                            E-Dokumen
+                            E-Doc Lanal Kendari
                         </h1>
                     </Link>
                 </div>

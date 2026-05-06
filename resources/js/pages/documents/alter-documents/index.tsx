@@ -12,6 +12,7 @@ import { store, update, storeFile } from '@/routes/api/documents';
 import { destroy as documentDestroy } from '@/routes/api/documents';
 
 import { index as previewRoute } from '@/routes/document/preview';
+import { index as documentsIndex } from '@/routes/documents/in';
 import type {
     Category,
     Document,
@@ -21,7 +22,6 @@ import type {
 import DocumentDetailsForm from './components/DocumentDetailsForm';
 import FileUploadZone from './components/FileUploadZone';
 import UploadedFilesList from './components/UploadedFilesList';
-import { index as documentsIndex } from '@/routes/documents/in';
 
 interface Props {
     categories: Category[];

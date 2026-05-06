@@ -8,12 +8,12 @@ import {
 import MaterialCategoryRounded from '@/components/custom-icons/MaterialCategoryRounded';
 import { dashboard } from '@/routes';
 import { index as categoriesIndex } from '@/routes/categories';
+import { index as documentsIndexIn } from '@/routes/documents/in';
 import { index as documentsIndexOut } from '@/routes/documents/out';
 import { edit } from '@/routes/profile';
 import { index as trashIndex } from '@/routes/trash';
 import { edit as editPassword } from '@/routes/user-password';
 import type { NavItem } from '@/types/navigation';
-import { index as documentsIndexIn } from '@/routes/documents/in';
 
 export const defaultItems: NavItem[] = [
     {
